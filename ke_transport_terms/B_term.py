@@ -29,38 +29,36 @@ from strain_rates   import strain_rates
 # B term                                                                  #
 #-------------------------------------------------------------------------#
 def b_term(
-        u1,                 # velocity-1 component
-        u2,                 # velocity-2 component
-        u3,                 # velocity-3 component
-        s11,                # strain rate-11 component
-        s12,                # strain rate-12 component
-        s13,                # strain rate-13 component
-        s22,                # strain rate-22 component
-        s23,                # strain rate-23 component
-        s33,                # strain rate-33 component 
+        U1,                 # velocity-1 component
+        U2,                 # velocity-2 component
+        U3,                 # velocity-3 component
         h,                  # spatial step size
-        nu):                # viscosity
+        NU):                # viscosity
 
     """ Calculating the B term in the kinetic energy transport equation """
     #---------------------------------------------------------------------#
-    # Finding the 9 gradient terms                                        #
+    # Calculating the strain rates                                        #
     #---------------------------------------------------------------------#
-    term1   = np.gradient(u1*s11, dx, edge_order=2)[0]
-    term2   = np.gradient(u1*s12, dx, edge_order=2)[1]
-    term3   = np.gradient(u1*s13, dx, edge_order=2)[2]
-    term4   = np.gradient(u2*s12, dx, edge_order=2)[0]
-    term5   = np.gradient(u2*s22, dx, edge_order=2)[1]
-    term6   = np.gradient(u2*s23, dx, edge_order=2)[2]
-    term7   = np.gradient(u3*s13, dx, edge_order=2)[0]
-    term8   = np.gradient(u3*s23, dx, edge_order=2)[1]
-    term9   = np.gradient(u3*s33, dx, edge_order=2)[2]
+    (S11, S12, S13, S22, S23, S33)  = strain_rates(U1, U2, U3, h)
+    #---------------------------------------------------------------------#
+    # Calculating the 9 gradient terms                                    #
+    #---------------------------------------------------------------------#
+    term1   = np.gradient(U1*S11, h, edge_order=2)[0]
+    term2   = np.gradient(U1*S12, h, edge_order=2)[1]
+    term3   = np.gradient(U1*S13, h, edge_order=2)[2]
+    term4   = np.gradient(U2*S12, h, edge_order=2)[0]
+    term5   = np.gradient(U2*S22, h, edge_order=2)[1]
+    term6   = np.gradient(U2*S23, h, edge_order=2)[2]
+    term7   = np.gradient(U3*S13, h, edge_order=2)[0]
+    term8   = np.gradient(U3*S23, h, edge_order=2)[1]
+    term9   = np.gradient(U3*S33, h, edge_order=2)[2]
     #---------------------------------------------------------------------#
     # Calculating B term                                                  #
     #---------------------------------------------------------------------#
-    b       = 2.0*nu*(term1 + term2 + term3 + term4 + term5 + term6 +\
+    B       = 2.0*NU*(term1 + term2 + term3 + term4 + term5 + term6 +\
                         term7 + term8 + term9)
 
-    return b
+    return B
 #=========================================================================#
 # Main                                                                    #
 #=========================================================================#
@@ -90,14 +88,14 @@ if __name__ == "__main__":
     #---------------------------------------------------------------------#
     # Defining velocities and strain rates                                #
     #---------------------------------------------------------------------#
-    u1          = u1[:,:,:,50]
-    u2          = u2[:,:,:,50]
-    u3          = u3[:,:,:,50]
-    (s11, s12, s13, s22, s23, s33)  = strain_rates(u1, u2, u3, dx) 
+    u1          = u1[:,:,:,100]
+    u2          = u2[:,:,:,100]
+    u3          = u3[:,:,:,100]
+    (s11, s12, s13, s22, s23, s33)  = strain_rates(u1, u2, u3, dx)
     #---------------------------------------------------------------------#
     # Calculating the B term                                              #
     #---------------------------------------------------------------------#
-    b           = b_term(u1, u2, u3, s11, s12, s13, s22, s23, s33, dx, nu)
+    b           = b_term(u1, u2, u3,  dx, nu)
     #---------------------------------------------------------------------#
     # Plotting                                                            #
     #---------------------------------------------------------------------#
@@ -106,3 +104,6 @@ if __name__ == "__main__":
         c.set_edgecolors("face")
     plt.colorbar()
     plt.show()
+
+    print("**** Successful Run ****")
+    sys.exit(0)
