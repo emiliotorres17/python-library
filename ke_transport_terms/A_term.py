@@ -56,42 +56,88 @@ if __name__ == "__main__":
     # Defining paths                                                      #
     #---------------------------------------------------------------------#
     media_path      = "media%c"                     %(sep)
-    data_path       = "data%c"                      %(sep)
     #---------------------------------------------------------------------#
     # Defining domain variables                                           #
     #---------------------------------------------------------------------#
-    dx          = (2.0*pi)/(64.0)
-    x1          = np.linspace(0.0, 2.0*pi, 64)
-    x2          = np.linspace(0.0, 2.0*pi, 64)
-    [X1, X2]    = np.meshgrid(x1, x2)
+    N           = 300
+    x0          = -0.5
+    xf          = 0.5
+    dx          = (xf-x0)/N
+    x           = np.linspace(x0, xf, N+1)
+    y           = np.linspace(x0, xf, N+1)
+    z           = np.linspace(x0, xf, N+1)
+    [X1, X2]    = np.meshgrid(x, y)
     #---------------------------------------------------------------------#
-    # Loading data                                                        #
+    # Preallocating variables                                             #
     #---------------------------------------------------------------------#
-    u1          = np.load(data_path + "velocity1.npy")
-    u2          = np.load(data_path + "velocity2.npy")
-    u3          = np.load(data_path + "velocity3.npy")
-    pressure    = np.load(data_path + "pressure.npy")
+    p           = np.zeros((N+1, N+1, N+1))
+    dpdx        = np.zeros((N+1, N+1, N+1)) 
+    dpdy        = np.zeros((N+1, N+1, N+1)) 
+    dpdz        = np.zeros((N+1, N+1, N+1)) 
+    ux          = np.zeros((N+1, N+1, N+1))
+    duxdx       = np.zeros((N+1, N+1, N+1)) 
+    uy          = np.zeros((N+1, N+1, N+1))
+    duydy       = np.zeros((N+1, N+1, N+1)) 
+    uz          = np.zeros((N+1, N+1, N+1))
+    duzdz       = np.zeros((N+1, N+1, N+1)) 
     #---------------------------------------------------------------------#
-    # Extracting the data                                                 #
+    # Preallocating variables                                             #
     #---------------------------------------------------------------------#
-    u1          = u1[:,:,:, 5]
-    u2          = u2[:,:,:, 5]
-    u3          = u3[:,:,:, 5]
-    pressure    = pressure[:,:,:, 5]
+    print_count = 0
+    for k in range(0, N+1):
+        for j in range(0, N+1):
+            for i in range(0, N+1):
+                p[i,j,k]        = np.sin(2.0*pi*x[i])*np.cos(3.0*pi*y[j])*(np.sin(2.0*pi*z[k]))**2.0
+                ux[i,j,k]       = np.cos(pi*x[i])*np.sin(3.0*pi*z[k])
+                uy[i,j,k]       = np.sin(pi*y[j])
+                uz[i,j,k]       = np.cos(3.0*pi*y[j])*np.cos(pi*z[k])
+                dpdx[i,j,k]     = 2.0*pi*np.cos(2.0*pi*x[i])*np.cos(3.0*pi*y[j])*(np.sin(2.0*pi*z[k]))**2.0
+                dpdy[i,j,k]     = -3.0*pi*np.sin(2.0*pi*x[i])*np.sin(3.0*pi*y[j])*(np.sin(2.0*pi*z[k]))**2.0
+                dpdz[i,j,k]     = 4.0*pi*np.sin(2.0*pi*x[i])*np.cos(3.0*pi*y[j])*np.sin(2.0*pi*z[k])*np.cos(2.0*pi*z[k])
+                duxdx[i,j,k]    = -pi*np.sin(pi*x[i])*np.sin(3.0*pi*z[k])
+                duydy[i,j,k]    = pi*np.cos(pi*y[j])
+                duzdz[i,j,k]    = -pi*np.cos(3.0*pi*y[j])*np.sin(pi*z[k])
+        if print_count > 20:
+            print(k)
+            print_count = 0
+        print_count += 1
+
+
+
+    f   = np.copy(ux)
+    print("x = %.5f"                    %(x[31]))
+    print("y = %.5f"                    %(y[17]))
+    print("z = %.5f"                    %(z[31]))
+    print("f = %.5f"                    %(f[31,17,31]))
     #---------------------------------------------------------------------#
-    # Calculating the A-term                                              #
+    # Calculating the exact A term                                        #
     #---------------------------------------------------------------------#
-    A   = a_term(u1, u2, u3, pressure, 1.0, dx)
+    A_exact     = -1.0*(p*duxdx + ux*dpdx + p*duydy + uy*dpdy + p*duzdz + uz*dpdz)
     #---------------------------------------------------------------------#
-    # Generating the contour plot                                         #
+    # Calculating the approximate A term                                  #
     #---------------------------------------------------------------------#
-    cnt = plt.contourf(X1, X2, A[:,:,32], 500, cmap="jet")
+    A_approx    = a_term(ux, uy, uz, p, 1.0, dx) 
+    #---------------------------------------------------------------------#
+    # Calculating the error                                               #
+    #---------------------------------------------------------------------#
+    error       = abs(A_approx - A_exact)
+    #---------------------------------------------------------------------#
+    # Plotting A exact, approximate, and error                            #
+    #---------------------------------------------------------------------#
+    plt.subplot(3,1,1)
+    cnt = plt.contourf(X1, X2, A_approx[:,:,31], 500, cmap="jet")
     for c in cnt.collections:
         c.set_edgecolors("face")
-    plt.xlabel(r"$0 \leq x_{1} \leq 2\pi$")
-    plt.ylabel(r"$0 \leq x_{2} \leq 2\pi$")
+    plt.subplot(3,1,2)
+    cnt = plt.contourf(X1, X2, A_approx[:,:,31], 500, cmap="jet")
+    for c in cnt.collections:
+        c.set_edgecolors("face")
+    plt.subplot(3,1,3)
+    cnt = plt.contourf(X1, X2, error[:,:,31], 500, cmap="jet")
+    for c in cnt.collections:
+        c.set_edgecolors("face")
+    plt.xlabel("$0 \leq x_{1} \leq \pi$")
+    plt.ylabel("$0 \leq x_{2} \leq \pi$")
+    #plt.clim([-2.0, 2.5])
     plt.colorbar()
     plt.show()
-
-    print("**** Successful Run ****")
-    sys.exit(0)
