@@ -25,21 +25,21 @@ def a_term(
         U1,                 # velocity-1 field
         U2,                 # velocity-2 field
         U3,                 # velocity-3 field
-        p,                  # pressure field
-        rho,                # density field
+        P,                  # pressure field
+        den,                # density field
         h):                 # step size
 
     """ Calculating the A term in the kinetic energy transport equation """
     #---------------------------------------------------------------------#
     # Calculating the 3 different terms                                   #
     #---------------------------------------------------------------------#
-    term1       = np.gradient(p*U1, h, edge_order=2)[0]
-    term2       = np.gradient(p*U2, h, edge_order=2)[1]
-    term3       = np.gradient(p*U3, h, edge_order=2)[2]
+    term1       = np.gradient(P*U1, h, edge_order=2)[0]
+    term2       = np.gradient(P*U2, h, edge_order=2)[1]
+    term3       = np.gradient(P*U3, h, edge_order=2)[2]
     #---------------------------------------------------------------------#
     # Calculating the A term                                              #
     #---------------------------------------------------------------------#
-    a   = -(1.0/rho)*(term1 + term2 + term3)
+    a   = -(1.0/den)*(term1 + term2 + term3)
 
     return a
 #=========================================================================#
@@ -59,7 +59,7 @@ if __name__ == "__main__":
     #---------------------------------------------------------------------#
     # Defining domain variables                                           #
     #---------------------------------------------------------------------#
-    N           = 300
+    N           = 400
     x0          = -0.5
     xf          = 0.5
     dx          = (xf-x0)/N
@@ -71,15 +71,15 @@ if __name__ == "__main__":
     # Preallocating variables                                             #
     #---------------------------------------------------------------------#
     p           = np.zeros((N+1, N+1, N+1))
-    dpdx        = np.zeros((N+1, N+1, N+1)) 
-    dpdy        = np.zeros((N+1, N+1, N+1)) 
-    dpdz        = np.zeros((N+1, N+1, N+1)) 
+    dpdx        = np.zeros((N+1, N+1, N+1))
+    dpdy        = np.zeros((N+1, N+1, N+1))
+    dpdz        = np.zeros((N+1, N+1, N+1))
     ux          = np.zeros((N+1, N+1, N+1))
-    duxdx       = np.zeros((N+1, N+1, N+1)) 
+    duxdx       = np.zeros((N+1, N+1, N+1))
     uy          = np.zeros((N+1, N+1, N+1))
-    duydy       = np.zeros((N+1, N+1, N+1)) 
+    duydy       = np.zeros((N+1, N+1, N+1))
     uz          = np.zeros((N+1, N+1, N+1))
-    duzdz       = np.zeros((N+1, N+1, N+1)) 
+    duzdz       = np.zeros((N+1, N+1, N+1))
     #---------------------------------------------------------------------#
     # Preallocating variables                                             #
     #---------------------------------------------------------------------#
@@ -101,14 +101,6 @@ if __name__ == "__main__":
             print(k)
             print_count = 0
         print_count += 1
-
-
-
-    f   = np.copy(ux)
-    print("x = %.5f"                    %(x[31]))
-    print("y = %.5f"                    %(y[17]))
-    print("z = %.5f"                    %(z[31]))
-    print("f = %.5f"                    %(f[31,17,31]))
     #---------------------------------------------------------------------#
     # Calculating the exact A term                                        #
     #---------------------------------------------------------------------#
@@ -116,7 +108,7 @@ if __name__ == "__main__":
     #---------------------------------------------------------------------#
     # Calculating the approximate A term                                  #
     #---------------------------------------------------------------------#
-    A_approx    = a_term(ux, uy, uz, p, 1.0, dx) 
+    A_approx    = a_term(ux, uy, uz, p, 1.0, dx)
     #---------------------------------------------------------------------#
     # Calculating the error                                               #
     #---------------------------------------------------------------------#
@@ -141,3 +133,6 @@ if __name__ == "__main__":
     #plt.clim([-2.0, 2.5])
     plt.colorbar()
     plt.show()
+
+    print("**** Successful Run ****")
+    sys.exit(0)
