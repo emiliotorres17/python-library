@@ -97,7 +97,7 @@ if __name__ == "__main__":
                 duxdx[i,j,k]    = -pi*np.sin(pi*x[i])*np.sin(3.0*pi*z[k])
                 duydy[i,j,k]    = pi*np.cos(pi*y[j])
                 duzdz[i,j,k]    = -pi*np.cos(3.0*pi*y[j])*np.sin(pi*z[k])
-        if print_count > 20:
+        if print_count == 5:
             print(k)
             print_count = 0
         print_count += 1
@@ -114,25 +114,32 @@ if __name__ == "__main__":
     #---------------------------------------------------------------------#
     error       = abs(A_approx - A_exact)
     #---------------------------------------------------------------------#
-    # Plotting A exact, approximate, and error                            #
+    # Plotting A exact solution                                           #
     #---------------------------------------------------------------------#
-    plt.subplot(3,1,1)
+    cnt = plt.contourf(X1, X2, A_exact[:,:,31], 500, cmap="jet")
+    for c in cnt.collections:
+        c.set_edgecolors("face")
+    plt.colorbar()
+    plt.savefig(media_path + "A-term-exact.pdf")
+    plt.clf()
+    #---------------------------------------------------------------------#
+    # Plotting A approximate solution                                     #
+    #---------------------------------------------------------------------#
     cnt = plt.contourf(X1, X2, A_approx[:,:,31], 500, cmap="jet")
     for c in cnt.collections:
         c.set_edgecolors("face")
-    plt.subplot(3,1,2)
-    cnt = plt.contourf(X1, X2, A_approx[:,:,31], 500, cmap="jet")
-    for c in cnt.collections:
-        c.set_edgecolors("face")
-    plt.subplot(3,1,3)
+    plt.colorbar()
+    plt.savefig(media_path + "A-term-approx.pdf")
+    plt.clf()
+    #---------------------------------------------------------------------#
+    # Plotting the error                                                  #
+    #---------------------------------------------------------------------#
     cnt = plt.contourf(X1, X2, error[:,:,31], 500, cmap="jet")
     for c in cnt.collections:
         c.set_edgecolors("face")
-    plt.xlabel("$0 \leq x_{1} \leq \pi$")
-    plt.ylabel("$0 \leq x_{2} \leq \pi$")
-    #plt.clim([-2.0, 2.5])
     plt.colorbar()
-    plt.show()
+    plt.savefig(media_path + "A-term-error.pdf")
+    plt.clf()
 
     print("**** Successful Run ****")
     sys.exit(0)
