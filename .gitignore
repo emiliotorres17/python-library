@@ -1,0 +1,12 @@
+tags
+*.pdf
+*.aux
+*.lof
+*.lot
+*.swp
+*.swo
+*.swq`
+data/*
+ke_transport_terms/data/*
+__pycache__/*
+ke_transport_terms/__pycache__/*
