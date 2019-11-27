@@ -43,65 +43,167 @@ def d_term(
     #---------------------------------------------------------------------#
     # Calculating the 6 terms                                             #
     #---------------------------------------------------------------------#
-    term1       = np.multiply(S11, S11)
-    term2       = 2.0*np.multiply(S12, S12)
-    term3       = 2.0*np.multiply(S13, S13)
-    term4       = np.multiply(S22, S22)
-    term5       = 2.0*np.multiply(S23, S23)
-    term6       = np.multiply(S33, S33)
+    Term1       = np.multiply(S11, S11)
+    Term2       = 2.0*np.multiply(S12, S12)
+    Term3       = 2.0*np.multiply(S13, S13)
+    Term4       = np.multiply(S22, S22)
+    Term5       = 2.0*np.multiply(S23, S23)
+    Term6       = np.multiply(S33, S33)
     #---------------------------------------------------------------------#
     # Calculating the D term                                              #
     #---------------------------------------------------------------------#
-    D           = -2.0*NU*(term1 + term2 + term3 + term4 + term5 + term6)
+    D           = -2.0*NU*(Term1 + Term2 + Term3 + Term4 + Term5 + Term6)
 
     return D
 #=========================================================================#
 # Main                                                                    #
 #=========================================================================#
 if __name__ == "__main__":
-    #---------------------------------------------------------------------#
+    #=====================================================================#
     # Main preamble                                                       #
-    #---------------------------------------------------------------------#
+    #=====================================================================#
     call(["clear"])
     sep         = os.sep
     pwd         = os.getcwd()
-    data_path   = pwd + "%cdata%c"              %(sep, sep)
+    media_path  = pwd + "%cmedia%c"         %(sep, sep)
     #---------------------------------------------------------------------#
     # Defining domain variables                                           #
     #---------------------------------------------------------------------#
-    pi          = np.pi
-    x1          = np.linspace(0, 2.0*pi, 64)
-    x2          = np.linspace(0, 2.0*pi, 64)
-    [X1, X2]    = np.meshgrid(x1, x2)
-    dx          = (2.0*pi)/64.0
-    nu          = 0.000185
+    N           = 128
+    x0          = 0.0
+    xf          = 1.0
+    x           = np.linspace(x0, xf, N+1)
+    y           = np.linspace(x0, xf, N+1)
+    z           = np.linspace(x0, xf, N+1)
+    [X1, X2]    = np.meshgrid(x, y)
+    dx          = (xf - x0)/N
+    nu          = 1.0
+    #=====================================================================#
+    # Approximate solution                                                #
+    #=====================================================================#
     #---------------------------------------------------------------------#
-    # Loading data                                                        #
+    # Preallocating velocities                                            #
     #---------------------------------------------------------------------#
-    u1          = np.load(data_path + "velocity1.npy")
-    u2          = np.load(data_path + "velocity2.npy")
-    u3          = np.load(data_path + "velocity3.npy")
+    ux  = np.zeros((N+1, N+1, N+1))
+    uy  = np.zeros((N+1, N+1, N+1))
+    uz  = np.zeros((N+1, N+1, N+1))
     #---------------------------------------------------------------------#
-    # Defining velocity data                                              #
+    # Calculating the velocities                                          #
     #---------------------------------------------------------------------#
-    tslice      = 50
-    u1          = u1[:,:,:,tslice]
-    u2          = u2[:,:,:,tslice]
-    u3          = u3[:,:,:,tslice]
+    print_count = 0
+    for k in range(0, N+1):
+        for j in range(0, N+1):
+            for i in range(0, N+1):
+                ux[i,j,k]   = x[i]**2.0*y[j]*z[k]
+                uy[i,j,k]   = x[i]*y[j]**2.0*z[k]
+                uz[i,j,k]   = x[i]*y[j]*z[k]**2.0
+        #-----------------------------------------------------------------#
+        # Print statement                                                 #
+        #-----------------------------------------------------------------#
+        if print_count > 5:
+            print(k)
+            print_count = 0
+        print_count += 1
+    #---------------------------------------------------------------------#
+    # Calculating the approximate solution                                #
+    #---------------------------------------------------------------------#
+    D_approx    = d_term(ux, uy, uz, nu, dx)
+    print("***** Minimum value")
+    print(np.amax(ux))
+    print(np.amax(uy))
+    print(np.amax(uz))
+    #---------------------------------------------------------------------#
+    # Clearing variables
+    #---------------------------------------------------------------------#
+    del ux
+    del uy
+    del uz
+    #=====================================================================#
+    # Exact solution                                                      #
+    #=====================================================================#
+    #---------------------------------------------------------------------#
+    # Preallocating terms                                                 #
+    #---------------------------------------------------------------------#
+    term1       = np.zeros((N+1, N+1, N+1))
+    term2       = np.zeros((N+1, N+1, N+1))
+    term3       = np.zeros((N+1, N+1, N+1))
+    term4       = np.zeros((N+1, N+1, N+1))
+    term5       = np.zeros((N+1, N+1, N+1))
+    term6       = np.zeros((N+1, N+1, N+1))
+    #---------------------------------------------------------------------#
+    # Calculating the terms in the D term                                 #
+    #---------------------------------------------------------------------#
+    print_count = 0
+    for k in range(0, N+1):
+        for j in range(0, N+1):
+            for i in range(0, N+1):
+                term1[i,j,k]    = 4.0*x[i]**2.0*y[j]**2.0*z[k]**2.0
+                term2[i,j,k]    = (0.5*(x[i]**2.0*z[k]+y[j]**2.0*z[k]))**2.0
+                term3[i,j,k]    = (0.5*(x[i]**2.0*y[j]+y[j]*z[k]**2.0))**2.0
+                term4[i,j,k]    = 4.0*x[i]**2.0*y[j]**2.0*z[k]**2.0
+                term5[i,j,k]    = (0.5*(x[i]*y[j]**2.0+x[i]*z[k]**2.0))**2.0
+                term6[i,j,k]    = 4.0*x[i]**2.0*y[j]**2.0*z[k]**2.0
+        #-----------------------------------------------------------------#
+        # Print statement                                                 #
+        #-----------------------------------------------------------------#
+        if print_count > 5:
+            print(k)
+            print_count = 0
+        print_count += 1
     #---------------------------------------------------------------------#
     # Calculating the D term                                              #
     #---------------------------------------------------------------------#
-    d           = d_term(u1, u2, u3, nu, dx)
+    D_exact     = -2.0*nu*(term1 + 2.0*term2 + 2.0*term3 + term4 +\
+                            2.0*term5 + term6)
     #---------------------------------------------------------------------#
-    # Plotting the results                                                #
+    # Clearing variables                                                  #
     #---------------------------------------------------------------------#
-    cnt = plt.contourf(X1, X2, d[:,:,32], 500, cmap="jet")
+    del term1
+    del term2
+    del term3
+    del term4
+    del term5
+    del term6
+    #=====================================================================#
+    # Error                                                               #
+    #=====================================================================#
+    error   = abs(D_exact - D_approx)
+    #=====================================================================#
+    # Plotting the solutions                                              #
+    #=====================================================================#
+    #---------------------------------------------------------------------#
+    # Exact solution                                                      #
+    #---------------------------------------------------------------------#
+    cnt = plt.contourf(X1, X2, D_exact[:,:,int(N/2)], 500, cmap="jet")
     for c in cnt.collections:
         c.set_edgecolors("face")
-    plt.xlabel(r"$0 \leq x_{1} \leq 2\pi$")
-    plt.ylabel(r"$0 \leq x_{1} \leq 2\pi$")
+    plt.xlabel("$0 \leq x_{1} \leq 1$")
+    plt.ylabel("$0 \leq x_{2} \leq 1$")
     plt.colorbar()
-    plt.show()
+    plt.savefig(media_path + "D-term-exact.pdf")
+    plt.clf()
+    #---------------------------------------------------------------------#
+    # Approximate solution                                                #
+    #---------------------------------------------------------------------#
+    cnt = plt.contourf(X1, X2, D_approx[:,:,int(N/2)], 500, cmap="jet")
+    for c in cnt.collections:
+        c.set_edgecolors("face")
+    plt.xlabel("$0 \leq x_{1} \leq 1$")
+    plt.ylabel("$0 \leq x_{2} \leq 1$")
+    plt.colorbar()
+    plt.savefig(media_path + "D-term-approx.pdf")
+    plt.clf()
+    #---------------------------------------------------------------------#
+    # Error                                                               #
+    #---------------------------------------------------------------------#
+    cnt = plt.contourf(X1, X2, error[:,:,int(N/2)], 500, cmap="jet")
+    for c in cnt.collections:
+        c.set_edgecolors("face")
+    plt.xlabel("$0 \leq x_{1} \leq 1$")
+    plt.ylabel("$0 \leq x_{2} \leq 1$")
+    plt.colorbar()
+    plt.savefig(media_path + "D-term-error.pdf")
+    plt.clf()
 
     print("**** Successful Run ****")
     sys.exit(0)
