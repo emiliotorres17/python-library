@@ -43,20 +43,32 @@ def b_term(
     #---------------------------------------------------------------------#
     # Calculating the 9 gradient terms                                    #
     #---------------------------------------------------------------------#
-    term1   = np.gradient(U1*S11, h, edge_order=2)[0]
-    term2   = np.gradient(U1*S12, h, edge_order=2)[1]
-    term3   = np.gradient(U1*S13, h, edge_order=2)[2]
-    term4   = np.gradient(U2*S12, h, edge_order=2)[0]
-    term5   = np.gradient(U2*S22, h, edge_order=2)[1]
-    term6   = np.gradient(U2*S23, h, edge_order=2)[2]
-    term7   = np.gradient(U3*S13, h, edge_order=2)[0]
-    term8   = np.gradient(U3*S23, h, edge_order=2)[1]
-    term9   = np.gradient(U3*S33, h, edge_order=2)[2]
+    Term1   = np.gradient(U1*S11, h, edge_order=2)[0]
+    Term2   = np.gradient(U1*S12, h, edge_order=2)[1]
+    Term3   = np.gradient(U1*S13, h, edge_order=2)[2]
+    Term4   = np.gradient(U2*S12, h, edge_order=2)[0]
+    Term5   = np.gradient(U2*S22, h, edge_order=2)[1]
+    Term6   = np.gradient(U2*S23, h, edge_order=2)[2]
+    Term7   = np.gradient(U3*S13, h, edge_order=2)[0]
+    Term8   = np.gradient(U3*S23, h, edge_order=2)[1]
+    Term9   = np.gradient(U3*S33, h, edge_order=2)[2]
     #---------------------------------------------------------------------#
     # Calculating B term                                                  #
     #---------------------------------------------------------------------#
-    B       = 2.0*NU*(term1 + term2 + term3 + term4 + term5 + term6 +\
-                        term7 + term8 + term9)
+    B       = 2.0*NU*(Term1 + Term2 + Term3 + Term4 + Term5 + Term6 +\
+                        Term7 + Term8 + Term9)
+    #---------------------------------------------------------------------#
+    # Deleting term variables                                             #
+    #---------------------------------------------------------------------#
+    del Term1
+    del Term2
+    del Term3
+    del Term4
+    del Term5
+    del Term6
+    del Term7
+    del Term8
+    del Term9
 
     return B
 #=========================================================================#
@@ -69,41 +81,126 @@ if __name__ == "__main__":
     call(["clear"])
     sep         = os.sep
     pwd         = os.getcwd()
-    data_path   = pwd + "%cdata%c"                  %(sep, sep)
+    media_path  = pwd + "%cmedia%c"         %(sep, sep)
     #---------------------------------------------------------------------#
     # Defining domain variables                                           #
     #---------------------------------------------------------------------#
+    N           = 400
     pi          = np.pi
-    x1          = np.linspace(0, 2.0*pi, 64)
-    x2          = np.linspace(0, 2.0*pi, 64)
-    [X1, X2]    = np.meshgrid(x1, x2)
-    dx          = (2.0*pi)/64.0
-    nu          = 0.000185
+    x0          = -0.5
+    xf          = 0.5
+    x           = np.linspace(x0, xf, N+1)
+    y           = np.linspace(x0, xf, N+1)
+    z           = np.linspace(x0, xf, N+1)
+    dx          = (xf - x0)/N
+    nu          = 1.0
+    #=====================================================================#
+    # Preallocating space                                                 #
+    #=====================================================================#
     #---------------------------------------------------------------------#
-    # Loading data                                                        #
+    # Velocities                                                          #
     #---------------------------------------------------------------------#
-    u1          = np.load(data_path + 'velocity1.npy')
-    u2          = np.load(data_path + 'velocity2.npy')
-    u3          = np.load(data_path + 'velocity3.npy')
-    #---------------------------------------------------------------------#
+    ux          = np.zeros((N+1, N+1, N+1))
+    uy          = np.zeros((N+1, N+1, N+1))
+    uz          = np.zeros((N+1, N+1, N+1))
+    #=====================================================================#
     # Defining velocities and strain rates                                #
+    #=====================================================================#
+    print_count = 0
+    for k in range(0, N+1):
+        for j in range(0, N+1):
+            for i in range(0, N+1):
+                #---------------------------------------------------------#
+                # Velocities                                              #
+                #---------------------------------------------------------#
+                ux[i,j,k]   = np.cos(pi*x[i])
+                uy[i,j,k]   = np.sin(2.0*pi*y[j])
+                uz[i,j,k]   = np.sin(pi*z[k])
+        #-----------------------------------------------------------------#
+        # print statement                                                 #
+        #-----------------------------------------------------------------#
+        if print_count > 5:
+            print(k)
+            print_count = 0
+        print_count += 1
+    #=====================================================================#
+    # Calculating the solution                                            #
+    #=====================================================================#
     #---------------------------------------------------------------------#
-    u1          = u1[:,:,:,100]
-    u2          = u2[:,:,:,100]
-    u3          = u3[:,:,:,100]
-    (s11, s12, s13, s22, s23, s33)  = strain_rates(u1, u2, u3, dx)
+    # Approximation solution                                              #
     #---------------------------------------------------------------------#
-    # Calculating the B term                                              #
+    B_approx    = b_term(ux, uy, uz, dx, nu)
+    del ux
+    del uy
+    del uz
+    del dx
     #---------------------------------------------------------------------#
-    b           = b_term(u1, u2, u3,  dx, nu)
+    # Exact solution                                                      #
     #---------------------------------------------------------------------#
-    # Plotting                                                            #
+    term1       = np.zeros((N+1, N+1, N+1))
+    term5       = np.zeros((N+1, N+1, N+1))
+    term9       = np.zeros((N+1, N+1, N+1))
+    for k in range(0, N+1):
+        for j in range(0, N+1):
+            for i in range(0, N+1):
+                #---------------------------------------------------------#
+                # Exact solution terms                                    #
+                #---------------------------------------------------------#
+                term1[i,j,k]    = -pi**2.0*(np.cos(pi*x[i]))**2.0 + \
+                                    pi**2.0*(np.sin(pi*x[i]))**2.0
+                term5[i,j,k]    = -4.0*pi**2.0*(np.sin(2.0*pi*y[j]))**2.0 +\
+                                    4.0*pi**2.0*(np.cos(2.0*pi*y[j]))**2.0
+                term9[i,j,k]    = -pi**2.0*(np.sin(pi*z[k]))**2.0 +\
+                                    pi**2.0*(np.cos(pi*z[k]))**2.0
+        #-----------------------------------------------------------------#
+        # print statement                                                 #
+        #-----------------------------------------------------------------#
+        if print_count > 5:
+            print(k)
+            print_count = 0
+        print_count += 1
+    B_exact     = 2.0*nu*(term1 + term5 + term9)
     #---------------------------------------------------------------------#
-    cnt         = plt.contourf(X1, X2, b[:,:,32], 500, cmap="jet")
+    # Calculating the error                                               #
+    #---------------------------------------------------------------------#
+    error   = abs(B_exact - B_approx)
+    #=====================================================================#
+    # Plotting the results                                                #
+    #=====================================================================#
+    [X1, X2]    = np.meshgrid(x, y)
+    #---------------------------------------------------------------------#
+    # Exact solution                                                      #
+    #---------------------------------------------------------------------#
+    cnt = plt.contourf(X1, X2, B_exact[:,:,int(N/2)], 500, cmap="jet")
     for c in cnt.collections:
         c.set_edgecolors("face")
+    plt.xlabel("$-0.5 \leq x_{1} \leq 0.5$")
+    plt.ylabel("$-0.5 \leq x_{2} \leq 0.5$")
     plt.colorbar()
-    plt.show()
+    plt.savefig(media_path + "B-term-exact.pdf")
+    plt.clf()
+    #---------------------------------------------------------------------#
+    # Approximation solution                                              #
+    #---------------------------------------------------------------------#
+    cnt = plt.contourf(X1, X2, B_approx[:,:,int(N/2)], 500, cmap="jet")
+    for c in cnt.collections:
+        c.set_edgecolors("face")
+    plt.xlabel("$-0.5 \leq x_{1} \leq 0.5$")
+    plt.ylabel("$-0.5 \leq x_{2} \leq 0.5$")
+    plt.colorbar()
+    plt.savefig(media_path + "B-term-approx.pdf")
+    plt.clf()
+    #---------------------------------------------------------------------#
+    # Error solution                                                      #
+    #---------------------------------------------------------------------#
+    cnt = plt.contourf(X1, X2, error[:,:,int(N/2)], 500, cmap="jet")
+    for c in cnt.collections:
+        c.set_edgecolors("face")
+    plt.xlabel("$-0.5 \leq x_{1} \leq 0.5$")
+    plt.ylabel("$-0.5 \leq x_{2} \leq 0.5$")
+    plt.colorbar()
+    plt.savefig(media_path + "B-term-error.pdf")
+    plt.clf()
 
     print("**** Successful Run ****")
     sys.exit(0)
