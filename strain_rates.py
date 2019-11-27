@@ -17,7 +17,6 @@ import os
 import sys
 from subprocess import call
 import numpy as np
-import scipy.io as sci
 import matplotlib.pyplot as plt
 #=========================================================================#
 # User defined functions                                                  #
@@ -35,60 +34,144 @@ def strain_rates(
     #---------------------------------------------------------------------#
     # Strain rates                                                        #
     #---------------------------------------------------------------------#
-    s11     =  np.gradient(u1, h, edge_order=2)[0]              # s11
-    s12     = 0.5*(np.gradient(u1, h, edge_order=2)[1] +\
-                    np.gradient(u2, h, edge_order=2)[0])        # s12
-    s13     = 0.5*(np.gradient(u1, h, edge_order=2)[2] +\
-                    np.gradient(u3, h, edge_order=2)[0])        # s13
-    s22     =  np.gradient(u2, h, edge_order=2)[1]              # s22
-    s23     = 0.5*(np.gradient(u2, h, edge_order=2)[2] +\
-                    np.gradient(u3, h, edge_order=2)[1])        # s23
-    s33     = (np.gradient(u3, h, edge_order=2)[2])             # s33
+    S11     =  np.gradient(u1, h, edge_order=2)[0]              # S11
+    S12     = 0.5*(np.gradient(u1, h, edge_order=2)[1] +\
+                    np.gradient(u2, h, edge_order=2)[0])        # S12
+    S13     = 0.5*(np.gradient(u1, h, edge_order=2)[2] +\
+                    np.gradient(u3, h, edge_order=2)[0])        # S13
+    S22     =  np.gradient(u2, h, edge_order=2)[1]              # S22
+    S23     = 0.5*(np.gradient(u2, h, edge_order=2)[2] +\
+                    np.gradient(u3, h, edge_order=2)[1])        # S23
+    S33     = (np.gradient(u3, h, edge_order=2)[2])             # S33
 
-    return s11, s12, s13, s22, s23, s33
+    return S11, S12, S13, S22, S23, S33
 #=========================================================================#
 # Main                                                                    #
 #=========================================================================#
 if __name__ == "__main__":
-    #---------------------------------------------------------------------#
+    #=====================================================================#
     # Main preamble                                                       #
-    #---------------------------------------------------------------------#
+    #=====================================================================#
     call(["clear"])
     sep         = os.sep
     pwd         = os.getcwd()
     data_path   = pwd + "%cdata%c"          %(sep, sep)
     #---------------------------------------------------------------------#
-    # Loading data                                                        #
-    #---------------------------------------------------------------------#
-    vel         = sci.loadmat(data_path + 'velocities-20.mat')
-    vel1        = vel['u1']
-    vel2        = vel['u2']
-    vel3        = vel['u3']
-    print("**** Loaded data ****")
-    #---------------------------------------------------------------------#
     # Defining domain variables                                           #
     #---------------------------------------------------------------------#
-    pi          = np.pi
-    dx          = (2.0*pi)/64.0
-    x1          = np.linspace(0, 2.0*pi, 64)
-    x2          = np.linspace(0, 2.0*pi, 64)
-    [X1, X2]    = np.meshgrid(x1, x2)
+    N           = 256
+    x0          = 0.0
+    xf          = 1.0
+    x           = np.linspace(x0, xf, N+1)
+    y           = np.linspace(x0, xf, N+1)
+    z           = np.linspace(x0, xf, N+1)
+    dx          = (xf-x0)/N
+    [X1, X2]    = np.meshgrid(x,y)
+    #=====================================================================#
+    # Approximate solution                                                #
+    #=====================================================================#
     #---------------------------------------------------------------------#
-    # Calculating the strain rates                                        #
+    # Preallocating velocities                                            #
     #---------------------------------------------------------------------#
-    (S11, S12, S13, S22, S23, S33) = strain_rates(vel1, vel2, vel3, dx)
+    ux          = np.zeros((N+1, N+1, N+1))
+    uy          = np.zeros((N+1, N+1, N+1))
+    uz          = np.zeros((N+1, N+1, N+1))
     #---------------------------------------------------------------------#
-    # Making contours                                                     #
+    # Calculating the velocities                                          #
     #---------------------------------------------------------------------#
-    cnt = plt.contourf(X1, X2, S23[:,:,44], 500, cmap="jet")
+    print_count = 0
+    for k in range(0, N+1):
+        for j in range(0, N+1):
+            for i in range(0, N+1):
+                ux[i,j,k]   = x[i]*y[j]*z[k]
+                uy[i,j,k]   = x[i] + 3.0*y[j] + z[k]
+                uz[i,j,k]   = x[i]*y[j]*z[k]**2.0
+        #-----------------------------------------------------------------#
+        # Print count                                                     #
+        #-----------------------------------------------------------------#
+        if print_count > 5:
+            print(k)
+            print_count = 0
+        print_count += 1
+    #---------------------------------------------------------------------#
+    # Calculating the approximate solution                                #
+    #---------------------------------------------------------------------#
+    approx  = strain_rates(ux, uy, uz, dx)[3]
+    #---------------------------------------------------------------------#
+    # Clearing variables                                                  #
+    #---------------------------------------------------------------------#
+    del ux
+    del uy
+    del uz
+    #=====================================================================#
+    # Exact solution                                                      #
+    #=====================================================================#
+    #---------------------------------------------------------------------#
+    # Preallocating strain rates                                          #
+    #---------------------------------------------------------------------#
+    s11     = np.zeros((N+1, N+1, N+1))
+    s12     = np.zeros((N+1, N+1, N+1))
+    s13     = np.zeros((N+1, N+1, N+1))
+    s22     = np.zeros((N+1, N+1, N+1))
+    s23     = np.zeros((N+1, N+1, N+1))
+    s33     = np.zeros((N+1, N+1, N+1))
+    #---------------------------------------------------------------------#
+    # Calculating the exact strain rates                                  #
+    #---------------------------------------------------------------------#
+    print_count = 0
+    for k in range(0, N+1):
+        for j in range(0, N+1):
+            for i in range(0, N+1):
+                s11[i,j,k]  = y[j]*z[k]
+                s12[i,j,k]  = 0.5*(x[i]*z[k] + 1.0)
+                s13[i,j,k]  = 0.5*(x[i]*y[j] + y[j]*z[k]**2.0)
+                s22[i,j,k]  = 3.0
+                s23[i,j,k]  = 0.5*(x[i]*z[k]**2.0 + 1.0)
+                s33[i,j,k]  = 2.0*x[i]*y[j]*z[k]
+        #-----------------------------------------------------------------#
+        # Print count                                                     #
+        #-----------------------------------------------------------------#
+        if print_count > 5:
+            print(k)
+            print_count = 0
+        print_count += 1
+    #=====================================================================#
+    # Error                                                               #
+    #=====================================================================#
+    error   = abs(approx - s22)
+    #=====================================================================#
+    # Plotting solutions                                                  #
+    #=====================================================================#
+    #---------------------------------------------------------------------#
+    # Exact solution                                                      #
+    #---------------------------------------------------------------------#
+    cnt = plt.contourf(X1, X2, s22[:,:,int(N/2)], 500, cmap="jet")
     for c in cnt.collections:
         c.set_edgecolors("face")
-    plt.xlabel(r"$0 \leq x_{1} \leq 2\pi$")
-    plt.ylabel(r"$0 \leq x_{2} \leq 2\pi$")
+    plt.xlabel("$%.1f \leq x_{1} \leq %.1f$"    %(x0, xf))
+    plt.ylabel("$%.1f \leq x_{2} \leq %.1f$"    %(x0, xf))
     plt.colorbar()
     plt.show()
-    for i in range(0, 5):
-        print(S23[i,12,45])
+    #---------------------------------------------------------------------#
+    # Exact solution                                                      #
+    #---------------------------------------------------------------------#
+    cnt = plt.contourf(X1, X2, approx[:,:,int(N/2)], 500, cmap="jet")
+    for c in cnt.collections:
+        c.set_edgecolors("face")
+    plt.xlabel("$%.1f \leq x_{1} \leq %.1f$"    %(x0, xf))
+    plt.ylabel("$%.1f \leq x_{2} \leq %.1f$"    %(x0, xf))
+    plt.colorbar()
+    plt.show()
+    #---------------------------------------------------------------------#
+    # Error                                                               #
+    #---------------------------------------------------------------------#
+    cnt = plt.contourf(X1, X2, error[:,:,int(N/2)], 500, cmap="jet")
+    for c in cnt.collections:
+        c.set_edgecolors("face")
+    plt.xlabel("$%.1f \leq x_{1} \leq %.1f$"    %(x0, xf))
+    plt.ylabel("$%.1f \leq x_{2} \leq %.1f$"    %(x0, xf))
+    plt.colorbar()
+    plt.show()
 
     print("**** Successful Run ****")
     sys.exit(0)
