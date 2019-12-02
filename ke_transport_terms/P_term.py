@@ -26,6 +26,39 @@ from strain_rates   import strain_rates
 # User defined functions                                                  #
 #=========================================================================#
 #-------------------------------------------------------------------------#
+# Terms in the P term                                                     #
+#-------------------------------------------------------------------------#
+def P_terms(
+        U1,                     # velocity-1 component
+        U2,                     # velocity-2 component
+        U3,                     # velocity-3 component
+        Tau11,                  # tau-11 component
+        Tau12,                  # tau-12 component
+        Tau13,                  # tau-13 component
+        Tau22,                  # tau-22 component
+        Tau23,                  # tau-23 component
+        Tau33,                  # tau-33 component
+        h):                     # spatial step size
+
+
+    """ Calculating the terms in the P term of the kinetic energy transport
+    equation """
+    #---------------------------------------------------------------------#
+    # Calculating the strain rates                                        #
+    #---------------------------------------------------------------------#
+    (S11, S12, S13, S22, S23, S33)  = strain_rates(U1, U2, U3, h)
+    #---------------------------------------------------------------------#
+    # Calculating the terms in the P term                                 #
+    #---------------------------------------------------------------------#
+    Term1   = np.multiply(Tau11, S11)
+    Term2   = 2.0*np.multiply(Tau12, S12)
+    Term3   = 2.0*np.multiply(Tau13, S13)
+    Term4   = np.multiply(Tau22, S22)
+    Term5   = 2.0*np.multiply(Tau23, S23)
+    Term6   = np.multiply(Tau33, S33)
+
+    return Term1, Term2, Term3, Term4, Term5, Term6
+#-------------------------------------------------------------------------#
 # P term                                                                  #
 #-------------------------------------------------------------------------#
 def p_term(
