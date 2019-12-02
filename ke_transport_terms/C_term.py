@@ -22,6 +22,38 @@ import matplotlib.pyplot as plt
 # User defined functions                                                  #
 #=========================================================================#
 #-------------------------------------------------------------------------#
+# Terms in the C term                                                     #
+#-------------------------------------------------------------------------#
+def c_terms(
+        U1,                 # velocity-1 component
+        U2,                 # velocity-2 component
+        U3,                 # velocity-3 component
+        Tau11,              # tau-11 component
+        Tau12,              # tau-12 component
+        Tau13,              # tau-13 component
+        Tau22,              # tau-22 component
+        Tau23,              # tau-23 component
+        Tau33,              # tau-33 component
+        h):                 # spatial step size
+
+    """ Calculating the terms in the C term of the kinetic energy transport
+    equation """
+
+    #---------------------------------------------------------------------#
+    # Calculating the terms in the C term                                 #
+    #---------------------------------------------------------------------#
+    Term1   = -1.0*np.gradient(Tau11*U1, h, edge_order=2)[0]
+    Term2   = -1.0*np.gradient(Tau12*U1, h, edge_order=2)[1]
+    Term3   = -1.0*np.gradient(Tau13*U1, h, edge_order=2)[2]
+    Term4   = -1.0*np.gradient(Tau12*U2, h, edge_order=2)[0]
+    Term5   = -1.0*np.gradient(Tau22*U2, h, edge_order=2)[1]
+    Term6   = -1.0*np.gradient(Tau23*U2, h, edge_order=2)[2]
+    Term7   = -1.0*np.gradient(Tau13*U3, h, edge_order=2)[0]
+    Term8   = -1.0*np.gradient(Tau23*U3, h, edge_order=2)[1]
+    Term9   = -1.0*np.gradient(Tau33*U3, h, edge_order=2)[2]
+
+    return Term1, Term2, Term3, Term4, Term5, Term6, Term7, Term8, Term9
+#-------------------------------------------------------------------------#
 # C term                                                                  #
 #-------------------------------------------------------------------------#
 def c_term(
