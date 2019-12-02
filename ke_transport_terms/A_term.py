@@ -21,6 +21,30 @@ import matplotlib.pyplot as plt
 #=========================================================================#
 # User defined functions                                                  #
 #=========================================================================#
+#-------------------------------------------------------------------------#
+# Terms in the A term                                                     #
+#-------------------------------------------------------------------------#
+def a_terms(
+        U1,                 # velocity 1 field
+        U2,                 # velocity 2 field
+        U3,                 # velocity 3 field
+        P,                  # pressure field
+        h,                  # spatial step size
+        rho):               # density
+
+    """ Calculating the terms in the A term of the kinetic energy transport
+    equation """
+    #---------------------------------------------------------------------#
+    # Calculating the 3 different terms                                   #
+    #---------------------------------------------------------------------#
+    term1       = (1.0/rho)*np.gradient(P*U1, h, edge_order=2)[0]
+    term2       = (1.0/rho)*np.gradient(P*U2, h, edge_order=2)[1]
+    term3       = (1.0/rho)*np.gradient(P*U3, h, edge_order=2)[2]
+
+    return term1, term2, term3
+#-------------------------------------------------------------------------#
+# A term                                                                  #
+#-------------------------------------------------------------------------#
 def a_term(
         U1,                 # velocity-1 field
         U2,                 # velocity-2 field
