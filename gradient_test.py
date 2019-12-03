@@ -13,6 +13,7 @@ Author:
 #-------------------------------------------------------------------------#
 # Python packages                                                         #
 #-------------------------------------------------------------------------#
+import os
 import sys
 from subprocess import call
 import numpy as np
@@ -25,68 +26,58 @@ if __name__ == "__main__":
     # Main preamble                                                       #
     #---------------------------------------------------------------------#
     call(["clear"])
+    sep             = os.sep
+    pwd             = os.getcwd()
+    media_path      = pwd + "%cke_transport_terms%cmedia%c" %(sep, sep, sep)
     #---------------------------------------------------------------------#
     # Domain variables                                                    #
     #---------------------------------------------------------------------#
     pi          = np.pi
-    N           = 1000
+    xf          = 2.0*pi
     xs          = 0.0
-    xf          = 0.5*pi
-    dx          = (xf-xs)/N
-    x           = np.linspace(xs, xf, N+1)
-    y           = np.linspace(xs, xf, N+1)
-    [X1, X2]    = np.meshgrid(x, y)
-    f           = np.zeros((N+1, N+1))
-    dfE         = np.zeros((N+1, N+1))
+    k           = 1.0
+    N           = [2, 4, 8, 16, 32, 64, 128, 256, 512, 1048, 2096, 4192,\
+                    8384, 16768]
+    error2      = np.zeros(len(N))
+    error1      = np.zeros(len(N))
+    dx          = np.zeros(len(N))
     #---------------------------------------------------------------------#
-    # Defining f and df/dx                                                #
+    # Spatial step loop                                                   #
     #---------------------------------------------------------------------#
-    for j, yc in enumerate(y):
-        for i, xc in enumerate(x):
-            f[i,j]      = np.sin(pi*xc)*np.cos(pi*yc)
-            dfE[i,j]    = -pi*np.sin(pi*xc)*np.sin(pi*yc)
-    dfA = np.gradient(f, dx, edge_order=2)[1]
+    for i, n in enumerate(N):
+        print(n)
+        dx[i]       = (xf-xs)/(n)
+        x           = np.linspace(xs, xf, n+1)
+        f           = np.cos(k*pi*x)
+        exact       = -k*pi*np.sin(k*pi*x)
+        approx2     = np.gradient(f, dx[i], edge_order=2)
+        approx1     = np.gradient(f, dx[i], edge_order=1)
+        error2[i]   = np.amax(abs(exact - approx2))
+        error1[i]   = np.amax(abs(exact - approx1))
     #---------------------------------------------------------------------#
-    # Plotting                                                            #
+    # Plotting solution                                                   #
     #---------------------------------------------------------------------#
-    cnt = plt.contourf(X1, X2, f, 500, cmap="jet")
-    for c in cnt.collections:
-        c.set_edgecolors("face")
-    plt.colorbar()
-    plt.show()
-    #---------------------------------------------------------------------#
-    # Plotting exact and approximate solutions                            #
-    #---------------------------------------------------------------------#
-    plt.subplot(2,1,1)
-    cnt = plt.contourf(X1, X2, dfE, 500, cmap="jet")
-    for c in cnt.collections:
-        c.set_edgecolors("face")
-    plt.colorbar()
-    plt.title("Exact solution")
-    plt.xlabel("$0 \leq x \leq \pi$") 
-    plt.ylabel("$0 \leq y \leq \pi$") 
-    plt.subplot(2,1,2)
-    cnt = plt.contourf(X1, X2, dfA, 500, cmap="jet")
-    for c in cnt.collections:
-        c.set_edgecolors("face")
-    plt.colorbar()
-    plt.title("Approximate solution")
-    plt.xlabel("$0 \leq x \leq \pi$") 
-    plt.ylabel("$0 \leq y \leq \pi$") 
-    plt.show()
+    plt.plot(x, exact, 'r', lw=1.5, label="Exact")
+    plt.plot(x, approx2, 'bo', markevery=100, label="Approximate")
+    plt.xlabel("$0 \leq x \leq 2.0\pi$")
+    plt.ylabel("$\partial f / \partial x$")
+    plt.grid(True)
+    plt.legend(loc=0)
+    plt.ylim([-4.5, 4.5])
+    plt.savefig(media_path + "gradient-study-1.pdf")
+    plt.clf()
     #---------------------------------------------------------------------#
     # Plotting error                                                      #
     #---------------------------------------------------------------------#
-    err = abs(dfA - dfE)
-    cnt = plt.contourf(X1, X2, err, 500, cmap="jet")
-    for c in cnt.collections:
-        c.set_edgecolors("face")
-    plt.colorbar()
-    plt.show()
-    #---------------------------------------------------------------------#
-    # Printing maximum error                                              #
-    #---------------------------------------------------------------------#
-    print("maximum error = %.8e"            %(np.amax(err)))
+    plt.loglog(dx, error2, 'r', lw=1.5, label="2nd order approximation")
+    plt.loglog(dx, error1, 'b', lw=1.5, label="1st order approximation")
+    plt.loglog(dx, 0.25*dx**2.0 , 'k', lw=1.5, label="$\sim c_{1} x^{2}$")
+    plt.xlabel("Step size")
+    plt.ylabel("Error")
+    plt.grid(True)
+    plt.legend(loc=0)
+    plt.savefig(media_path + "gradient-study-2.pdf")
+    plt.clf()
 
-    print("**** Successful Run ****")
+    print("**** Successful Run")
     sys.exit(0)
