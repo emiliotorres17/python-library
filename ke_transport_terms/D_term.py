@@ -70,8 +70,8 @@ if __name__ == "__main__":
     # Defining domain variables                                           #
     #---------------------------------------------------------------------#
     N           = 128
-    x0          = 0.0
-    xf          = 1.0
+    x0          = 1.0
+    xf          = 2.0
     x           = np.linspace(x0, xf, N+1)
     y           = np.linspace(x0, xf, N+1)
     z           = np.linspace(x0, xf, N+1)
@@ -201,6 +201,7 @@ if __name__ == "__main__":
         c.set_edgecolors("face")
     plt.xlabel("$0 \leq x_{1} \leq 1$")
     plt.ylabel("$0 \leq x_{2} \leq 1$")
+    plt.clim([0.0, 1])
     plt.colorbar()
     plt.savefig(media_path + "D-term-error.pdf")
     plt.clf()
