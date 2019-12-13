@@ -1,0 +1,267 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+A_approx	ke_transport_terms/A_term.py	/^    A_approx    = a_term(ux, uy, uz, p, 1.0, dx)$/;"	v
+A_exact	ke_transport_terms/A_term.py	/^    A_exact     = -1.0*(p*duxdx + ux*dpdx + p*duydy + uy*dpdy + p*duzdz + uz*dpdz)$/;"	v
+B_approx	ke_transport_terms/B_term.py	/^    B_approx    = b_term(ux, uy, uz, dx, nu)$/;"	v
+B_exact	ke_transport_terms/B_term.py	/^    B_exact     = 2.0*nu*(term1 + term5 + term9)$/;"	v
+C_approx	ke_transport_terms/C_term.py	/^                            tau33, dx)$/;"	v
+C_exact	ke_transport_terms/C_term.py	/^                        term7 + term8 + term9)$/;"	v
+D_approx	ke_transport_terms/D_term.py	/^    D_approx    = d_term(ux, uy, uz, nu, dx)$/;"	v
+D_exact	ke_transport_terms/D_term.py	/^                            2.0*term5 + term6)$/;"	v
+N	gradient_test.py	/^    N           = 1000$/;"	v
+N	ke_transport_terms/A_term.py	/^    N           = 400$/;"	v
+N	ke_transport_terms/B_term.py	/^    N           = 400$/;"	v
+N	ke_transport_terms/C_term.py	/^    N           = 400$/;"	v
+N	ke_transport_terms/D_term.py	/^    N           = 128$/;"	v
+N	ke_transport_terms/P_term.py	/^    N           = 350$/;"	v
+N	strain_rates.py	/^    N           = 256$/;"	v
+P_approx	ke_transport_terms/P_term.py	/^                            tau33, dx)$/;"	v
+P_exact	ke_transport_terms/P_term.py	/^    P_exact = term1 + 2.0*term2 + 2.0*term3 + term4 + 2.0*term5 + term6$/;"	v
+P_terms	ke_transport_terms/P_term.py	/^def P_terms($/;"	f
+a	normalize.py	/^    a           = np.array([[1,2,3], [2,3,5,], [4,3,5]])$/;"	v
+a_term	ke_transport_terms/A_term.py	/^def a_term($/;"	f
+a_terms	ke_transport_terms/A_term.py	/^def a_terms($/;"	f
+anorm	normalize.py	/^    anorm       = norm_min_max(a)$/;"	v
+approx	strain_rates.py	/^    approx  = strain_rates(ux, uy, uz, dx)[3]$/;"	v
+b_term	ke_transport_terms/B_term.py	/^def b_term($/;"	f
+c_term	ke_transport_terms/C_term.py	/^def c_term($/;"	f
+c_terms	ke_transport_terms/C_term.py	/^def c_terms($/;"	f
+calc	cube_locator.py	/^        calc        = cube_locator(xcube[i])$/;"	v
+calc	cube_locator.py	/^        calc        = cube_locator(xneg[i])$/;"	v
+calc	cube_locator.py	/^        calc        = cube_locator(xpos[i])$/;"	v
+calc	distance.py	/^        calc    = distance(x1[i], y1[i], z1[i], x2[i], y2[i], z2[i])$/;"	v
+cnt	gradient_test.py	/^    cnt = plt.contourf(X1, X2, dfA, 500, cmap="jet")$/;"	v
+cnt	gradient_test.py	/^    cnt = plt.contourf(X1, X2, dfE, 500, cmap="jet")$/;"	v
+cnt	gradient_test.py	/^    cnt = plt.contourf(X1, X2, err, 500, cmap="jet")$/;"	v
+cnt	gradient_test.py	/^    cnt = plt.contourf(X1, X2, f, 500, cmap="jet")$/;"	v
+cnt	ke_transport_terms/A_term.py	/^    cnt = plt.contourf(X1, X2, A_approx[:,:,31], 500, cmap="jet")$/;"	v
+cnt	ke_transport_terms/A_term.py	/^    cnt = plt.contourf(X1, X2, A_exact[:,:,31], 500, cmap="jet")$/;"	v
+cnt	ke_transport_terms/A_term.py	/^    cnt = plt.contourf(X1, X2, error[:,:,31], 500, cmap="jet")$/;"	v
+cnt	ke_transport_terms/B_term.py	/^    cnt = plt.contourf(X1, X2, B_approx[:,:,int(N\/2)], 500, cmap="jet")$/;"	v
+cnt	ke_transport_terms/B_term.py	/^    cnt = plt.contourf(X1, X2, B_exact[:,:,int(N\/2)], 500, cmap="jet")$/;"	v
+cnt	ke_transport_terms/B_term.py	/^    cnt = plt.contourf(X1, X2, error[:,:,int(N\/2)], 500, cmap="jet")$/;"	v
+cnt	ke_transport_terms/C_term.py	/^    cnt = plt.contourf(X1, X2, C_approx[:,:,int(N\/2)], 500, cmap="jet")$/;"	v
+cnt	ke_transport_terms/C_term.py	/^    cnt = plt.contourf(X1, X2, C_exact[:,:,int(N\/2)], 500, cmap="jet")$/;"	v
+cnt	ke_transport_terms/C_term.py	/^    cnt = plt.contourf(X1, X2, error[:,:,int(N\/2)], 500, cmap="jet")$/;"	v
+cnt	ke_transport_terms/D_term.py	/^    cnt = plt.contourf(X1, X2, D_approx[:,:,int(N\/2)], 500, cmap="jet")$/;"	v
+cnt	ke_transport_terms/D_term.py	/^    cnt = plt.contourf(X1, X2, D_exact[:,:,int(N\/2)], 500, cmap="jet")$/;"	v
+cnt	ke_transport_terms/D_term.py	/^    cnt = plt.contourf(X1, X2, error[:,:,int(N\/2)], 500, cmap="jet")$/;"	v
+cnt	ke_transport_terms/P_term.py	/^    cnt = plt.contourf(X1, X2, P_approx[:,:,int(N\/2)], 500, cmap="jet")$/;"	v
+cnt	ke_transport_terms/P_term.py	/^    cnt = plt.contourf(X1, X2, P_exact[:,:,int(N\/2)], 500, cmap="jet")$/;"	v
+cnt	ke_transport_terms/P_term.py	/^    cnt = plt.contourf(X1, X2, error[:,:,int(N\/2)], 500, cmap="jet")$/;"	v
+cnt	strain_rates.py	/^    cnt = plt.contourf(X1, X2, approx[:,:,int(N\/2)], 500, cmap="jet")$/;"	v
+cnt	strain_rates.py	/^    cnt = plt.contourf(X1, X2, error[:,:,int(N\/2)], 500, cmap="jet")$/;"	v
+cnt	strain_rates.py	/^    cnt = plt.contourf(X1, X2, s22[:,:,int(N\/2)], 500, cmap="jet")$/;"	v
+cube_locator	cube_locator.py	/^def cube_locator($/;"	f
+d_term	ke_transport_terms/D_term.py	/^def d_term($/;"	f
+data_path	strain_rates.py	/^    data_path   = pwd + "%cdata%c"          %(sep, sep)$/;"	v
+dfA	gradient_test.py	/^    dfA = np.gradient(f, dx, edge_order=2)[1]$/;"	v
+dfE	gradient_test.py	/^    dfE         = np.zeros((N+1, N+1))$/;"	v
+distance	distance.py	/^def distance($/;"	f
+dpdx	ke_transport_terms/A_term.py	/^    dpdx        = np.zeros((N+1, N+1, N+1))$/;"	v
+dpdy	ke_transport_terms/A_term.py	/^    dpdy        = np.zeros((N+1, N+1, N+1))$/;"	v
+dpdz	ke_transport_terms/A_term.py	/^    dpdz        = np.zeros((N+1, N+1, N+1))$/;"	v
+duxdx	ke_transport_terms/A_term.py	/^    duxdx       = np.zeros((N+1, N+1, N+1))$/;"	v
+duydy	ke_transport_terms/A_term.py	/^    duydy       = np.zeros((N+1, N+1, N+1))$/;"	v
+duzdz	ke_transport_terms/A_term.py	/^    duzdz       = np.zeros((N+1, N+1, N+1))$/;"	v
+dx	gradient_test.py	/^    dx          = (xf-xs)\/N$/;"	v
+dx	ke_transport_terms/A_term.py	/^    dx          = (xf-x0)\/N$/;"	v
+dx	ke_transport_terms/B_term.py	/^    dx          = (xf - x0)\/N$/;"	v
+dx	ke_transport_terms/C_term.py	/^    dx          = (xf-x0)\/N$/;"	v
+dx	ke_transport_terms/D_term.py	/^    dx          = (xf - x0)\/N$/;"	v
+dx	ke_transport_terms/P_term.py	/^    dx          = (xf - x0)\/N$/;"	v
+dx	strain_rates.py	/^    dx          = (xf-x0)\/N$/;"	v
+err	cube_locator.py	/^        err         = abs((calc - sol)\/sol)$/;"	v
+err	distance.py	/^        err     = abs((calc - sol)\/sol)$/;"	v
+err	gradient_test.py	/^    err = abs(dfA - dfE)$/;"	v
+error	ke_transport_terms/A_term.py	/^    error       = abs(A_approx - A_exact)$/;"	v
+error	ke_transport_terms/B_term.py	/^    error   = abs(B_exact - B_approx)$/;"	v
+error	ke_transport_terms/C_term.py	/^    error   = abs(C_exact - C_approx)$/;"	v
+error	ke_transport_terms/D_term.py	/^    error   = abs(D_exact - D_approx)$/;"	v
+error	ke_transport_terms/P_term.py	/^    error   = abs(P_exact - P_approx)$/;"	v
+error	strain_rates.py	/^    error   = abs(approx - s22)$/;"	v
+f	gradient_test.py	/^    f           = np.zeros((N+1, N+1))$/;"	v
+find_max2D	min_max.py	/^def find_max2D($/;"	f
+find_max3D	min_max.py	/^def find_max3D($/;"	f
+find_max4D	min_max.py	/^def find_max4D($/;"	f
+find_min2D	min_max.py	/^def find_min2D($/;"	f
+find_min3D	min_max.py	/^def find_min3D($/;"	f
+find_time	find_time.py	/^def find_time($/;"	f
+index	find_time.py	/^    index   = find_time(0.6, time)$/;"	v
+index	find_time.py	/^    index   = find_time(0.8, time)$/;"	v
+index	find_time.py	/^    index   = find_time(200.0, time)$/;"	v
+ke_average	ke_calcs.py	/^def ke_average($/;"	f
+ke_field	ke_calcs.py	/^def ke_field($/;"	f
+max_err	distance.py	/^    max_err     = -145.0$/;"	v
+media_path	ke_transport_terms/A_term.py	/^    media_path      = "media%c"                     %(sep)$/;"	v
+media_path	ke_transport_terms/B_term.py	/^    media_path  = pwd + "%cmedia%c"         %(sep, sep)$/;"	v
+media_path	ke_transport_terms/C_term.py	/^    media_path  = pwd + "%cmedia%c"         %(sep, sep)$/;"	v
+media_path	ke_transport_terms/D_term.py	/^    media_path  = pwd + "%cmedia%c"         %(sep, sep)$/;"	v
+media_path	ke_transport_terms/P_term.py	/^    media_path  = pwd + "%cmedia%c"              %(sep, sep)$/;"	v
+norm_min_max	normalize.py	/^def norm_min_max($/;"	f
+npy_pressure_extract_16	npy_extract.py	/^def npy_pressure_extract_16($/;"	f
+npy_tau_extract_16	npy_extract.py	/^def npy_tau_extract_16($/;"	f
+npy_time	npy_extract.py	/^def npy_time($/;"	f
+npy_total_extract	npy_extract.py	/^def npy_total_extract($/;"	f
+npy_velocity_proc_1	npy_extract.py	/^def npy_velocity_proc_1($/;"	f
+npy_velocity_proc_16	npy_extract.py	/^def npy_velocity_proc_16($/;"	f
+nu	ke_transport_terms/B_term.py	/^    nu          = 1.0$/;"	v
+nu	ke_transport_terms/D_term.py	/^    nu          = 1.0$/;"	v
+p	ke_transport_terms/A_term.py	/^    p           = np.zeros((N+1, N+1, N+1))$/;"	v
+p_term	ke_transport_terms/P_term.py	/^def p_term($/;"	f
+pi	gradient_test.py	/^    pi          = np.pi$/;"	v
+pi	ke_transport_terms/A_term.py	/^    pi          = np.pi$/;"	v
+pi	ke_transport_terms/B_term.py	/^    pi          = np.pi$/;"	v
+pi	ke_transport_terms/P_term.py	/^    pi          = np.pi$/;"	v
+print_count	ke_transport_terms/A_term.py	/^            print_count = 0$/;"	v
+print_count	ke_transport_terms/A_term.py	/^    print_count = 0$/;"	v
+print_count	ke_transport_terms/B_term.py	/^            print_count = 0$/;"	v
+print_count	ke_transport_terms/B_term.py	/^    print_count = 0$/;"	v
+print_count	ke_transport_terms/C_term.py	/^            print_count = 0$/;"	v
+print_count	ke_transport_terms/C_term.py	/^    print_count = 0$/;"	v
+print_count	ke_transport_terms/D_term.py	/^            print_count = 0$/;"	v
+print_count	ke_transport_terms/D_term.py	/^    print_count = 0$/;"	v
+print_count	ke_transport_terms/P_term.py	/^            print_count = 0$/;"	v
+print_count	ke_transport_terms/P_term.py	/^    print_count = 0$/;"	v
+print_count	strain_rates.py	/^            print_count = 0$/;"	v
+print_count	strain_rates.py	/^    print_count = 0$/;"	v
+proc_string	npy_extract.py	/^def proc_string($/;"	f
+pwd	ke_transport_terms/B_term.py	/^    pwd         = os.getcwd()$/;"	v
+pwd	ke_transport_terms/C_term.py	/^    pwd         = os.getcwd()$/;"	v
+pwd	ke_transport_terms/D_term.py	/^    pwd         = os.getcwd()$/;"	v
+pwd	ke_transport_terms/P_term.py	/^    pwd         = os.getcwd()$/;"	v
+pwd	strain_rates.py	/^    pwd         = os.getcwd()$/;"	v
+results	cube_locator.py	/^                                    %(i + 1, err, calc, sol)$/;"	v
+results	distance.py	/^                                    %(i + 1, err, calc, sol)$/;"	v
+s11	strain_rates.py	/^    s11     = np.zeros((N+1, N+1, N+1))$/;"	v
+s12	strain_rates.py	/^    s12     = np.zeros((N+1, N+1, N+1))$/;"	v
+s13	strain_rates.py	/^    s13     = np.zeros((N+1, N+1, N+1))$/;"	v
+s22	strain_rates.py	/^    s22     = np.zeros((N+1, N+1, N+1))$/;"	v
+s23	strain_rates.py	/^    s23     = np.zeros((N+1, N+1, N+1))$/;"	v
+s33	strain_rates.py	/^    s33     = np.zeros((N+1, N+1, N+1))$/;"	v
+sep	ke_transport_terms/A_term.py	/^    sep         = os.sep$/;"	v
+sep	ke_transport_terms/B_term.py	/^    sep         = os.sep$/;"	v
+sep	ke_transport_terms/C_term.py	/^    sep         = os.sep$/;"	v
+sep	ke_transport_terms/D_term.py	/^    sep         = os.sep$/;"	v
+sep	ke_transport_terms/P_term.py	/^    sep         = os.sep$/;"	v
+sep	strain_rates.py	/^    sep         = os.sep$/;"	v
+sol	min_max.py	/^    sol                     = test[6,4,1]$/;"	v
+sol	min_max.py	/^    sol                     = test[8,5,7]$/;"	v
+sol	min_max.py	/^    sol                 = -15$/;"	v
+sol	min_max.py	/^    sol                 = 15$/;"	v
+solcube	cube_locator.py	/^    solcube     = np.array([5.83, 0.50, 4.13, 6.20, 5.11])$/;"	v
+solneg	cube_locator.py	/^                                5.433185307, 4.716370614, 2.364824574])$/;"	v
+solpos	cube_locator.py	/^                                0.9168146928, 0.2668146928])$/;"	v
+sols	distance.py	/^                            11.3974076])$/;"	v
+strain_rates	strain_rates.py	/^def strain_rates($/;"	f
+tau11	ke_transport_terms/C_term.py	/^    tau11       = np.zeros((N+1, N+1, N+1))$/;"	v
+tau11	ke_transport_terms/P_term.py	/^    tau11   = np.zeros((N+1, N+1, N+1))$/;"	v
+tau12	ke_transport_terms/C_term.py	/^    tau12       = np.zeros((N+1, N+1, N+1))$/;"	v
+tau12	ke_transport_terms/P_term.py	/^    tau12   = np.zeros((N+1, N+1, N+1))$/;"	v
+tau13	ke_transport_terms/C_term.py	/^    tau13       = np.zeros((N+1, N+1, N+1))$/;"	v
+tau13	ke_transport_terms/P_term.py	/^    tau13   = np.zeros((N+1, N+1, N+1))$/;"	v
+tau22	ke_transport_terms/C_term.py	/^    tau22       = np.zeros((N+1, N+1, N+1))$/;"	v
+tau22	ke_transport_terms/P_term.py	/^    tau22   = np.zeros((N+1, N+1, N+1))$/;"	v
+tau23	ke_transport_terms/C_term.py	/^    tau23       = np.zeros((N+1, N+1, N+1))$/;"	v
+tau23	ke_transport_terms/P_term.py	/^    tau23   = np.zeros((N+1, N+1, N+1))$/;"	v
+tau33	ke_transport_terms/C_term.py	/^    tau33       = np.zeros((N+1, N+1, N+1))$/;"	v
+tau33	ke_transport_terms/P_term.py	/^    tau33   = np.zeros((N+1, N+1, N+1))$/;"	v
+term1	ke_transport_terms/B_term.py	/^    term1       = np.zeros((N+1, N+1, N+1))$/;"	v
+term1	ke_transport_terms/C_term.py	/^    term1   = np.zeros((N+1, N+1, N+1))$/;"	v
+term1	ke_transport_terms/D_term.py	/^    term1       = np.zeros((N+1, N+1, N+1))$/;"	v
+term1	ke_transport_terms/P_term.py	/^    term1   = np.zeros((N+1, N+1, N+1))$/;"	v
+term2	ke_transport_terms/C_term.py	/^    term2   = np.zeros((N+1, N+1, N+1))$/;"	v
+term2	ke_transport_terms/D_term.py	/^    term2       = np.zeros((N+1, N+1, N+1))$/;"	v
+term2	ke_transport_terms/P_term.py	/^    term2   = np.zeros((N+1, N+1, N+1))$/;"	v
+term3	ke_transport_terms/C_term.py	/^    term3   = np.zeros((N+1, N+1, N+1))$/;"	v
+term3	ke_transport_terms/D_term.py	/^    term3       = np.zeros((N+1, N+1, N+1))$/;"	v
+term3	ke_transport_terms/P_term.py	/^    term3   = np.zeros((N+1, N+1, N+1))$/;"	v
+term4	ke_transport_terms/C_term.py	/^    term4   = np.zeros((N+1, N+1, N+1))$/;"	v
+term4	ke_transport_terms/D_term.py	/^    term4       = np.zeros((N+1, N+1, N+1))$/;"	v
+term4	ke_transport_terms/P_term.py	/^    term4   = np.zeros((N+1, N+1, N+1))$/;"	v
+term5	ke_transport_terms/B_term.py	/^    term5       = np.zeros((N+1, N+1, N+1))$/;"	v
+term5	ke_transport_terms/C_term.py	/^    term5   = np.zeros((N+1, N+1, N+1))$/;"	v
+term5	ke_transport_terms/D_term.py	/^    term5       = np.zeros((N+1, N+1, N+1))$/;"	v
+term5	ke_transport_terms/P_term.py	/^    term5   = np.zeros((N+1, N+1, N+1))$/;"	v
+term6	ke_transport_terms/C_term.py	/^    term6   = np.zeros((N+1, N+1, N+1))$/;"	v
+term6	ke_transport_terms/D_term.py	/^    term6       = np.zeros((N+1, N+1, N+1))$/;"	v
+term6	ke_transport_terms/P_term.py	/^    term6   = np.zeros((N+1, N+1, N+1))$/;"	v
+term7	ke_transport_terms/C_term.py	/^    term7   = np.zeros((N+1, N+1, N+1))$/;"	v
+term8	ke_transport_terms/C_term.py	/^    term8   = np.zeros((N+1, N+1, N+1))$/;"	v
+term9	ke_transport_terms/B_term.py	/^    term9       = np.zeros((N+1, N+1, N+1))$/;"	v
+term9	ke_transport_terms/C_term.py	/^    term9   = np.zeros((N+1, N+1, N+1))$/;"	v
+test	min_max.py	/^    test                    = np.zeros((10,10,10))$/;"	v
+test	min_max.py	/^    test                = np.array([[1,2,3], [-15,15,8]])$/;"	v
+test	test.py	/^def test():$/;"	f
+time	find_time.py	/^    time    = np.linspace(0.0, 100, 501)$/;"	v
+time	find_time.py	/^    time    = np.round(time, 3)$/;"	v
+time_string	npy_extract.py	/^def time_string($/;"	f
+tol	cube_locator.py	/^    tol         = 1e-05$/;"	v
+tol	distance.py	/^    tol         = 1e-08$/;"	v
+ux	ke_transport_terms/A_term.py	/^    ux          = np.zeros((N+1, N+1, N+1))$/;"	v
+ux	ke_transport_terms/B_term.py	/^    ux          = np.zeros((N+1, N+1, N+1))$/;"	v
+ux	ke_transport_terms/C_term.py	/^    ux          = np.zeros((N+1, N+1, N+1))$/;"	v
+ux	ke_transport_terms/D_term.py	/^    ux  = np.zeros((N+1, N+1, N+1))$/;"	v
+ux	ke_transport_terms/P_term.py	/^    ux      = np.zeros((N+1, N+1, N+1))$/;"	v
+ux	strain_rates.py	/^    ux          = np.zeros((N+1, N+1, N+1))$/;"	v
+uy	ke_transport_terms/A_term.py	/^    uy          = np.zeros((N+1, N+1, N+1))$/;"	v
+uy	ke_transport_terms/B_term.py	/^    uy          = np.zeros((N+1, N+1, N+1))$/;"	v
+uy	ke_transport_terms/C_term.py	/^    uy          = np.zeros((N+1, N+1, N+1))$/;"	v
+uy	ke_transport_terms/D_term.py	/^    uy  = np.zeros((N+1, N+1, N+1))$/;"	v
+uy	ke_transport_terms/P_term.py	/^    uy      = np.zeros((N+1, N+1, N+1))$/;"	v
+uy	strain_rates.py	/^    uy          = np.zeros((N+1, N+1, N+1))$/;"	v
+uz	ke_transport_terms/A_term.py	/^    uz          = np.zeros((N+1, N+1, N+1))$/;"	v
+uz	ke_transport_terms/B_term.py	/^    uz          = np.zeros((N+1, N+1, N+1))$/;"	v
+uz	ke_transport_terms/C_term.py	/^    uz          = np.zeros((N+1, N+1, N+1))$/;"	v
+uz	ke_transport_terms/D_term.py	/^    uz  = np.zeros((N+1, N+1, N+1))$/;"	v
+uz	ke_transport_terms/P_term.py	/^    uz      = np.zeros((N+1, N+1, N+1))$/;"	v
+uz	strain_rates.py	/^    uz          = np.zeros((N+1, N+1, N+1))$/;"	v
+valmax	normalize.py	/^    valmax      = find_max2D(anorm)[0]$/;"	v
+valmin	normalize.py	/^    valmin      = find_min2D(anorm)[0]$/;"	v
+x	gradient_test.py	/^    x           = np.linspace(xs, xf, N+1)$/;"	v
+x	ke_transport_terms/A_term.py	/^    x           = np.linspace(x0, xf, N+1)$/;"	v
+x	ke_transport_terms/B_term.py	/^    x           = np.linspace(x0, xf, N+1)$/;"	v
+x	ke_transport_terms/C_term.py	/^    x           = np.linspace(x0, xf, N+1)$/;"	v
+x	ke_transport_terms/D_term.py	/^    x           = np.linspace(x0, xf, N+1)$/;"	v
+x	ke_transport_terms/P_term.py	/^    x           = np.linspace(x0, xf, N+1)$/;"	v
+x	strain_rates.py	/^    x           = np.linspace(x0, xf, N+1)$/;"	v
+x0	ke_transport_terms/A_term.py	/^    x0          = -0.5$/;"	v
+x0	ke_transport_terms/B_term.py	/^    x0          = -0.5$/;"	v
+x0	ke_transport_terms/C_term.py	/^    x0          = 0.0$/;"	v
+x0	ke_transport_terms/D_term.py	/^    x0          = 0.0$/;"	v
+x0	ke_transport_terms/P_term.py	/^    x0          = 0.0$/;"	v
+x0	strain_rates.py	/^    x0          = 0.0$/;"	v
+x1	distance.py	/^    x1      = np.array([1.0,2.50,3.40,-1.20, -2.30])$/;"	v
+x2	distance.py	/^    x2      = np.array([0.25, -1.45, 0.32, 2.30, -1.08])$/;"	v
+xcube	cube_locator.py	/^    xcube       = np.array([5.83, 0.50, 4.13, 6.20, 5.11])$/;"	v
+xf	gradient_test.py	/^    xf          = 0.5*pi$/;"	v
+xf	ke_transport_terms/A_term.py	/^    xf          = 0.5$/;"	v
+xf	ke_transport_terms/B_term.py	/^    xf          = 0.5$/;"	v
+xf	ke_transport_terms/C_term.py	/^    xf          = 1.0$/;"	v
+xf	ke_transport_terms/D_term.py	/^    xf          = 1.0$/;"	v
+xf	ke_transport_terms/P_term.py	/^    xf          = 1.0$/;"	v
+xf	strain_rates.py	/^    xf          = 1.0$/;"	v
+xneg	cube_locator.py	/^    xneg        = np.array([-0.23, -1.58, -3.65, -0.85, -7.85, -500.29])$/;"	v
+xpos	cube_locator.py	/^    xpos        = np.array([6.30, 500.25, 185.03, 7.20, 6.55])$/;"	v
+xs	gradient_test.py	/^    xs          = 0.0$/;"	v
+y	gradient_test.py	/^    y           = np.linspace(xs, xf, N+1)$/;"	v
+y	ke_transport_terms/A_term.py	/^    y           = np.linspace(x0, xf, N+1)$/;"	v
+y	ke_transport_terms/B_term.py	/^    y           = np.linspace(x0, xf, N+1)$/;"	v
+y	ke_transport_terms/C_term.py	/^    y           = np.linspace(x0, xf, N+1)$/;"	v
+y	ke_transport_terms/D_term.py	/^    y           = np.linspace(x0, xf, N+1)$/;"	v
+y	ke_transport_terms/P_term.py	/^    y           = np.linspace(x0, xf, N+1)$/;"	v
+y	strain_rates.py	/^    y           = np.linspace(x0, xf, N+1)$/;"	v
+y1	distance.py	/^    y1      = np.array([-0.25, 0.37, 5.20, 8.50, -1.20])$/;"	v
+y2	distance.py	/^    y2      = np.array([0.28, 1.58, 8.52, -7.35, -2.05])$/;"	v
+z	ke_transport_terms/A_term.py	/^    z           = np.linspace(x0, xf, N+1)$/;"	v
+z	ke_transport_terms/B_term.py	/^    z           = np.linspace(x0, xf, N+1)$/;"	v
+z	ke_transport_terms/C_term.py	/^    z           = np.linspace(x0, xf, N+1)$/;"	v
+z	ke_transport_terms/D_term.py	/^    z           = np.linspace(x0, xf, N+1)$/;"	v
+z	ke_transport_terms/P_term.py	/^    z           = np.linspace(x0, xf, N+1)$/;"	v
+z	strain_rates.py	/^    z           = np.linspace(x0, xf, N+1)$/;"	v
+z1	distance.py	/^    z1      = np.array([0.5, 0.12, 2.0, -3.5, 1.2])$/;"	v
+z2	distance.py	/^    z2      = np.array([0.26, -1.32, 2.54, 0.53, 12.5])$/;"	v
