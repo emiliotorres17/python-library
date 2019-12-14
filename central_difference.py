@@ -26,7 +26,7 @@ import numpy as np
 def time_derv(
         field,              # Field
         Nt,                 # number of time steps
-        dt):                # temporal step size
+        time):              # time variable
 
     """ Calculating dF/dt using a second order scheme; if it is not at the
     boundary """
@@ -35,7 +35,7 @@ def time_derv(
     #---------------------------------------------------------------------#
     dim         = field.shape
     DT          = np.zeros((dim[0], dim[1], dim[2]))
-    c1          = 1/(2.0*dt)
+    c1          = 1/(time[Nt+1] - time[Nt-1])
     #---------------------------------------------------------------------#
     # Looping over the time and space variables                           #
     #---------------------------------------------------------------------#
