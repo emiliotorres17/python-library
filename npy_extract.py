@@ -377,10 +377,10 @@ def npy_time_interval(
     Nt          = int(tf-t0)
     time        = np.zeros(Nt + 1)
     print_count = 0
-    for i in range(t0, tf+1):
+    for count, i in enumerate(range(t0, tf+1)):
         time_str        = time_string(i)
         file_name       = location + 'SimulationTime' + time_str + '.npy'
-        time[i]         = np.load(file_name)
+        time[count]     = np.load(file_name)
         #-----------------------------------------------------------------#
         # Printing time step output                                       #
         #-----------------------------------------------------------------#
