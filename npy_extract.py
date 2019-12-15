@@ -477,6 +477,53 @@ def npy_tau_interval(
         print_count += 1
 
     return tau
+#-------------------------------------------------------------------------#
+# NPY velocity extraction general                                         #
+#-------------------------------------------------------------------------#
+def npy_velocity_general(
+        ucomp,                          # velocity component
+        N_space,                        # number of spatial steps
+        num_proc,                       # number or processors
+        tstart,                         # time start (i.e., 100)
+        tfinish,                        # time finish (i.e., 500)
+        location):                      # data location
+
+    """ A general extraction code velocity """
+    #---------------------------------------------------------------------#
+    # Defining file variables                                             #
+    #---------------------------------------------------------------------#
+    sep = os.sep
+    if location[-1] != sep:
+        location    = location + sep
+    if isinstance(ucomp, str) is False:
+        ucomp   = str(ucomp)
+    #---------------------------------------------------------------------#
+    # Preallocating space for the velocity                                #
+    #---------------------------------------------------------------------#
+    Nt      = int(tfinish-tstart)
+    u       = np.zeros((N_space, N_space, N_space, Nt+1))
+    #---------------------------------------------------------------------#
+    # Extracting the data                                                 #
+    #---------------------------------------------------------------------#
+    interval    = int(N_space/num_proc)
+    print_count = 0
+    for count, i in enumerate(range(tstart, tfinish+1)):
+        time_str        = time_string(i)
+        for n in range(0,num_proc):
+            proc        = proc_string(n)
+            utemp       = np.load(location + 'Velocity' + ucomp + time_str +\
+                                proc + '.npy')
+            index       = int(interval*n)
+            u[index:index + interval, :, :, count]   = utemp
+        #-----------------------------------------------------------------#
+        # Printing time step output                                       #
+        #-----------------------------------------------------------------#
+        if print_count > 20:
+            print('Velocity' + ucomp + ' ---> t_step = %i'      %(i))
+            print_count = 0
+        print_count += 1
+
+    return u
 #=========================================================================#
 # Main                                                                    #
 #=========================================================================#
