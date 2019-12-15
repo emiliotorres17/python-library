@@ -179,7 +179,6 @@ def npy_velocity_proc_16(
 def npy_tau_extract_16(
         tau_comp,                   # subgrid stress component
         Nt,                         # number of time steps
-        Np,                         # number of processors
         location):                  # tau file location
 
     """ Subroutine to extract the subgrib stress """
@@ -214,15 +213,14 @@ def npy_tau_extract_16(
             print('tau' + tau_comp + ' ---> t_step = %i'      %(i))
             print_count = 0
         print_count += 1
-    
-    return tau 
+
+    return tau
 #-------------------------------------------------------------------------#
 # Subroutine for extracting the pressure                                  #
 #-------------------------------------------------------------------------#
 def npy_pressure_extract_16(
         pressure_comp,              # pressure component
         Nt,                         # number of time steps
-        Np,                         # number of processors
         location):                  # location of files
 
     """ Subroutine to extract the pressure stress """
@@ -257,8 +255,8 @@ def npy_pressure_extract_16(
             print('pressure' + pressure_comp + ' ---> t_step = %i'      %(i))
             print_count = 0
         print_count += 1
-    
-    return pressure 
+
+    return pressure
 #-------------------------------------------------------------------------#
 # Subroutine for full extraction and storing time and velocities (npy/mat)#
 #-------------------------------------------------------------------------#
@@ -315,7 +313,7 @@ def npy_total_extract(
 #-------------------------------------------------------------------------#
 def npy_velocity_interval(
         ucomp,                          # velocity component
-        tstart,                         # time start (i.e., 100)  
+        tstart,                         # time start (i.e., 100)
         tfinish,                        # time finish (i.e., 500)
         location):                      # data location
 
@@ -360,7 +358,7 @@ def npy_velocity_interval(
 #-------------------------------------------------------------------------#
 def npy_time_interval(
         t0,                         # start time
-        tf,                         # finish time        
+        tf,                         # finish time
         location):                  # file locations
 
     """ Extracting the time vector from the ALES simulations for a given
@@ -390,6 +388,95 @@ def npy_time_interval(
         print_count += 1
 
     return time
+#-------------------------------------------------------------------------#
+# Subroutine for extracting the pressure for a certain time interval      #
+#-------------------------------------------------------------------------#
+def npy_pressure_interval(
+        pressure_comp,              # pressure component
+        tstart,                     # time start
+        tfinish,                    # finish time
+        location):                  # location of files
+
+    """ Subroutine to extract the pressure for a given time interval """
+    #---------------------------------------------------------------------#
+    # Defining file variables                                             #
+    #---------------------------------------------------------------------#
+    sep = os.sep
+    if location[-1] != sep:
+        location    = location + sep
+    if isinstance(pressure_comp, str) is False:
+        pressure_comp   = str(pressure_comp)
+    #---------------------------------------------------------------------#
+    # Preallocating space for the velocity                                #
+    #---------------------------------------------------------------------#
+    Nt          = int(tfinish-tstart)
+    pressure    = np.zeros((64, 64, 64, Nt+1))
+    #---------------------------------------------------------------------#
+    # Extracting the data                                                 #
+    #---------------------------------------------------------------------#
+    print_count = 0
+    for count, i in enumerate(range(tstart, tfinish+1)):
+        time_str        = time_string(i)
+        for n in range(0,16):
+            proc            = proc_string(n)
+            pressure_temp   = np.load(location + 'Pressure' + pressure_comp + time_str +\
+                                proc + '.npy')
+            index           = int(4*n)
+            pressure[index:index + 4, :, :, count]   = pressure_temp
+        #-----------------------------------------------------------------#
+        # Printing time step output                                       #
+        #-----------------------------------------------------------------#
+        if print_count > 20:
+            print('pressure' + pressure_comp + ' ---> t_step = %i'      %(i))
+            print_count = 0
+        print_count += 1
+
+    return pressure
+#-------------------------------------------------------------------------#
+# Subroutine for extracting the tau for a given time interval             #
+#-------------------------------------------------------------------------#
+def npy_tau_interval(
+        tau_comp,                   # subgrid stress component
+        tstart,                     # starting time
+        tfinish,                    # finishing time
+        location):                  # tau file location
+
+    """ Subroutine to extract the subgrib stress for a given time
+    interval """
+    #---------------------------------------------------------------------#
+    # Defining file variables                                             #
+    #---------------------------------------------------------------------#
+    sep = os.sep
+    if location[-1] != sep:
+        location    = location + sep
+    if isinstance(tau_comp, str) is False:
+        tau_comp   = str(tau_comp)
+    #---------------------------------------------------------------------#
+    # Preallocating space for the velocity                                #
+    #---------------------------------------------------------------------#
+    Nt      = int(tfinish-tstart)
+    tau     = np.zeros((64, 64, 64, Nt+1))
+    #---------------------------------------------------------------------#
+    # Extracting the data                                                 #
+    #---------------------------------------------------------------------#
+    print_count = 0
+    for count, i in enumerate(range(tstart, tfinish+1)):
+        time_str        = time_string(i)
+        for n in range(0,16):
+            proc        = proc_string(n)
+            tau_temp    = np.load(location + 'tau' + tau_comp + time_str +\
+                                proc + '.npy')
+            index       = int(4*n)
+            tau[index:index + 4, :, :, count]   = tau_temp
+        #-----------------------------------------------------------------#
+        # Printing time step output                                       #
+        #-----------------------------------------------------------------#
+        if print_count > 20:
+            print('tau' + tau_comp + ' ---> t_step = %i'      %(i))
+            print_count = 0
+        print_count += 1
+
+    return tau
 #=========================================================================#
 # Main                                                                    #
 #=========================================================================#
