@@ -514,7 +514,7 @@ def npy_velocity_general(
             utemp       = np.load(location + 'Velocity' + ucomp + time_str +\
                                 proc + '.npy')
             index       = int(interval*n)
-            u[index:index + interval, :, :, count]   = utemp
+            u[index:index+interval, :, :, count]   = utemp
         #-----------------------------------------------------------------#
         # Printing time step output                                       #
         #-----------------------------------------------------------------#
