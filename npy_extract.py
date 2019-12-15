@@ -358,8 +358,7 @@ def npy_velocity_interval(
 #-------------------------------------------------------------------------#
 # NPY time extraction for a defined time interval                         #
 #-------------------------------------------------------------------------#
-def npy_time(
-        Nt,                         # number of time steps
+def npy_time_interval(
         t0,                         # start time
         tf,                         # finish time        
         location):                  # file locations
