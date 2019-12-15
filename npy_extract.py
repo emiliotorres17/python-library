@@ -310,7 +310,87 @@ def npy_total_extract(
         print("\n\n**** Finished storing .mat ****")
 
     return time, u1, u2, u3
+#-------------------------------------------------------------------------#
+# NPY velocity extraction w/ proc = 16 from t=t_{0}-t_{f}                 #
+#-------------------------------------------------------------------------#
+def npy_velocity_interval(
+        ucomp,                          # velocity component
+        tstart,                         # time start (i.e., 100)  
+        tfinish,                        # time finish (i.e., 500)
+        location):                      # data location
 
+    """ Extracting the velocities from a simulation with 16 processors
+    from time range t=t_{0} to t=t_{finish}"""
+    #---------------------------------------------------------------------#
+    # Defining file variables                                             #
+    #---------------------------------------------------------------------#
+    sep = os.sep
+    if location[-1] != sep:
+        location    = location + sep
+    if isinstance(ucomp, str) is False:
+        ucomp   = str(ucomp)
+    #---------------------------------------------------------------------#
+    # Preallocating space for the velocity                                #
+    #---------------------------------------------------------------------#
+    Nt      = int(tfinish-tstart)
+    u       = np.zeros((64, 64, 64, Nt+1))
+    #---------------------------------------------------------------------#
+    # Extracting the data                                                 #
+    #---------------------------------------------------------------------#
+    print_count = 0
+    for i in range(tstart, tfinish+1):
+        time_str        = time_string(i)
+        for n in range(0,16):
+            proc        = proc_string(n)
+            utemp       = np.load(location + 'Velocity' + ucomp + time_str +\
+                                proc + '.npy')
+            index       = int(4*n)
+            u[index:index + 4, :, :, i]   = utemp
+        #-----------------------------------------------------------------#
+        # Printing time step output                                       #
+        #-----------------------------------------------------------------#
+        if print_count > 20:
+            print('Velocity' + ucomp + ' ---> t_step = %i'      %(i))
+            print_count = 0
+        print_count += 1
+
+    return u
+#-------------------------------------------------------------------------#
+# NPY time extraction for a defined time interval                         #
+#-------------------------------------------------------------------------#
+def npy_time(
+        Nt,                         # number of time steps
+        t0,                         # start time
+        tf,                         # finish time        
+        location):                  # file locations
+
+    """ Extracting the time vector from the ALES simulations for a given
+    time interval """
+    #---------------------------------------------------------------------#
+    # Checking the location path to make sure it has a seperator          #
+    #---------------------------------------------------------------------#
+    sep = os.sep
+    if location[-1] != sep:
+        location    = location + sep
+    #---------------------------------------------------------------------#
+    # Extracting the time vector                                          #
+    #---------------------------------------------------------------------#
+    Nt          = int(tf-t0)
+    time        = np.zeros(Nt + 1)
+    print_count = 0
+    for i in range(t0, tf+1):
+        time_str        = time_string(i)
+        file_name       = location + 'SimulationTime' + time_str + '.npy'
+        time[i]         = np.load(file_name)
+        #-----------------------------------------------------------------#
+        # Printing time step output                                       #
+        #-----------------------------------------------------------------#
+        if print_count > 20:
+            print('time extract ---> t_step = %i'       %(i))
+            print_count = 0
+        print_count += 1
+
+    return time
 #=========================================================================#
 # Main                                                                    #
 #=========================================================================#
