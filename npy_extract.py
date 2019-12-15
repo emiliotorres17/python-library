@@ -338,14 +338,14 @@ def npy_velocity_interval(
     # Extracting the data                                                 #
     #---------------------------------------------------------------------#
     print_count = 0
-    for i in range(tstart, tfinish+1):
+    for count, i in enumerate(range(tstart, tfinish+1)):
         time_str        = time_string(i)
         for n in range(0,16):
             proc        = proc_string(n)
             utemp       = np.load(location + 'Velocity' + ucomp + time_str +\
                                 proc + '.npy')
             index       = int(4*n)
-            u[index:index + 4, :, :, i]   = utemp
+            u[index:index + 4, :, :, count]   = utemp
         #-----------------------------------------------------------------#
         # Printing time step output                                       #
         #-----------------------------------------------------------------#
