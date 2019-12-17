@@ -575,7 +575,7 @@ def npy_tau_general(
 #-------------------------------------------------------------------------#
 # A general subroutine for extracting the pressure term                   #
 #-------------------------------------------------------------------------#
-def npy_pressure_interval(
+def npy_pressure_general(
         pressure_comp,              # pressure component
         N,                          # number of grid points
         num_proc,                   # number of processors
