@@ -75,12 +75,12 @@ if __name__ == "__main__":
     #=====================================================================#
     pi      = np.pi
     N       = 64
-    num_t   = 1500
+    num_t   = 200
     x0      = 0.0
     xf      = 1.0
     dx      = (xf-x0)/N
     t0      = 0.0
-    tf      = 200.0
+    tf      = 5.0
     t_int   = int(num_t - 4)
     x       = np.linspace(x0, xf, N+1)
     y       = np.linspace(x0, xf, N+1)
