@@ -13,8 +13,6 @@ Author:
 #-------------------------------------------------------------------------#
 # Python packages                                                         #
 #-------------------------------------------------------------------------#
-import os
-import sys
 from subprocess import call
 import numpy as np
 import matplotlib.pyplot as plt
@@ -47,18 +45,18 @@ def spectral_strain_rates(
     #---------------------------------------------------------------------#
     # Calculating the strain rates                                        #
     #---------------------------------------------------------------------#
-    St[0]   = 0.5*np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(U[0]) + 1j*Kfield[0]*np.fft.fftn(U[0])).real
-    St[1]   = 0.5*np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(U[1]) + 1j*Kfield[1]*np.fft.fftn(U[0])).real
-    St[2]   = 0.5*np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(U[2]) + 1j*Kfield[2]*np.fft.fftn(U[0])).real
-    St[3]   = 0.5*np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(U[1]) + 1j*Kfield[1]*np.fft.fftn(U[1])).real
-    St[4]   = 0.5*np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(U[2]) + 1j*Kfield[2]*np.fft.fftn(U[1])).real
-    St[5]   = 0.5*np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(U[2]) + 1j*Kfield[2]*np.fft.fftn(U[2])).real
-    #St[0]   = 0.5*np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(U1) + 1j*Kfield[0]*np.fft.fftn(U1)).real
-    #St[1]   = 0.5*np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(U2) + 1j*Kfield[1]*np.fft.fftn(U1)).real
-    #St[2]   = 0.5*np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(U3) + 1j*Kfield[2]*np.fft.fftn(U1)).real
-    #St[3]   = 0.5*np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(U2) + 1j*Kfield[1]*np.fft.fftn(U2)).real
-    #St[4]   = 0.5*np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(U3) + 1j*Kfield[2]*np.fft.fftn(U2)).real
-    #St[5]   = 0.5*np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(U3) + 1j*Kfield[2]*np.fft.fftn(U3)).real
+    St[0]   = 0.5*np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(U[0]) +\
+                        1j*Kfield[0]*np.fft.fftn(U[0])).real
+    St[1]   = 0.5*np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(U[1]) +\
+                        1j*Kfield[1]*np.fft.fftn(U[0])).real
+    St[2]   = 0.5*np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(U[2]) +\
+                        1j*Kfield[2]*np.fft.fftn(U[0])).real
+    St[3]   = 0.5*np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(U[1]) +\
+                        1j*Kfield[1]*np.fft.fftn(U[1])).real
+    St[4]   = 0.5*np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(U[2]) +\
+                        1j*Kfield[2]*np.fft.fftn(U[1])).real
+    St[5]   = 0.5*np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(U[2]) +\
+                        1j*Kfield[2]*np.fft.fftn(U[2])).real
 
     return St
 #=========================================================================#
@@ -96,7 +94,7 @@ if __name__ == "__main__":
     for k in range(0,N+1):
         for j in range(0,N+1):
             for i in range(0,N+1):
-                u[i,j,k]            = np.cos(pi*x[i])
+                u[i,j,k]            = x[i]**2.0
                 v[i,j,k]            = x[i]*z[k]*np.sin(pi*y[j])
                 w[i,j,k]            = x[i]*y[j]*np.cos(pi*z[k])
         #-----------------------------------------------------------------#
@@ -131,7 +129,7 @@ if __name__ == "__main__":
     for k in range(0,N+1):
         for j in range(0,N+1):
             for i in range(0,N+1):
-                S11_exact[i,j,k]    = -pi*np.sin(pi*x[i])
+                S11_exact[i,j,k]    = 2.0*x[i]
         #-----------------------------------------------------------------#
         # Print statement output                                          #
         #-----------------------------------------------------------------#
@@ -152,13 +150,13 @@ if __name__ == "__main__":
     print(np.amax(S11_exact[:,:,zslice]))
     dummy[0,1]  = np.amin(S11_exact[:,:,zslice])
     print(np.amin(S11_exact[:,:,zslice]))
-    cnt1        = plt.contourf(X1, X2, dummy, 500, cmap="jet") 
+    cnt1        = plt.contourf(X1, X2, dummy, 500, cmap="jet")
     plt.colorbar()
     plt.clf()
     #---------------------------------------------------------------------#
     # Approximate solution                                                #
     #---------------------------------------------------------------------#
-    cnt         = plt.contourf(X1, X2, S[:,:,zslice], 500, cmap="jet") 
+    cnt         = plt.contourf(X1, X2, S[:,:,zslice], 500, cmap="jet")
     for c in cnt.collections:
         c.set_edgecolors("face")
     plt.xlabel("$0\leq x \leq \pi$")
@@ -169,7 +167,7 @@ if __name__ == "__main__":
     #---------------------------------------------------------------------#
     # Exact solution                                                      #
     #---------------------------------------------------------------------#
-    cnt         = plt.contourf(X1, X2, S11_exact[:,:,zslice], 500, cmap="jet") 
+    cnt         = plt.contourf(X1, X2, S11_exact[:,:,zslice], 500, cmap="jet")
     for c in cnt.collections:
         c.set_edgecolors("face")
     plt.xlabel("$0\leq x \leq \pi$")
@@ -182,7 +180,7 @@ if __name__ == "__main__":
     #---------------------------------------------------------------------#
     error       = abs(S - S11_exact)
     cnt         = plt.contourf(X1[20:30,20:30], X2[20:30,20:30],\
-                        error[20:30,20:30,zslice], 500, cmap="jet") 
+                        error[20:30,20:30,zslice], 500, cmap="jet")
     for c in cnt.collections:
         c.set_edgecolors("face")
     plt.xlabel("$0\leq x \leq \pi$")
