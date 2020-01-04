@@ -619,6 +619,53 @@ def npy_pressure_general(
         print_count += 1
 
     return pressure
+#-------------------------------------------------------------------------#
+# NPY vorticity extraction general                                        #
+#-------------------------------------------------------------------------#
+def npy_vorticity_general(
+        wcomp,                          # vorticity component
+        N_space,                        # number of spatial steps
+        num_proc,                       # number or processors
+        tstart,                         # time start (i.e., 100)
+        tfinish,                        # time finish (i.e., 500)
+        location):                      # data location
+
+    """ A general extraction code for vorticity """
+    #---------------------------------------------------------------------#
+    # Defining file variables                                             #
+    #---------------------------------------------------------------------#
+    sep = os.sep
+    if location[-1] != sep:
+        location    = location + sep
+    if isinstance(wcomp, str) is False:
+        wcomp   = str(wcomp)
+    #---------------------------------------------------------------------#
+    # Preallocating space for the velocity                                #
+    #---------------------------------------------------------------------#
+    Nt      = int(tfinish-tstart)
+    w       = np.zeros((N_space, N_space, N_space, Nt+1))
+    #---------------------------------------------------------------------#
+    # Extracting the data                                                 #
+    #---------------------------------------------------------------------#
+    interval    = int(N_space/num_proc)
+    print_count = 0
+    for count, i in enumerate(range(tstart, tfinish+1)):
+        time_str        = time_string(i)
+        for n in range(0,num_proc):
+            proc        = proc_string(n)
+            wtemp       = np.load(location + 'Omega' + wcomp + time_str +\
+                                proc + '.npy')
+            index       = int(interval*n)
+            w[index:index+interval, :, :, count]   = utemp
+        #-----------------------------------------------------------------#
+        # Printing time step output                                       #
+        #-----------------------------------------------------------------#
+        if print_count > 20:
+            print('Omega' + wcomp + ' ---> t_step = %i'      %(i))
+            print_count = 0
+        print_count += 1
+
+    return w
 #=========================================================================#
 # Main                                                                    #
 #=========================================================================#
