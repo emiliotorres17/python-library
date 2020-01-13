@@ -95,7 +95,8 @@ def R_term(
         s13,                # strain rate-13 component
         s22,                # strain rate-22 component
         s23,                # strain rate-23 component
-        s33):               # strain rate-33 component
+        s33,                # strain rate-33 component
+        diff = False):      # differentiation flag
 
     """ Calculating the R term from Dahm's scanned notes
             **** Note: need to update the gradient terms to use spectral
@@ -107,11 +108,37 @@ def R_term(
     dx      = (2.0*pi)/64.0                     # spatial step
     nu      = 0.000185                          # default viscosity
     #---------------------------------------------------------------------#
-    # Numerator (need to update to spectral method)                       #
+    # Spectral differentiation variables                                  #
     #---------------------------------------------------------------------#
-    term1   = np.gradient(enst,dx, edge_order=2)[0]
-    term2   = np.gradient(enst,dx, edge_order=2)[1]
-    term3   = np.gradient(enst,dx, edge_order=2)[2]
+    dim     = 64
+    kspec   = np.fft.fftfreq(dim) * dim
+    Kfield  = np.array(np.meshgrid(kspec, kspec, kspec, indexing='ij'))
+    #---------------------------------------------------------------------#
+    # Spectral differentiation variables                                  #
+    #---------------------------------------------------------------------#
+    term1   = np.zeros((dim, dim, dim))
+    term2   = np.zeros((dim, dim, dim))
+    term3   = np.zeros((dim, dim, dim))
+    #---------------------------------------------------------------------#
+    # Numerator (numpy gradient tool)                                     #
+    #---------------------------------------------------------------------#
+    if diff is not False:
+        term1   = np.gradient(enst,dx, edge_order=2)[0]
+        term2   = np.gradient(enst,dx, edge_order=2)[1]
+        term3   = np.gradient(enst,dx, edge_order=2)[2]
+    #---------------------------------------------------------------------#
+    # Numerator (spectral differentiation)                                #
+    #---------------------------------------------------------------------#
+    else:
+        term1   = 0.5*np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(enst) +\
+                        1j*Kfield[0]*np.fft.fftn(enst)).real
+        term2   = 0.5*np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(enst) +\
+                        1j*Kfield[1]*np.fft.fftn(enst)).real
+        term3   = 0.5*np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(enst) +\
+                        1j*Kfield[2]*np.fft.fftn(enst)).real
+    #---------------------------------------------------------------------#
+    # Numerator                                                           #
+    #---------------------------------------------------------------------#
     num     = nu*(term1 + term2 + term3)
     #---------------------------------------------------------------------#
     # Denominator                                                         #
