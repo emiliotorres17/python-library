@@ -31,13 +31,14 @@ import matplotlib.pyplot as plt
 # Contour plot generator                                                  #
 #-------------------------------------------------------------------------#
 def subplot_gen(
-        var,                    # variable
-        name,                   # file name
-        loc,                    # location of where to save
-        color   = "jet",        # color scheme (default set to jet)
-        cb      = False,        # color bar flag (default set to off)
-        xlab    = False,        # x-label flag (default set to off)
-        ylab    = False):       # y-label flag (default set to off)
+        var,                        # variable
+        name,                       # file name
+        loc,                        # location of where to save
+        color       = "jet",        # color scheme (default set to jet)
+        cb          = False,        # color bar flag (default set to off)
+        xlab        = False,        # x-label flag (default set to off)
+        ylab        = False,        # y-label flag (default set to off)
+        lab_ticks   = False):       # x and y ticks (default set to off) 
 
     """ Subroutine to generate subplots for any quantity (64x64x64) """
     #---------------------------------------------------------------------#
@@ -69,25 +70,28 @@ def subplot_gen(
         plt.subplot(8,8,i+1)
         cnt     = plt.contourf(X1, X2, var[:,:,i], 500, cmap=color)
         for c in cnt.collections:           # setting the edge colors
-            c.set_edgecolors("faces")
+            c.set_edgecolors("face")
         if cb is not False:                 # generating the color bar
             plt.colorbar()
         if xlab is not False:               # generating the x_{1}-label
             plt.xlabel("$0 \leq x_{1} \leq 2\pi$")
         if ylab is not False:               # generating the x_{2}-label
             plt.ylabel("$0 \leq x_{1} \leq 2\pi$")
+        if lab_ticks is False:
+            plt.axis("off")
         #-----------------------------------------------------------------#
         # Print counter                                                   #
         #-----------------------------------------------------------------#
-        if print_count > 10:
-            print("z step --> %i"               %(i))
+        if print_count >= 7:
+            print("\tz step --> %i"         %(i+1))
             print_count = 0
         print_count += 1
     #---------------------------------------------------------------------#
     # Saving and clearing figure                                          #
     #---------------------------------------------------------------------#
-    plt.savefig(loc + name + ".pdf")        # storing figure
+    plt.savefig(loc + name + ".png")        # storing figure
     plt.clf()                               # clearing figure
+    print("\t**** Plots saved ****")
 
     return
 #=========================================================================#
