@@ -23,12 +23,12 @@ import os
 import sys
 from subprocess import call
 import numpy as np
-import matplot.pyplot as plt
+import matplotlib.pyplot as plt
 #=========================================================================#
 # User defined functions                                                  #
 #=========================================================================#
 #-------------------------------------------------------------------------#
-# Contour subplots                                                        #
+# Contour plot generator                                                  #
 #-------------------------------------------------------------------------#
 def subplot_gen(
         var,                    # variable
