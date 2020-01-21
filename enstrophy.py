@@ -52,6 +52,39 @@ def enstrophy_field(
 
     return ens
 #-------------------------------------------------------------------------#
+# Average enstrophy field                                                 #
+#-------------------------------------------------------------------------#
+def enstrophy_average(
+        omega1,                 # vorticity-1 component
+        omega2,                 # vorticity-2 component
+        omega3):                # vorticity-3 component
+
+    """ Calculating the average enstrophy field """
+    #---------------------------------------------------------------------#
+    # Defining the domain variables                                       #
+    #---------------------------------------------------------------------#
+    dim     = omega1.shape
+    time    = dim[-1]+1
+    avg     = np.zeros(time)
+    #---------------------------------------------------------------------#
+    # Looping over the time variable                                      #
+    #---------------------------------------------------------------------#
+    for i in range(0, time):
+        term1   = np.square(omega1[:,:,:,i])
+        term2   = np.square(omega2[:,:,:,i])
+        term3   = np.square(omega3[:,:,:,i])
+        enst    = 0.5*(term1 + term2 + term3)
+        avg[i]  = np.mean(enst)
+        #-----------------------------------------------------------------#
+        # Printing statement                                              #
+        #-----------------------------------------------------------------#
+        if print_count > 20:
+            print('Enstrophy average ---> t_step = %i'      %(i))
+            print_count = 0
+        print_count += 1
+
+    return avg
+#-------------------------------------------------------------------------#
 # Q term from Dahm's emailed notes                                        #
 #-------------------------------------------------------------------------#
 def Q_term(
