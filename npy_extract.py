@@ -656,7 +656,7 @@ def npy_vorticity_general(
             wtemp       = np.load(location + 'Omega' + wcomp + time_str +\
                                 proc + '.npy')
             index       = int(interval*n)
-            w[index:index+interval, :, :, count]   = utemp
+            w[index:index+interval, :, :, count]   = wtemp
         #-----------------------------------------------------------------#
         # Printing time step output                                       #
         #-----------------------------------------------------------------#
