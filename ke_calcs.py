@@ -69,9 +69,9 @@ def ke_average(
     # Calculated average kinetic energy                                   #
     #---------------------------------------------------------------------#
     dim         = u1.shape
-    keavg       = np.zeros(dim[-1])
+    keavg       = np.zeros(dim[-1]+1)
     print_count = 0
-    for i in range(0, dim[-1]):
+    for i in range(0, dim[-1]+1):
         term1           = np.square(u1[:,:,:,i])
         term2           = np.square(u2[:,:,:,i])
         term3           = np.square(u3[:,:,:,i])
