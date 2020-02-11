@@ -28,23 +28,32 @@ def strain_rates(
         u1,                     # velocity-1 component
         u2,                     # velocity-2 component
         u3,                     # velocity-3 component
-        h):                     # spatial step size
+        h       = False,        # spatial step size
+        dim     = 64):          # number of spatial steps 
 
     """ Calculating the strain rates from the velocity fields """
     #---------------------------------------------------------------------#
+    # Default settings                                                    #
+    #---------------------------------------------------------------------#
+    if h is False:
+        pi  = np.pi
+        N   = 64
+        h   = (2.0*pi)/N
+    #---------------------------------------------------------------------#
     # Strain rates                                                        #
     #---------------------------------------------------------------------#
-    S11     =  np.gradient(u1, h, edge_order=2)[0]              # S11
-    S12     = 0.5*(np.gradient(u1, h, edge_order=2)[1] +\
-                    np.gradient(u2, h, edge_order=2)[0])        # S12
-    S13     = 0.5*(np.gradient(u1, h, edge_order=2)[2] +\
-                    np.gradient(u3, h, edge_order=2)[0])        # S13
-    S22     =  np.gradient(u2, h, edge_order=2)[1]              # S22
-    S23     = 0.5*(np.gradient(u2, h, edge_order=2)[2] +\
-                    np.gradient(u3, h, edge_order=2)[1])        # S23
-    S33     = (np.gradient(u3, h, edge_order=2)[2])             # S33
+    St      = np.empty((6, dim, dim, dim))
+    St[0]   =  np.gradient(u1, h, edge_order=2)[0]              # S11
+    St[1]   = 0.5*(np.gradient(u1, h, edge_order=2)[1] +\
+                   np.gradient(u2, h, edge_order=2)[0])         # S12
+    St[2]   = 0.5*(np.gradient(u1, h, edge_order=2)[2] +\
+                   np.gradient(u3, h, edge_order=2)[0])         # S13
+    St[3]   =  np.gradient(u2, h, edge_order=2)[1]              # S22
+    St[4]   = 0.5*(np.gradient(u2, h, edge_order=2)[2] +\
+                   np.gradient(u3, h, edge_order=2)[1])         # S23
+    St[5]   = (np.gradient(u3, h, edge_order=2)[2])             # S33
 
-    return S11, S12, S13, S22, S23, S33
+    return St
 #=========================================================================#
 # Main                                                                    #
 #=========================================================================#
@@ -96,7 +105,7 @@ if __name__ == "__main__":
     #---------------------------------------------------------------------#
     # Calculating the approximate solution                                #
     #---------------------------------------------------------------------#
-    approx  = strain_rates(ux, uy, uz, dx)[3]
+    approx  = strain_rates(ux, uy, uz, dx, N+1)[0]
     #---------------------------------------------------------------------#
     # Clearing variables                                                  #
     #---------------------------------------------------------------------#
@@ -138,14 +147,14 @@ if __name__ == "__main__":
     #=====================================================================#
     # Error                                                               #
     #=====================================================================#
-    error   = abs(approx - s22)
+    error   = abs(approx - s11)
     #=====================================================================#
     # Plotting solutions                                                  #
     #=====================================================================#
     #---------------------------------------------------------------------#
     # Exact solution                                                      #
     #---------------------------------------------------------------------#
-    cnt = plt.contourf(X1, X2, s22[:,:,int(N/2)], 500, cmap="jet")
+    cnt = plt.contourf(X1, X2, s11[:,:,int(N/2)], 500, cmap="jet")
     for c in cnt.collections:
         c.set_edgecolors("face")
     plt.xlabel("$%.1f \leq x_{1} \leq %.1f$"    %(x0, xf))
