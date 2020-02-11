@@ -64,11 +64,12 @@ def enstrophy_average(
     # Defining the domain variables                                       #
     #---------------------------------------------------------------------#
     dim     = omega1.shape
-    time    = dim[-1]+1
+    time    = dim[-1]
     avg     = np.zeros(time)
     #---------------------------------------------------------------------#
     # Looping over the time variable                                      #
     #---------------------------------------------------------------------#
+    print_count = 51
     for i in range(0, time):
         term1   = np.square(omega1[:,:,:,i])
         term2   = np.square(omega2[:,:,:,i])
