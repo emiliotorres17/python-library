@@ -66,21 +66,36 @@ def c_term(
         Tau22,              # tau-22 component
         Tau23,              # tau-23 component
         Tau33,              # tau-33 component
-        h):                 # spatial step size
+        h,                  # spatial step size
+        flag    = True):    # spectral; default is set to gradient tool
 
     """ Calculating the C term """
     #---------------------------------------------------------------------#
     # Calculating the terms in the C term                                 #
     #---------------------------------------------------------------------#
-    Term1   = np.gradient(Tau11*U1, h, edge_order=2)[0]
-    Term2   = np.gradient(Tau12*U1, h, edge_order=2)[1]
-    Term3   = np.gradient(Tau13*U1, h, edge_order=2)[2]
-    Term4   = np.gradient(Tau12*U2, h, edge_order=2)[0]
-    Term5   = np.gradient(Tau22*U2, h, edge_order=2)[1]
-    Term6   = np.gradient(Tau23*U2, h, edge_order=2)[2]
-    Term7   = np.gradient(Tau13*U3, h, edge_order=2)[0]
-    Term8   = np.gradient(Tau23*U3, h, edge_order=2)[1]
-    Term9   = np.gradient(Tau33*U3, h, edge_order=2)[2]
+    if flag is True:
+        Term1   = np.gradient(Tau11*U1, h, edge_order=2)[0]
+        Term2   = np.gradient(Tau12*U1, h, edge_order=2)[1]
+        Term3   = np.gradient(Tau13*U1, h, edge_order=2)[2]
+        Term4   = np.gradient(Tau12*U2, h, edge_order=2)[0]
+        Term5   = np.gradient(Tau22*U2, h, edge_order=2)[1]
+        Term6   = np.gradient(Tau23*U2, h, edge_order=2)[2]
+        Term7   = np.gradient(Tau13*U3, h, edge_order=2)[0]
+        Term8   = np.gradient(Tau23*U3, h, edge_order=2)[1]
+        Term9   = np.gradient(Tau33*U3, h, edge_order=2)[2]
+    else:
+        dim     = U1.shape[0]
+        kspec   = np.fft.fftfreq(dim) * dim
+        Kfield  = np.array(np.meshgrid(kspec, kspec, kspec, indexing='ij'))
+        Term1   = np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(Tau11*U1)).real
+        Term2   = np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(Tau12*U1)).real
+        Term3   = np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(Tau13*U1)).real
+        Term4   = np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(Tau12*U2)).real
+        Term5   = np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(Tau22*U2)).real
+        Term6   = np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(Tau23*U2)).real
+        Term7   = np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(Tau13*U3)).real
+        Term8   = np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(Tau23*U3)).real
+        Term9   = np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(Tau33*U3)).real
     #---------------------------------------------------------------------#
     # Calculating the C term                                              #
     #---------------------------------------------------------------------#
@@ -114,7 +129,7 @@ if __name__ == "__main__":
     #---------------------------------------------------------------------#
     # Defining domain variables                                           #
     #---------------------------------------------------------------------#
-    N           = 400
+    N           = 128
     x0          = 0.0
     xf          = 1.0
     dx          = (xf-x0)/N
@@ -164,7 +179,7 @@ if __name__ == "__main__":
     # Calculating the approximate solution                                #
     #---------------------------------------------------------------------#
     C_approx    = c_term(ux, uy, uz, tau11, tau12, tau13, tau22, tau23,\
-                            tau33, dx)
+                            tau33, dx, True)
     #---------------------------------------------------------------------#
     # Clearing variables                                                  #
     #---------------------------------------------------------------------#
@@ -178,7 +193,7 @@ if __name__ == "__main__":
     del tau23
     del tau33
     #=====================================================================#
-    # Approximate solution                                                #
+    # Exact solution                                                      #
     #=====================================================================#
     #---------------------------------------------------------------------#
     # Preallocating variables                                             #
