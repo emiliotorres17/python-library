@@ -4,6 +4,14 @@ Purpose:
     The purpose of this subroutine is to calculate the strain rates of a
     fluid flied.
 
+    **** Note:
+                St[0]   --> S_{11}
+                St[1]   --> S_{12}
+                St[2]   --> S_{13}
+                St[3]   --> S_{22}
+                St[4]   --> S_{23}
+                St[5]   --> S_{33}
+
 Author:
     Emilio Torres
 ========================================================================"""
@@ -29,7 +37,7 @@ def strain_rates(
         u2,                     # velocity-2 component
         u3,                     # velocity-3 component
         h       = False,        # spatial step size
-        dim     = 64):          # number of spatial steps 
+        dim     = False):       # number of spatial steps 
 
     """ Calculating the strain rates from the velocity fields """
     #---------------------------------------------------------------------#
@@ -39,6 +47,8 @@ def strain_rates(
         pi  = np.pi
         N   = 64
         h   = (2.0*pi)/N
+    if dim is False:
+        dim = 64
     #---------------------------------------------------------------------#
     # Strain rates                                                        #
     #---------------------------------------------------------------------#
