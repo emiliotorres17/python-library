@@ -51,15 +51,27 @@ def a_term(
         U3,                 # velocity-3 field
         P,                  # pressure field
         den,                # density field
-        h):                 # step size
+        h,                  # step size
+        flag    = True):    # spectral flag; gradient tool is default
 
     """ Calculating the A term in the kinetic energy transport equation """
     #---------------------------------------------------------------------#
     # Calculating the 3 different terms                                   #
     #---------------------------------------------------------------------#
-    term1       = np.gradient(P*U1, h, edge_order=2)[0]
-    term2       = np.gradient(P*U2, h, edge_order=2)[1]
-    term3       = np.gradient(P*U3, h, edge_order=2)[2]
+    if flag is True:                    # gradient tool
+        term1       = np.gradient(P*U1, h, edge_order=2)[0]
+        term2       = np.gradient(P*U2, h, edge_order=2)[1]
+        term3       = np.gradient(P*U3, h, edge_order=2)[2]
+    else:                               # spectral tool
+        #-----------------------------------------------------------------#
+        # Defining the domain variables                                   #
+        #-----------------------------------------------------------------#
+        dim     = U1.shape[0]
+        kspec   = np.fft.fftfreq(dim) * dim
+        Kfield  = np.array(np.meshgrid(kspec, kspec, kspec, indexing='ij'))
+        term1   = np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(P*U1)).real
+        term2   = np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(P*U2)).real
+        term3   = np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(P*U3)).real
     #---------------------------------------------------------------------#
     # Calculating the A term                                              #
     #---------------------------------------------------------------------#
@@ -83,7 +95,7 @@ if __name__ == "__main__":
     #---------------------------------------------------------------------#
     # Defining domain variables                                           #
     #---------------------------------------------------------------------#
-    N           = 400
+    N           = 256
     x0          = -0.5
     xf          = 0.5
     dx          = (xf-x0)/N
@@ -128,11 +140,12 @@ if __name__ == "__main__":
     #---------------------------------------------------------------------#
     # Calculating the exact A term                                        #
     #---------------------------------------------------------------------#
-    A_exact     = -1.0*(p*duxdx + ux*dpdx + p*duydy + uy*dpdy + p*duzdz + uz*dpdz)
+    A_exact     = -1.0*(p*duxdx + ux*dpdx + p*duydy + uy*dpdy + p*duzdz +\
+                        uz*dpdz)
     #---------------------------------------------------------------------#
     # Calculating the approximate A term                                  #
     #---------------------------------------------------------------------#
-    A_approx    = a_term(ux, uy, uz, p, 1.0, dx)
+    A_approx    = a_term(ux, uy, uz, p, 1.0, dx, True)
     #---------------------------------------------------------------------#
     # Calculating the error                                               #
     #---------------------------------------------------------------------#
