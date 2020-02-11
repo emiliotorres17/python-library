@@ -21,7 +21,8 @@ import matplotlib.pyplot as plt
 #-------------------------------------------------------------------------#
 # User packages                                                           #
 #-------------------------------------------------------------------------#
-from strain_rates   import strain_rates
+from strain_rates           import strain_rates
+from strain_rates_spectral  import spectral_strain_rates
 #=========================================================================#
 # User defined functions                                                  #
 #=========================================================================#
@@ -71,22 +72,26 @@ def p_term(
         Tau22,                  # tau-22 component
         Tau23,                  # tau-23 component
         Tau33,                  # tau-33 component
-        h):                     # spatial step size
+        h,                      # spatial step size
+        flag    = True):        # spectral flag; default is gradient tool
 
     """ Calculating the P term """
     #---------------------------------------------------------------------#
     # Calculating the strain rates                                        #
     #---------------------------------------------------------------------#
-    (S11, S12, S13, S22, S23, S33)  = strain_rates(U1, U2, U3, h)
+    if flag is True:
+        St  = strain_rates(U1, U2, U3, h, U1.shape[0])
+    else:
+        St  = spectral_strain_rates(U1, U2, U3)
     #---------------------------------------------------------------------#
     # Calculating the terms in the P term                                 #
     #---------------------------------------------------------------------#
-    Term1   = np.multiply(Tau11, S11)
-    Term2   = 2.0*np.multiply(Tau12, S12)
-    Term3   = 2.0*np.multiply(Tau13, S13)
-    Term4   = np.multiply(Tau22, S22)
-    Term5   = 2.0*np.multiply(Tau23, S23)
-    Term6   = np.multiply(Tau33, S33)
+    Term1   = np.multiply(Tau11, St[0])
+    Term2   = 2.0*np.multiply(Tau12, St[1])
+    Term3   = 2.0*np.multiply(Tau13, St[2])
+    Term4   = np.multiply(Tau22, St[3])
+    Term5   = 2.0*np.multiply(Tau23, St[4])
+    Term6   = np.multiply(Tau33, St[5])
     #---------------------------------------------------------------------#
     # Calculating the P term                                              #
     #---------------------------------------------------------------------#
@@ -108,7 +113,7 @@ if __name__ == "__main__":
     # Domain variables                                                    #
     #---------------------------------------------------------------------#
     pi          = np.pi
-    N           = 350
+    N           = 128
     x0          = 0.0
     xf          = 1.0
     x           = np.linspace(x0, xf, N+1)
@@ -164,7 +169,7 @@ if __name__ == "__main__":
     # Calculating the approximate solution                                #
     #---------------------------------------------------------------------#
     P_approx    = p_term(ux, uy, uz, tau11, tau12, tau13, tau22, tau23,\
-                            tau33, dx)
+                            tau33, dx, True)
     #---------------------------------------------------------------------#
     # Deleting variables                                                  #
     #---------------------------------------------------------------------#

@@ -33,26 +33,29 @@ def d_term(
         U1,                 # velocity-1 component
         U2,                 # velocity-2 component
         U3,                 # velocity-3 component
-        NU  = 0.000185,     # viscosity
-        h   = False):       # spatial step size
+        NU      = False,    # viscosity
+        h       = False,    # spatial step size
+        flag    = True):    # spectral flag; default is gradient tool
 
     """ Calculating the D term in the kinetic energy transport equation """
     #---------------------------------------------------------------------#
+    # Default settings                                                    #
+    #---------------------------------------------------------------------#
+    if NU is False:
+        NU = 0.000185
+    if h is False:
+        num = 64
+        pi  = np.pi
+        h   = (2.0*pi)/num
+    #---------------------------------------------------------------------#
     # Calculating the strain rates                                        #
     #---------------------------------------------------------------------#
-    #(S11, S12, S13, S22, S23, S33)  = strain_rates(U1, U2, U3, h)
-    St  = spectral_strain_rates(U1, U2, U3)
-    ##---------------------------------------------------------------------#
-    ## Calculating the 6 terms                                             #
-    ##---------------------------------------------------------------------#
-    #Term1       = np.multiply(S11, S11)
-    #Term2       = 2.0*np.multiply(S12, S12)
-    #Term3       = 2.0*np.multiply(S13, S13)
-    #Term4       = np.multiply(S22, S22)
-    #Term5       = 2.0*np.multiply(S23, S23)
-    #Term6       = np.multiply(S33, S33)
+    if flag is True:
+        St  = strain_rates(U1, U2, U3, h, U1.shape[0])
+    else:
+        St  = spectral_strain_rates(U1, U2, U3)
     #---------------------------------------------------------------------#
-    # Calculating the 6 terms with spectral code                          #
+    # Calculating the 6 terms                                             #
     #---------------------------------------------------------------------#
     Term1       = np.multiply(St[0], St[0])
     Term2       = 2.0*np.multiply(St[1], St[1])
@@ -118,7 +121,7 @@ if __name__ == "__main__":
     #---------------------------------------------------------------------#
     # Calculating the approximate solution                                #
     #---------------------------------------------------------------------#
-    D_approx    = d_term(ux, uy, uz, nu, dx)
+    D_approx    = d_term(ux, uy, uz, nu, dx, True)
     print("***** Minimum value")
     print(np.amax(ux))
     print(np.amax(uy))
