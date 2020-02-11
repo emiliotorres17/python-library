@@ -21,7 +21,8 @@ import matplotlib.pyplot as plt
 #-------------------------------------------------------------------------#
 # User packages                                                           #
 #-------------------------------------------------------------------------#
-from strain_rates   import strain_rates
+from strain_rates               import strain_rates
+from strain_rates_spectral      import spectral_strain_rates
 #=========================================================================#
 # User defined functions                                                  #
 #=========================================================================#
@@ -32,23 +33,33 @@ def d_term(
         U1,                 # velocity-1 component
         U2,                 # velocity-2 component
         U3,                 # velocity-3 component
-        NU,                 # viscosity
-        h):                 # spatial step size
+        NU  = 0.000185,     # viscosity
+        h   = False):       # spatial step size
 
     """ Calculating the D term in the kinetic energy transport equation """
     #---------------------------------------------------------------------#
     # Calculating the strain rates                                        #
     #---------------------------------------------------------------------#
-    (S11, S12, S13, S22, S23, S33)  = strain_rates(U1, U2, U3, h)
+    #(S11, S12, S13, S22, S23, S33)  = strain_rates(U1, U2, U3, h)
+    St  = spectral_strain_rates(U1, U2, U3)
+    ##---------------------------------------------------------------------#
+    ## Calculating the 6 terms                                             #
+    ##---------------------------------------------------------------------#
+    #Term1       = np.multiply(S11, S11)
+    #Term2       = 2.0*np.multiply(S12, S12)
+    #Term3       = 2.0*np.multiply(S13, S13)
+    #Term4       = np.multiply(S22, S22)
+    #Term5       = 2.0*np.multiply(S23, S23)
+    #Term6       = np.multiply(S33, S33)
     #---------------------------------------------------------------------#
-    # Calculating the 6 terms                                             #
+    # Calculating the 6 terms with spectral code                          #
     #---------------------------------------------------------------------#
-    Term1       = np.multiply(S11, S11)
-    Term2       = 2.0*np.multiply(S12, S12)
-    Term3       = 2.0*np.multiply(S13, S13)
-    Term4       = np.multiply(S22, S22)
-    Term5       = 2.0*np.multiply(S23, S23)
-    Term6       = np.multiply(S33, S33)
+    Term1       = np.multiply(St[0], St[0])
+    Term2       = 2.0*np.multiply(St[1], St[1])
+    Term3       = 2.0*np.multiply(St[2], St[2])
+    Term4       = np.multiply(St[3], St[3])
+    Term5       = 2.0*np.multiply(St[4], St[4])
+    Term6       = np.multiply(St[5], St[5])
     #---------------------------------------------------------------------#
     # Calculating the D term                                              #
     #---------------------------------------------------------------------#
