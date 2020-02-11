@@ -21,7 +21,8 @@ import matplotlib.pyplot as plt
 #-------------------------------------------------------------------------#
 # User packages                                                           #
 #-------------------------------------------------------------------------#
-from strain_rates   import strain_rates
+from strain_rates           import strain_rates
+from strain_rates_spectral  import spectral_strain_rates
 #=========================================================================#
 # User defined functions                                                  #
 #=========================================================================#
@@ -33,25 +34,43 @@ def b_term(
         U2,                 # velocity-2 component
         U3,                 # velocity-3 component
         h,                  # spatial step size
-        NU):                # viscosity
+        NU,                 # viscosity
+        flag    = True):    # spectral flag; default is the gradient tool
 
     """ Calculating the B term in the kinetic energy transport equation """
     #---------------------------------------------------------------------#
     # Calculating the strain rates                                        #
     #---------------------------------------------------------------------#
-    (S11, S12, S13, S22, S23, S33)  = strain_rates(U1, U2, U3, h)
+    if flag is True:
+        St  = strain_rates(U1, U2, U3, h, U1.shape[0])
+    else:
+        St  = spectral_strain_rates(U1,U2, U3)
     #---------------------------------------------------------------------#
     # Calculating the 9 gradient terms                                    #
     #---------------------------------------------------------------------#
-    Term1   = np.gradient(U1*S11, h, edge_order=2)[0]
-    Term2   = np.gradient(U1*S12, h, edge_order=2)[1]
-    Term3   = np.gradient(U1*S13, h, edge_order=2)[2]
-    Term4   = np.gradient(U2*S12, h, edge_order=2)[0]
-    Term5   = np.gradient(U2*S22, h, edge_order=2)[1]
-    Term6   = np.gradient(U2*S23, h, edge_order=2)[2]
-    Term7   = np.gradient(U3*S13, h, edge_order=2)[0]
-    Term8   = np.gradient(U3*S23, h, edge_order=2)[1]
-    Term9   = np.gradient(U3*S33, h, edge_order=2)[2]
+    if flag is True:            # gradient tool flag
+        Term1   = np.gradient(U1*St[0], h, edge_order=2)[0]
+        Term2   = np.gradient(U1*St[1], h, edge_order=2)[1]
+        Term3   = np.gradient(U1*St[2], h, edge_order=2)[2]
+        Term4   = np.gradient(U2*St[1], h, edge_order=2)[0]
+        Term5   = np.gradient(U2*St[3], h, edge_order=2)[1]
+        Term6   = np.gradient(U2*St[4], h, edge_order=2)[2]
+        Term7   = np.gradient(U3*St[2], h, edge_order=2)[0]
+        Term8   = np.gradient(U3*St[4], h, edge_order=2)[1]
+        Term9   = np.gradient(U3*St[5], h, edge_order=2)[2]
+    else:                       # spectral tool flag
+        dim     = U1.shape[0]
+        kspec   = np.fft.fftfreq(dim) * dim
+        Kfield  = np.array(np.meshgrid(kspec, kspec, kspec, indexing='ij'))
+        Term1   = np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(U1*St[0])).real
+        Term2   = np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(U1*St[1])).real
+        Term3   = np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(U1*St[2])).real
+        Term4   = np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(U2*St[1])).real
+        Term5   = np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(U2*St[3])).real
+        Term6   = np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(U2*St[4])).real
+        Term7   = np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(U3*St[2])).real
+        Term8   = np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(U3*St[4])).real
+        Term9   = np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(U3*St[5])).real
     #---------------------------------------------------------------------#
     # Calculating B term                                                  #
     #---------------------------------------------------------------------#
@@ -85,7 +104,7 @@ if __name__ == "__main__":
     #---------------------------------------------------------------------#
     # Defining domain variables                                           #
     #---------------------------------------------------------------------#
-    N           = 400
+    N           = 300
     pi          = np.pi
     x0          = 0.0
     xf          = 0.5
@@ -129,7 +148,7 @@ if __name__ == "__main__":
     #---------------------------------------------------------------------#
     # Approximation solution                                              #
     #---------------------------------------------------------------------#
-    B_approx    = b_term(ux, uy, uz, dx, nu)
+    B_approx    = b_term(ux, uy, uz, dx, nu, True)
     del ux
     del uy
     del uz
