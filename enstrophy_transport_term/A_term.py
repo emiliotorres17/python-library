@@ -14,6 +14,7 @@ Author:
 #-------------------------------------------------------------------------#
 # Python packages                                                         #
 #-------------------------------------------------------------------------#
+import os
 import sys
 from subprocess import call
 import numpy as np
@@ -77,11 +78,14 @@ if __name__ == "__main__":
     # Main                                                                #
     #---------------------------------------------------------------------#
     call(["clear"])
+    sep             = os.sep
+    pwd             = os.getcwd()
+    media_path      = pwd + "%cmedia%c"             %(sep, sep)
     #---------------------------------------------------------------------#
     # Domain variables                                                    #
     #---------------------------------------------------------------------#
     pi          = np.pi
-    N           = 256
+    N           = 400
     dx          = (2.0*pi)/(N)
     x           = np.linspace(0, 2.0*pi, N)
     y           = np.linspace(0, 2.0*pi, N)
@@ -133,8 +137,7 @@ if __name__ == "__main__":
     for c in cnt.collections:
         c.set_edgecolors("face")
     plt.colorbar()
-    plt.title("Exact solution")
-    plt.show()
+    plt.savefig(media_path + "A-term-exact.pdf")
     plt.clf()
     #---------------------------------------------------------------------#
     # Plotting approximate solution                                       #
@@ -144,7 +147,7 @@ if __name__ == "__main__":
         c.set_edgecolors("face")
     plt.colorbar()
     plt.title("Approximate solution")
-    plt.show()
+    plt.savefig(media_path + "A-term-approx.pdf")
     plt.clf()
     #---------------------------------------------------------------------#
     # Plotting the error                                                  #
@@ -155,7 +158,7 @@ if __name__ == "__main__":
         c.set_edgecolors("face")
     plt.colorbar()
     plt.title("Error")
-    plt.show()
+    plt.savefig(media_path + "A-term-error.pdf")
     plt.clf()
 
     print("**** Successful Run ****")
