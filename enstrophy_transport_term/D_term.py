@@ -43,35 +43,37 @@ def d_term_enstrophy(
     # Calculating the gradients                                           #
     #---------------------------------------------------------------------#
     dim     = w1.shape[0]
+    d       = np.zeros((dim, dim, dim))
     if flag is True:
-        term1   = np.gradient(w1, h, edge_order=2)[0]
-        term2   = np.gradient(w1, h, edge_order=2)[1]
-        term3   = np.gradient(w1, h, edge_order=2)[2]
-        term4   = np.gradient(w2, h, edge_order=2)[0]
-        term5   = np.gradient(w2, h, edge_order=2)[1]
-        term6   = np.gradient(w2, h, edge_order=2)[2]
-        term7   = np.gradient(w3, h, edge_order=2)[0]
-        term8   = np.gradient(w3, h, edge_order=2)[1]
-        term9   = np.gradient(w3, h, edge_order=2)[2]
+        grad1   = np.gradient(w1, h, edge_order=2)
+        grad2   = np.gradient(w2, h, edge_order=2)
+        grad3   = np.gradient(w3, h, edge_order=2)
+        
+        d       += (grad1[0])**2.0
+        d       += (grad1[1])**2.0
+        d       += (grad1[2])**2.0
+        d       += (grad2[0])**2.0
+        d       += (grad2[1])**2.0
+        d       += (grad2[2])**2.0
+        d       += (grad3[0])**2.0
+        d       += (grad3[1])**2.0
+        d       += (grad3[2])**2.0
     else:
         kspec   = np.fft.fftfreq(dim) * dim
         Kfield  = np.array(np.meshgrid(kspec, kspec, kspec, indexing='ij'))
-        term1   = np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(w1)).real
-        term2   = np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(w1)).real
-        term3   = np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(w1)).real
-        term4   = np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(w2)).real
-        term5   = np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(w2)).real
-        term6   = np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(w2)).real
-        term7   = np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(w3)).real
-        term8   = np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(w3)).real
-        term9   = np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(w3)).real
+        d       += (np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(w1)).real)**2.0
+        d       += (np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(w1)).real)**2.0
+        d       += (np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(w1)).real)**2.0
+        d       += (np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(w2)).real)**2.0
+        d       += (np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(w2)).real)**2.0
+        d       += (np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(w2)).real)**2.0
+        d       += (np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(w3)).real)**2.0
+        d       += (np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(w3)).real)**2.0
+        d       += (np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(w3)).real)**2.0
     #---------------------------------------------------------------------#
     # Calculating the dissipation                                         #
     #---------------------------------------------------------------------#
-    d   = np.zeros((dim, dim, dim))
-    d   += -Nu*(term1*term1 + term2*term2 + term3*term3 +\
-                term4*term4 + term5*term5 + term6*term6 +\
-                term7*term7 + term8*term8 + term9*term9)
+    d   *= -Nu
 
     return d
 #=========================================================================#
@@ -89,34 +91,45 @@ if __name__ == "__main__":
     # Domain variables                                                    #
     #---------------------------------------------------------------------#
     nu          = 1.0
-    N           = 400
-    pi          = np.pi
-    dx          = (2.0*pi)/N
-    x           = np.linspace(0, 2.0*pi, N)
-    y           = np.linspace(0, 2.0*pi, N)
-    z           = np.linspace(0, 2.0*pi, N)
+    N           = 256
+    xf          = 1.0
+    x0          = 0.0
+    dx          = (xf-x0)/N
+    x           = np.linspace(x0, xf, N+1)
+    y           = np.linspace(x0, xf, N+1)
+    z           = np.linspace(x0, xf, N+1)
     [X1, X2]    = np.meshgrid(x,y)
     #---------------------------------------------------------------------#
     # Pre-allocating space                                                #
     #---------------------------------------------------------------------#
-    omega1  = np.zeros((N,N,N))
-    omega2  = np.zeros((N,N,N))
-    omega3  = np.zeros((N,N,N))
-    sol     = np.zeros((N,N,N))
+    omega1  = np.zeros((N+1,N+1,N+1))
+    omega2  = np.zeros((N+1,N+1,N+1))
+    omega3  = np.zeros((N+1,N+1,N+1))
+    sol     = np.zeros((N+1,N+1,N+1))
     #---------------------------------------------------------------------#
-    # Approximate solution                                                #
+    # Approximate and exact solutions                                     #
     #---------------------------------------------------------------------#
-    for k in range(0,N):
-        for j in range(0,N):
-            for i in range(0,N):
-                omega1[i,j,k]   = np.sin(x[i])
-                omega2[i,j,k]   = np.cos(y[j])
-                omega3[i,j,k]   = np.sin(z[k])
-                sol[i,j,k]      = -nu*(np.cos(x[i])**2.0 +\
-                                    np.sin(y[j])**2.0 +\
-                                    np.cos(z[k])**2.0)
+    for k in range(0,N+1):
+        for j in range(0,N+1):
+            for i in range(0,N+1):
+                #---------------------------------------------------------#
+                # Vorticities                                             #
+                #---------------------------------------------------------#
+                omega1[i,j,k]   = y[j]*z[k]*np.sin(x[i])
+                omega2[i,j,k]   = x[i]*z[k]*np.sin(y[j])
+                omega3[i,j,k]   = x[i]*y[j]*np.sin(z[k])
+                sol[i,j,k]      = (y[j]*z[k]*np.cos(x[i]))**2.0\
+                                    + (z[k]*np.sin(x[i]))**2.0\
+                                    + (y[j]*np.sin(x[i]))**2.0\
+                                    + (z[k]*np.sin(y[j]))**2.0\
+                                    + (x[i]*z[k]*np.cos(y[j]))**2.0\
+                                    + (x[i]*np.sin(y[j]))**2.0\
+                                    + (y[j]*np.sin(z[k]))**2.0\
+                                    + (x[i]*np.sin(z[k]))**2.0\
+                                    + (y[j]*x[i]*np.cos(z[k]))**2.0
         print(k)
     d_approx = d_term_enstrophy(omega1, omega2, omega3, dx, nu, True)
+    sol *= -nu
     #---------------------------------------------------------------------#
     # Plotting approximate solution                                       #
     #---------------------------------------------------------------------#
