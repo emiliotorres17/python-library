@@ -15,9 +15,11 @@ Author:
 #-------------------------------------------------------------------------#
 # Python packages                                                         #
 #-------------------------------------------------------------------------#
+import os
 import sys
 from subprocess import call
 import numpy as np
+import matplotlib.pyplot as plt
 #-------------------------------------------------------------------------#
 # User packages                                                           #
 #-------------------------------------------------------------------------#
@@ -60,21 +62,21 @@ def SGS_transport_enstrophy(
         #-----------------------------------------------------------------#
         # Terms 1-3 (i = 1)                                               #
         #-----------------------------------------------------------------#
-        SGS_trans   += np.gradient(w1*Psi[0], h, edge_orer=2)[0]
-        SGS_trans   += np.gradient(w1*Psi[1], h, edge_orer=2)[1]
-        SGS_trans   += np.gradient(w1*Psi[2], h, edge_orer=2)[2]
+        SGS_trans   += np.gradient(w1*Psi[0], h, edge_order=2)[0]
+        SGS_trans   += np.gradient(w1*Psi[1], h, edge_order=2)[1]
+        SGS_trans   += np.gradient(w1*Psi[2], h, edge_order=2)[2]
         #-----------------------------------------------------------------#
         # Terms 4-6 (i = 2)                                               #
         #-----------------------------------------------------------------#
-        SGS_trans   += np.gradient(w2*Psi[3], h, edge_orer=2)[0]
-        SGS_trans   += np.gradient(w2*Psi[4], h, edge_orer=2)[1]
-        SGS_trans   += np.gradient(w2*Psi[5], h, edge_orer=2)[2]
+        SGS_trans   += np.gradient(w2*Psi[3], h, edge_order=2)[0]
+        SGS_trans   += np.gradient(w2*Psi[4], h, edge_order=2)[1]
+        SGS_trans   += np.gradient(w2*Psi[5], h, edge_order=2)[2]
         #-----------------------------------------------------------------#
         # Terms 7-9 (i = 3)                                               #
         #-----------------------------------------------------------------#
-        SGS_trans   += np.gradient(w3*Psi[6], h, edge_orer=2)[0]
-        SGS_trans   += np.gradient(w3*Psi[7], h, edge_orer=2)[1]
-        SGS_trans   += np.gradient(w3*Psi[8], h, edge_orer=2)[2]
+        SGS_trans   += np.gradient(w3*Psi[6], h, edge_order=2)[0]
+        SGS_trans   += np.gradient(w3*Psi[7], h, edge_order=2)[1]
+        SGS_trans   += np.gradient(w3*Psi[8], h, edge_order=2)[2]
 
     SGS_trans *= -1
 
@@ -87,6 +89,104 @@ if __name__ == "__main__":
     # Main preamble                                                       #
     #---------------------------------------------------------------------#
     call(["clear"])
-    print("**** Has not been unit tested ****")
+    sep             = os.sep
+    pwd             = os.getcwd()
+    media_path      = pwd + "%cmedia%c"         %(sep, sep)
+    #---------------------------------------------------------------------#
+    # Domain variables                                                    #
+    #---------------------------------------------------------------------#
+    N           = 256
+    pi          = np.pi
+    x0          = 0.0
+    xf          = 1.0
+    dx          = (xf-x0)/N
+    x           = np.linspace(x0, xf, N+1)
+    y           = np.linspace(x0, xf, N+1)
+    z           = np.linspace(x0, xf, N+1)
+    [X1, X2]    = np.meshgrid(x,y)
+    #---------------------------------------------------------------------#
+    # Preallocating space                                                 #
+    #---------------------------------------------------------------------#
+    sol         = np.zeros((N+1, N+1, N+1))
+    omega1      = np.zeros((N+1, N+1, N+1))
+    omega2      = np.zeros((N+1, N+1, N+1))
+    omega3      = np.zeros((N+1, N+1, N+1))
+    tau         = np.zeros((6,N+1, N+1, N+1))
+    #---------------------------------------------------------------------#
+    # Looping over domain                                                 #
+    #---------------------------------------------------------------------#
+    count   = 0
+    for k in range(0, N+1):
+        for j in range(0, N+1):
+            for i in range(0, N+1):
+                #---------------------------------------------------------#
+                # Vorticities                                             #
+                #---------------------------------------------------------#
+                omega1[i,j,k]   = x[i]*y[j]*z[k]
+                omega2[i,j,k]   = x[i]**2.0*y[j]**3.0*z[k]
+                omega3[i,j,k]   = x[i]*y[j]*np.sin(z[k])
+                #---------------------------------------------------------#
+                # SGS                                                     #
+                #---------------------------------------------------------#
+                tau[0,i,j,k]    = x[i]**2.0
+                tau[1,i,j,k]    = x[i]*y[j]
+                tau[2,i,j,k]    = x[i]*z[k]
+                tau[3,i,j,k]    = y[j]**2.0
+                tau[4,i,j,k]    = y[j]*z[k]
+                tau[5,i,j,k]    = z[k]**2.0
+                #---------------------------------------------------------#
+                # Exact solution                                          #
+                #---------------------------------------------------------#
+                sol[i,j,k]      = x[i]*z[k]**2.0\
+                                    - x[i]*y[j]**2.0\
+                                    - 2.0*x[i]*y[j]**3.0*z[k]**2.0\
+                                    + x[i]**3.0*y[j]**3.0\
+                                    + y[j]**2.0*np.sin(z[k])\
+                                    - x[i]**2.0*np.sin(z[k])
+        #-----------------------------------------------------------------#
+        # Print criteria                                                  #
+        #-----------------------------------------------------------------#
+        if count == 20:
+            print(k)
+            count = 0
+        count += 1
+    #---------------------------------------------------------------------#
+    # Exact solution                                                      #
+    #---------------------------------------------------------------------#
+    sol *= -1
+    #---------------------------------------------------------------------#
+    # Approximate solution                                                #
+    #---------------------------------------------------------------------#
+    sgs_approx  = SGS_transport_enstrophy(omega1, omega2, omega3, tau,\
+                    dx, True)
+    #---------------------------------------------------------------------#
+    # Plotting approximate solution                                       #
+    #---------------------------------------------------------------------#
+    cnt     = plt.contourf(X1, X2, sgs_approx[:,:,int(N/2)], 500, cmap='jet')
+    for c in cnt.collections:
+        c.set_edgecolors("face")
+    plt.colorbar()
+    plt.savefig(media_path + "SGS-trans-approx.pdf")
+    plt.clf()
+    #---------------------------------------------------------------------#
+    # Plotting exact solution                                             #
+    #---------------------------------------------------------------------#
+    cnt     = plt.contourf(X1, X2, sol[:,:,int(N/2)], 500, cmap='jet')
+    for c in cnt.collections:
+        c.set_edgecolors("face")
+    plt.colorbar()
+    plt.savefig(media_path + "SGS-trans-exact.pdf")
+    plt.clf()
+    #---------------------------------------------------------------------#
+    # Plotting error                                                      #
+    #---------------------------------------------------------------------#
+    error   = abs(sol-sgs_approx)
+    cnt     = plt.contourf(X1, X2, error[:,:,int(N/2)], 500, cmap='jet')
+    for c in cnt.collections:
+        c.set_edgecolors("face")
+    plt.colorbar()
+    plt.savefig(media_path + "SGS-trans-error.pdf")
+    plt.clf()
 
+    print("**** Successful Run ****")
     sys.exit(0)
