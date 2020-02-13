@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """========================================================================
 Purpose:
-    The purpose of this subroutine is to calculate the dissipation term 
+    The purpose of this subroutine is to calculate the dissipation term
     (D term) in he enstrophy transport term.
 
 Author:
@@ -82,7 +82,7 @@ if __name__ == "__main__":
     # Main preamble                                                       #
     #---------------------------------------------------------------------#
     call(["clear"])
-    sep             = os.sep 
+    sep             = os.sep
     pwd             = os.getcwd()
     media_path      = pwd + "%cmedia%c"         %(sep, sep)
     #---------------------------------------------------------------------#
@@ -109,9 +109,9 @@ if __name__ == "__main__":
     for k in range(0,N):
         for j in range(0,N):
             for i in range(0,N):
-                omega1[i,j,k]   = np.sin(x[i])    
-                omega2[i,j,k]   = np.cos(y[j])    
-                omega3[i,j,k]   = np.sin(z[k])    
+                omega1[i,j,k]   = np.sin(x[i])
+                omega2[i,j,k]   = np.cos(y[j])
+                omega3[i,j,k]   = np.sin(z[k])
                 sol[i,j,k]      = -nu*(np.cos(x[i])**2.0 +\
                                     np.sin(y[j])**2.0 +\
                                     np.cos(z[k])**2.0)
@@ -145,3 +145,6 @@ if __name__ == "__main__":
     plt.colorbar()
     plt.savefig(media_path + "D-term-error.pdf")
     plt.clf()
+
+    print("**** Successful Run ****")
+    sys.exit(0)
