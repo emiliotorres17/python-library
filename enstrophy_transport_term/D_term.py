@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 #=========================================================================#
 # User defined functions                                                  #
 #=========================================================================#
-def d_term(
+def d_term_enstrophy(
         w1,                 # vorticity component-1
         w2,                 # vorticity component-2
         w3,                 # vorticity component-3
@@ -116,7 +116,7 @@ if __name__ == "__main__":
                                     np.sin(y[j])**2.0 +\
                                     np.cos(z[k])**2.0)
         print(k)
-    d_approx = d_term(omega1, omega2, omega3, dx, nu, True)
+    d_approx = d_term_enstrophy(omega1, omega2, omega3, dx, nu, True)
     #---------------------------------------------------------------------#
     # Plotting approximate solution                                       #
     #---------------------------------------------------------------------#
