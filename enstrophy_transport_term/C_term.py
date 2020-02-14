@@ -134,8 +134,6 @@ if __name__ == "__main__":
                                 + 2.0*y[j]**2.0*np.sin(x[i])**2.0\
                                 + 2.0*x[i]**2.0*np.sin(y[j])**2.0
                 sol[i,j,k]  = 0.5*(df_dx + df_dy + df_dz)
-
-
         print(k)
     c_approx    = c_term_enstrophy(omega1, omega2, omega3, dx, 1.0, True)
     #---------------------------------------------------------------------#
