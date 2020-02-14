@@ -18,6 +18,10 @@ import sys
 from subprocess import call
 import numpy as np
 import matplotlib.pyplot as plt
+#-------------------------------------------------------------------------#
+# User packages                                                           #
+#-------------------------------------------------------------------------#
+from enstrophy      import enstrophy_static
 #=========================================================================#
 # User defined functions                                                  #
 #=========================================================================#
@@ -25,7 +29,9 @@ import matplotlib.pyplot as plt
 # C term                                                                  #
 #-------------------------------------------------------------------------#
 def c_term_enstrophy(
-        Enst,                           # enstrophy field
+        w1,                             # vorticity-1 component
+        w2,                             # vorticity-2 component
+        w3,                             # vorticity-3 component
         h       = False,                # spatial step size
         Nu      = False,                # viscosity
         flag    = True):                # spectral flag; default is gradient
@@ -40,6 +46,10 @@ def c_term_enstrophy(
         h  = (2.0*Pi)/num
     if Nu is False:
         Nu  = 0.000185
+    #---------------------------------------------------------------------#
+    # Calculating the enstrophy                                           #
+    #---------------------------------------------------------------------#
+    Enst    = enstrophy_static(w1, w2, w3)
     #---------------------------------------------------------------------#
     # Calculating the Laplacian                                           #
     #---------------------------------------------------------------------#
@@ -81,9 +91,8 @@ if __name__ == "__main__":
     #---------------------------------------------------------------------#
     # Domain variables                                                    #
     #---------------------------------------------------------------------#
-    pi          = np.pi
-    N           = 128
-    x0          = -1.0
+    N           = 256
+    x0          = 0
     xf          = 1.0
     dx          = (xf-x0)/N
     x           = np.linspace(x0, xf, N+1)
@@ -93,7 +102,9 @@ if __name__ == "__main__":
     #---------------------------------------------------------------------#
     # Preallocating space                                                 #
     #---------------------------------------------------------------------#
-    enst        = np.zeros((N+1,N+1,N+1))
+    omega1      = np.zeros((N+1,N+1,N+1))
+    omega2      = np.zeros((N+1,N+1,N+1))
+    omega3      = np.zeros((N+1,N+1,N+1))
     sol         = np.zeros((N+1,N+1,N+1))
     #---------------------------------------------------------------------#
     # Calculating approximate and exact solution                          #
@@ -101,12 +112,32 @@ if __name__ == "__main__":
     for k in range(0,N+1):
         for j in range(0,N+1):
             for i in range(0,N+1):
-                enst[i,j,k] = x[i]**2.0*y[j]**2.0*z[k]**2.0
-                sol[i,j,k]  = 2.0*y[j]**2.0*z[k]**2.0 +\
-                                2.0*x[i]**2.0*z[k]**2.0 +\
-                                2.0*x[i]**2.0*y[j]**2.0
+                #---------------------------------------------------------#
+                # vorticities                                             #
+                #---------------------------------------------------------#
+                omega1[i,j,k]   = y[j]*z[k]*np.sin(x[i])
+                omega2[i,j,k]   = x[i]*z[k]*np.sin(y[j])
+                omega3[i,j,k]   = x[i]*y[j]*np.sin(z[k])
+                #---------------------------------------------------------#
+                # exact solution                                          #
+                #---------------------------------------------------------#
+                df_dx       = y[j]**2.0*z[k]**2.0*\
+                                (4.0*np.cos(x[i])**2.0-2.0)\
+                                + 2.0*z[k]**2.0*np.sin(y[j])**2.0\
+                                + 2.0*y[j]**2.0*np.sin(z[k])**2.0
+                df_dy       = x[i]**2.0*z[k]**2.0*\
+                                (4.0*np.cos(y[j])**2.0-2.0)\
+                                + 2.0*z[k]**2.0*np.sin(x[i])**2.0\
+                                + 2.0*x[i]**2.0*np.sin(z[k])**2.0
+                df_dz       = x[i]**2.0*y[j]**2.0*\
+                                (4.0*np.cos(z[k])**2.0-2.0)\
+                                + 2.0*y[j]**2.0*np.sin(x[i])**2.0\
+                                + 2.0*x[i]**2.0*np.sin(y[j])**2.0
+                sol[i,j,k]  = 0.5*(df_dx + df_dy + df_dz)
+
+
         print(k)
-    c_approx    = c_term_enstrophy(enst, dx, 1.0, True)
+    c_approx    = c_term_enstrophy(omega1, omega2, omega3, dx, 1.0, True)
     #---------------------------------------------------------------------#
     # Plotting approximate solution                                       #
     #---------------------------------------------------------------------#

@@ -22,6 +22,29 @@ import numpy as np
 #-------------------------------------------------------------------------#
 # Enstrophy                                                               #
 #-------------------------------------------------------------------------#
+def enstrophy_static(
+        omega1,                     # vorticity-1 component
+        omega2,                     # vorticity-2 component
+        omega3):                    # vorticity-3 component
+
+    """ Calculating the enstrophy field """
+    #---------------------------------------------------------------------#
+    # Determining the shape of the enstrophy field                        #
+    #---------------------------------------------------------------------#
+    dim     = omega1.shape
+    ens     = np.empty((dim[0], dim[1], dim[2]))
+    #---------------------------------------------------------------------#
+    # Time loop                                                           #
+    #---------------------------------------------------------------------#
+    term1   = np.square(omega1)
+    term2   = np.square(omega2)
+    term3   = np.square(omega3)
+    ens     = 0.5*(term1 + term2 + term3)
+
+    return ens
+#-------------------------------------------------------------------------#
+# Enstrophy                                                               #
+#-------------------------------------------------------------------------#
 def enstrophy_field(
         omega1,                     # vorticity-1 component
         omega2,                     # vorticity-2 component
