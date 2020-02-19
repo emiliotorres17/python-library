@@ -666,6 +666,50 @@ def npy_vorticity_general(
         print_count += 1
 
     return w
+#-------------------------------------------------------------------------#
+# NPY vorticity extraction general                                        #
+#-------------------------------------------------------------------------#
+def npy_A_general(
+        N_space,                        # number of spatial steps
+        num_proc,                       # number or processors
+        tstart,                         # time start (i.e., 100)
+        tfinish,                        # time finish (i.e., 500)
+        location):                      # data location
+
+    """ A general extraction code for vorticity """
+    #---------------------------------------------------------------------#
+    # Defining file variables                                             #
+    #---------------------------------------------------------------------#
+    sep = os.sep
+    if location[-1] != sep:
+        location    = location + sep
+    #---------------------------------------------------------------------#
+    # Preallocating space for the velocity                                #
+    #---------------------------------------------------------------------#
+    Nt      = int(tfinish-tstart)
+    A       = np.zeros((N_space, N_space, N_space, Nt+1))
+    #---------------------------------------------------------------------#
+    # Extracting the data                                                 #
+    #---------------------------------------------------------------------#
+    interval    = int(N_space/num_proc)
+    print_count = 0
+    for count, i in enumerate(range(tstart, tfinish+1)):
+        time_str        = time_string(i)
+        for n in range(0,num_proc):
+            proc        = proc_string(n)
+            Atemp       = np.load(location + 'A-term' + time_str +\
+                                proc + '.npy')
+            index       = int(interval*n)
+            A[index:index+interval, :, :, count]   = Atemp
+        #-----------------------------------------------------------------#
+        # Printing time step output                                       #
+        #-----------------------------------------------------------------#
+        if print_count > 20:
+            print('A-term ---> t_step = %i'     %(i))
+            print_count = 0
+        print_count += 1
+
+    return A
 #=========================================================================#
 # Main                                                                    #
 #=========================================================================#
