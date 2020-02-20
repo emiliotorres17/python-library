@@ -697,7 +697,7 @@ def npy_A_general(
         time_str        = time_string(i)
         for n in range(0,num_proc):
             proc        = proc_string(n)
-            Atemp       = np.load(location + 'A-term' + time_str +\
+            Atemp       = np.load(location + 'A' + time_str +\
                                 proc + '.npy')
             index       = int(interval*n)
             A[index:index+interval, :, :, count]   = Atemp
@@ -710,6 +710,54 @@ def npy_A_general(
         print_count += 1
 
     return A
+#-------------------------------------------------------------------------#
+# Subroutine for extracting the strain rates using a general approach     #
+#-------------------------------------------------------------------------#
+def npy_S_general(
+        S_comp,                     # subgrid stress component
+        N,                          # number of spatial steps
+        num_proc,                   # number of processors
+        tstart,                     # starting time
+        tfinish,                    # finishing time
+        location):                  # file location
+
+    """ Subroutine to extract the strain rates for a given time
+    interval """
+    #---------------------------------------------------------------------#
+    # Defining file variables                                             #
+    #---------------------------------------------------------------------#
+    sep = os.sep
+    if location[-1] != sep:
+        location    = location + sep
+    if isinstance(S_comp, str) is False:
+        S_comp   = str(S_comp)
+    #---------------------------------------------------------------------#
+    # Preallocating space for the velocity                                #
+    #---------------------------------------------------------------------#
+    Nt      = int(tfinish-tstart)
+    S       = np.zeros((N, N, N, Nt+1))
+    #---------------------------------------------------------------------#
+    # Extracting the data                                                 #
+    #---------------------------------------------------------------------#
+    interval    = int(N/num_proc)
+    print_count = 0
+    for count, i in enumerate(range(tstart, tfinish+1)):
+        time_str        = time_string(i)
+        for n in range(0,num_proc):
+            proc        = proc_string(n)
+            S_temp      = np.load(location + 'S' + S_comp + time_str +\
+                                proc + '.npy')
+            index       = int(interval*n)
+            S[index:index+interval, :, :, count]   = S_temp
+        #-----------------------------------------------------------------#
+        # Printing time step output                                       #
+        #-----------------------------------------------------------------#
+        if print_count > 20:
+            print('Strain rates' + S_comp + ' ---> t_step = %i'   %(i))
+            print_count = 0
+        print_count += 1
+
+    return S
 #=========================================================================#
 # Main                                                                    #
 #=========================================================================#
