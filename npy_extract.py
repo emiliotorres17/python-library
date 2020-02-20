@@ -669,7 +669,8 @@ def npy_vorticity_general(
 #-------------------------------------------------------------------------#
 # NPY vorticity extraction general                                        #
 #-------------------------------------------------------------------------#
-def npy_A_general(
+def npy_transport_term_general(
+        term,                           # transport term
         N_space,                        # number of spatial steps
         num_proc,                       # number or processors
         tstart,                         # time start (i.e., 100)
@@ -697,7 +698,7 @@ def npy_A_general(
         time_str        = time_string(i)
         for n in range(0,num_proc):
             proc        = proc_string(n)
-            Atemp       = np.load(location + 'A' + time_str +\
+            Atemp       = np.load(location + term + time_str +\
                                 proc + '.npy')
             index       = int(interval*n)
             A[index:index+interval, :, :, count]   = Atemp
@@ -705,7 +706,7 @@ def npy_A_general(
         # Printing time step output                                       #
         #-----------------------------------------------------------------#
         if print_count > 20:
-            print('A-term ---> t_step = %i'     %(i))
+            print(term + '-term ---> t_step = %i'     %(i))
             print_count = 0
         print_count += 1
 
