@@ -146,7 +146,6 @@ if __name__ == "__main__":
     for c in cnt.collections:
         c.set_edgecolors("face")
     plt.colorbar()
-    plt.title("Approximate solution")
     plt.savefig(media_path + "A-term-approx.pdf")
     plt.clf()
     #---------------------------------------------------------------------#
@@ -157,7 +156,6 @@ if __name__ == "__main__":
     for c in cnt.collections:
         c.set_edgecolors("face")
     plt.colorbar()
-    plt.title("Error")
     plt.savefig(media_path + "A-term-error.pdf")
     plt.clf()
 
