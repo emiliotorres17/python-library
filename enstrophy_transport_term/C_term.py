@@ -54,27 +54,29 @@ def c_term_enstrophy(
     # Calculating the Laplacian                                           #
     #---------------------------------------------------------------------#
     dim = Enst.shape[0]
+    c   = np.zeros((dim,dim,dim))
     if flag is True:
-        term1   = np.gradient(np.gradient(Enst, h, edge_order=2)[0],\
+        c       += np.gradient(np.gradient(Enst, h, edge_order=2)[0],\
                                 h, edge_order=2)[0]
-        term2   = np.gradient(np.gradient(Enst, h, edge_order=2)[1],\
+        c       += np.gradient(np.gradient(Enst, h, edge_order=2)[1],\
                                 h, edge_order=2)[1]
-        term3   = np.gradient(np.gradient(Enst, h, edge_order=2)[2],\
+        c       += np.gradient(np.gradient(Enst, h, edge_order=2)[2],\
                                 h, edge_order=2)[2]
+        #c       += np.sum(np.gradient(np.gradient(Enst,h, edge_order=2), h,\
+        #                edge_order=2))
     else:
         kspec   = np.fft.fftfreq(dim) * dim
         Kfield  = np.array(np.meshgrid(kspec, kspec, kspec, indexing='ij'))
         term1   = np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(Enst)).real
-        term1   = np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(term1)).real
-        term2   = np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(Enst)).real
-        term2   = np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(term2)).real
-        term3   = np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(Enst)).real
-        term3   = np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(term3)).real
+        c       += np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(term1)).real
+        term2   = np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(Enst)).real
+        c       += np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(term2)).real
+        term3   = np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(Enst)).real
+        c       += np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(term3)).real
     #---------------------------------------------------------------------#
     # Calculating dissipation term                                        #
     #---------------------------------------------------------------------#
-    c   = np.zeros((dim,dim,dim))
-    c   += Nu*(term1 + term2 + term3)
+    c   *= Nu
 
     return c
 #=========================================================================#
