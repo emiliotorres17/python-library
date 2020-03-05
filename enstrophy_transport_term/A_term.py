@@ -31,12 +31,10 @@ from strain_rates               import strain_rates
 # A term (Vortex stretching)                                              #
 #-------------------------------------------------------------------------#
 def a_term_enstrophy(
-        U1,                     # velocity 1 component
-        U2,                     # velocity 2 component
-        U3,                     # velocity 3 component
         W1,                     # vorticity 1 component
         W2,                     # vorticity 2 component
         W3,                     # vorticity 3 component
+        St,                     # strain rates
         flag    = False,        # spectral flag
         h       = False,        # spatial step size
         dim     = False):       # Number of spatial steps
@@ -52,13 +50,6 @@ def a_term_enstrophy(
     if dim is False:
         dim = 64
     a   = np.zeros((dim,dim,dim))
-    #---------------------------------------------------------------------#
-    # Strain rates                                                        #
-    #---------------------------------------------------------------------#
-    if flag is False:
-        St  = spectral_strain_rates(U1, U2, U3)
-    else:
-        St  = strain_rates(U1,U2,U3, h, dim)
     #---------------------------------------------------------------------#
     # Calculating vortex stretching                                       #
     #---------------------------------------------------------------------#
