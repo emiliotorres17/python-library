@@ -27,7 +27,7 @@ from enstrophy_transport_term.psi_enstrophy     import psi
 #=========================================================================#
 # User defined functions                                                  #
 #=========================================================================#
-def p_enstrophy(
+def p_term_enstrophy(
         w1,                 # vorticity-1 component
         w2,                 # vorticity-2 component
         w3,                 # vorticity-3 component
