@@ -27,7 +27,7 @@ from enstrophy_transport_term.psi_enstrophy     import psi
 #=========================================================================#
 # User defined functions                                                  #
 #=========================================================================#
-def SGS_production_enstrophy(
+def p_enstrophy(
         w1,                 # vorticity-1 component
         w2,                 # vorticity-2 component
         w3,                 # vorticity-3 component
@@ -99,7 +99,7 @@ if __name__ == "__main__":
     #---------------------------------------------------------------------#
     # Domain variables                                                    #
     #---------------------------------------------------------------------#
-    N           = 256
+    N           = 128
     pi          = np.pi
     x0          = 0.0
     xf          = 1.0
@@ -157,7 +157,7 @@ if __name__ == "__main__":
     #---------------------------------------------------------------------#
     # Approximate solution                                                #
     #---------------------------------------------------------------------#
-    sgs_approx  = SGS_production_enstrophy(omega1, omega2, omega3, tau,\
+    sgs_approx  = p_enstrophy(omega1, omega2, omega3, tau,\
                     dx, True)
     #---------------------------------------------------------------------#
     # Plotting approximate solution                                       #
