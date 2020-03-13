@@ -157,7 +157,7 @@ if __name__ == "__main__":
     #---------------------------------------------------------------------#
     # Approximate solution                                                #
     #---------------------------------------------------------------------#
-    sgs_approx  = p_enstrophy(omega1, omega2, omega3, tau,\
+    sgs_approx  = p_term_enstrophy(omega1, omega2, omega3, tau,\
                     dx, True)
     #---------------------------------------------------------------------#
     # Plotting approximate solution                                       #
