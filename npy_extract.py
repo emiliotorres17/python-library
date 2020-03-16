@@ -759,6 +759,54 @@ def npy_S_general(
         print_count += 1
 
     return S
+#-------------------------------------------------------------------------#
+# Subroutine for extracting psi using a general approach                  #
+#-------------------------------------------------------------------------#
+def npy_psi_general(
+        psi_comp,                   # subgrid stress component
+        N,                          # number of spatial steps
+        num_proc,                   # number of processors
+        tstart,                     # starting time
+        tfinish,                    # finishing time
+        location):                  # tau file location
+
+    """ Subroutine to extract the Psi operator for a given time
+    interval """
+    #---------------------------------------------------------------------#
+    # Defining file variables                                             #
+    #---------------------------------------------------------------------#
+    sep = os.sep
+    if location[-1] != sep:
+        location    = location + sep
+    if isinstance(psi_comp, str) is False:
+        psi_comp   = str(psi_comp)
+    #---------------------------------------------------------------------#
+    # Preallocating space for the velocity                                #
+    #---------------------------------------------------------------------#
+    Nt      = int(tfinish-tstart)
+    psi     = np.zeros((N, N, N, Nt+1))
+    #---------------------------------------------------------------------#
+    # Extracting the data                                                 #
+    #---------------------------------------------------------------------#
+    interval    = int(N/num_proc)
+    print_count = 0
+    for count, i in enumerate(range(tstart, tfinish+1)):
+        time_str        = time_string(i)
+        for n in range(0,num_proc):
+            proc        = proc_string(n)
+            psi_temp    = np.load(location + 'psi' + psi_comp + time_str +\
+                                proc + '.npy')
+            index       = int(interval*n)
+            psi[index:index+interval, :, :, count]   = psi_temp
+        #-----------------------------------------------------------------#
+        # Printing time step output                                       #
+        #-----------------------------------------------------------------#
+        if print_count > 20:
+            print('psi' + psi_comp + ' ---> t_step = %i'      %(i))
+            print_count = 0
+        print_count += 1
+
+    return psi
 #=========================================================================#
 # Main                                                                    #
 #=========================================================================#

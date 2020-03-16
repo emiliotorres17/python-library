@@ -27,7 +27,7 @@ from enstrophy_transport_term.psi_enstrophy     import psi
 #=========================================================================#
 # User defined functions                                                  #
 #=========================================================================#
-def SGS_transport_enstrophy(
+def pi_term_enstrophy(
         w1,                 # vorticity-1 component
         w2,                 # vorticity-2 component
         w3,                 # vorticity-3 component
@@ -56,8 +56,18 @@ def SGS_transport_enstrophy(
     # Calculating SGS transport                                           #
     #---------------------------------------------------------------------#
     if flag is False:       # spectral flag
-        print("**** Error:Spectral differentiation has not been setup ****")
-        sys.exit(1)
+        kspec       = np.fft.fftfreq(dim) * dim
+        Kfield      = np.array(np.meshgrid(kspec, kspec, kspec, indexing='ij'))
+        SGS_trans   += np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(w1*Psi[0])).real
+        SGS_trans   += np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(w1*Psi[1])).real
+        SGS_trans   += np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(w1*Psi[2])).real
+        SGS_trans   += np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(w2*Psi[3])).real
+        SGS_trans   += np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(w2*Psi[4])).real
+        SGS_trans   += np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(w2*Psi[5])).real
+        SGS_trans   += np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(w3*Psi[6])).real
+        SGS_trans   += np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(w3*Psi[7])).real
+        SGS_trans   += np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(w3*Psi[8])).real
+
     else:                   # gradient tool flag
         #-----------------------------------------------------------------#
         # Terms 1-3 (i = 1)                                               #
@@ -95,7 +105,7 @@ if __name__ == "__main__":
     #---------------------------------------------------------------------#
     # Domain variables                                                    #
     #---------------------------------------------------------------------#
-    N           = 256
+    N           = 64
     pi          = np.pi
     x0          = 0.0
     xf          = 1.0
@@ -157,7 +167,7 @@ if __name__ == "__main__":
     #---------------------------------------------------------------------#
     # Approximate solution                                                #
     #---------------------------------------------------------------------#
-    sgs_approx  = SGS_transport_enstrophy(omega1, omega2, omega3, tau,\
+    sgs_approx  = pi_term_enstrophy(omega1, omega2, omega3, tau,\
                     dx, True)
     #---------------------------------------------------------------------#
     # Plotting approximate solution                                       #

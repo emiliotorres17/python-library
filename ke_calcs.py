@@ -100,7 +100,7 @@ def ke_average2(
     keavg       = np.zeros(dim[-1])
     print_count = 0
     for i in range(0, dim[-1]):
-        keavg[i]        = np.mean(KE)
+        keavg[i]        = np.mean(KE[:,:,:,i])
         #-----------------------------------------------------------------#
         # Printing statement                                              #
         #-----------------------------------------------------------------#
