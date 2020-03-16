@@ -11,3 +11,7 @@ ke_transport_terms/data/*
 __pycache__/*
 ke_transport_terms/__pycache__/*
 enstrophy_transport_term/__pycache__/*
+tests/*
+examples/*
+evtk/*
+
