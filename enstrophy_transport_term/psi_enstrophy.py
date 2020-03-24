@@ -24,7 +24,7 @@ import numpy as np
 #-------------------------------------------------------------------------#
 # Psi operator                                                            #
 #-------------------------------------------------------------------------#
-def psi(
+def psi_enstrophy(
         Tau,                    # SGS; (6,64,64,64)
         h       = False,        # spatial step size
         flag    = True):        # spectral flag; default is gradient tool
