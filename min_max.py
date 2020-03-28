@@ -123,7 +123,7 @@ def find_max4D(
 #-------------------------------------------------------------------------#
 # Finding the minimum subroutine 4D                                       #
 #-------------------------------------------------------------------------#
-def find_max4D(
+def find_min4D(
         field):                 # 4D field
 
     """ Finding the minimum of 4D field """
@@ -141,6 +141,56 @@ def find_max4D(
         sys.exit(1)
 
     return Val, Loc1, Loc2, Loc3, Loc4
+#-------------------------------------------------------------------------#
+# Finding the maximum subroutine 4D                                       #
+#-------------------------------------------------------------------------#
+def find_max_per_time4D(
+        field,                      # field variable
+        name = 'kinetic energy'):   # name of the field
+
+    """ Subroutine to find the maximum value per time step """
+    #---------------------------------------------------------------------#
+    # Finding the maximum subroutine 4D                                   #
+    #---------------------------------------------------------------------#
+    N           = field.shape[-1]
+    max_vec     = np.zeros(N) 
+    print_count = 0
+    for i in range(0,N):
+        max_vec[i] = np.amax(field[:,:,:,i])
+        #-----------------------------------------------------------------#
+        # Printing statement                                              #
+        #-----------------------------------------------------------------#
+        if print_count > 20:
+            print( name + '---> t_step = %i'      %(i))
+            print_count = 0
+        print_count += 1
+
+    return max_vec
+#-------------------------------------------------------------------------#
+# Finding the maximum subroutine 4D                                       #
+#-------------------------------------------------------------------------#
+def find_min_per_time4D(
+        field,                      # field variable
+        name = 'kinetic energy'):   # name of the field
+
+    """ Subroutine to find the maximum value per time step """
+    #---------------------------------------------------------------------#
+    # Finding the maximum subroutine 4D                                   #
+    #---------------------------------------------------------------------#
+    N           = field.shape[-1]
+    min_vec     = np.zeros(N) 
+    print_count = 0
+    for i in range(0,N):
+        min_vec[i] = np.amin(field[:,:,:,i])
+        #-----------------------------------------------------------------#
+        # Printing statement                                              #
+        #-----------------------------------------------------------------#
+        if print_count > 20:
+            print( name + '---> t_step = %i'      %(i))
+            print_count = 0
+        print_count += 1
+
+    return min_vec
 #=========================================================================#
 # Main                                                                    #
 #=========================================================================#

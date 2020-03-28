@@ -90,7 +90,8 @@ def ke_average(
 # Average kinetic energy                                                  #
 #-------------------------------------------------------------------------#
 def ke_average2(
-        KE):                # kinetic energy field
+        KE,                         # field
+        name = 'kinetic energy'):   # name of the field
 
     """ Calculating the average kinetic energy """
     #---------------------------------------------------------------------#
@@ -105,7 +106,7 @@ def ke_average2(
         # Printing statement                                              #
         #-----------------------------------------------------------------#
         if print_count > 20:
-            print('KE average ---> t_step = %i'      %(i))
+            print( name + '---> t_step = %i'      %(i))
             print_count = 0
         print_count += 1
 
