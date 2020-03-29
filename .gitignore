@@ -14,3 +14,4 @@ enstrophy_transport_term/__pycache__/*
 tests/*
 examples/*
 evtk/*
+pyevtk/*
