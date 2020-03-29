@@ -76,9 +76,10 @@ def npy_time(
     #---------------------------------------------------------------------#
     # Extracting the time vector                                          #
     #---------------------------------------------------------------------#
-    time        = np.zeros(Nt + 1)
+    Nt          = Nt - tstart
+    time        = np.zeros(Nt+1)
     print_count = 0
-    for i in range(0, Nt+1):
+    for i in range(Nt+1):
         time_str        = time_string(i)
         file_name       = location + 'SimulationTime' + time_str + '.npy'
         time[i]         = np.load(file_name)
