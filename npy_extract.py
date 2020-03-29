@@ -63,7 +63,6 @@ def proc_string(
 # NPY time extraction                                                     #
 #-------------------------------------------------------------------------#
 def npy_time(
-        tstart,                     # start time
         Nt,                         # number of time steps
         location):                  # file locations
 
