@@ -45,18 +45,18 @@ def spectral_strain_rates(
     #---------------------------------------------------------------------#
     # Calculating the strain rates                                        #
     #---------------------------------------------------------------------#
-    St[0]   = 0.5*np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(U[0]) +\
-                        1j*Kfield[0]*np.fft.fftn(U[0])).real
-    St[1]   = 0.5*np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(U[1]) +\
-                        1j*Kfield[1]*np.fft.fftn(U[0])).real
-    St[2]   = 0.5*np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(U[2]) +\
+    St[0]   = 0.5*np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(U[0]) +\
                         1j*Kfield[2]*np.fft.fftn(U[0])).real
+    St[1]   = 0.5*np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(U[1]) +\
+                        1j*Kfield[1]*np.fft.fftn(U[0])).real
+    St[2]   = 0.5*np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(U[2]) +\
+                        1j*Kfield[0]*np.fft.fftn(U[0])).real
     St[3]   = 0.5*np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(U[1]) +\
                         1j*Kfield[1]*np.fft.fftn(U[1])).real
     St[4]   = 0.5*np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(U[2]) +\
-                        1j*Kfield[2]*np.fft.fftn(U[1])).real
-    St[5]   = 0.5*np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(U[2]) +\
-                        1j*Kfield[2]*np.fft.fftn(U[2])).real
+                        1j*Kfield[0]*np.fft.fftn(U[1])).real
+    St[5]   = 0.5*np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(U[2]) +\
+                        1j*Kfield[0]*np.fft.fftn(U[2])).real
 
     return St
 #=========================================================================#
