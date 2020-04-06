@@ -23,7 +23,7 @@ import matplotlib.pyplot as plt
 #-------------------------------------------------------------------------#
 # User packages                                                           #
 #-------------------------------------------------------------------------#
-from enstrophy_transport_term.psi_enstrophy     import psi
+from enstrophy_transport_term.psi_enstrophy     import psi_enstrophy
 #=========================================================================#
 # User defined functions                                                  #
 #=========================================================================#
@@ -51,42 +51,42 @@ def pi_term_enstrophy(
     #---------------------------------------------------------------------#
     # Calculating Psi                                                     #
     #---------------------------------------------------------------------#
-    Psi = psi(Tau, h, flag)
+    Psi = psi_enstrophy(Tau, h, flag)
     #---------------------------------------------------------------------#
     # Calculating SGS transport                                           #
     #---------------------------------------------------------------------#
     if flag is False:       # spectral flag
         kspec       = np.fft.fftfreq(dim) * dim
         Kfield      = np.array(np.meshgrid(kspec, kspec, kspec, indexing='ij'))
-        SGS_trans   += np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(w1*Psi[0])).real
+        SGS_trans   += np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(w1*Psi[0])).real
         SGS_trans   += np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(w1*Psi[1])).real
-        SGS_trans   += np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(w1*Psi[2])).real
-        SGS_trans   += np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(w2*Psi[3])).real
+        SGS_trans   += np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(w1*Psi[2])).real
+        SGS_trans   += np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(w2*Psi[3])).real
         SGS_trans   += np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(w2*Psi[4])).real
-        SGS_trans   += np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(w2*Psi[5])).real
-        SGS_trans   += np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(w3*Psi[6])).real
+        SGS_trans   += np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(w2*Psi[5])).real
+        SGS_trans   += np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(w3*Psi[6])).real
         SGS_trans   += np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(w3*Psi[7])).real
-        SGS_trans   += np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(w3*Psi[8])).real
+        SGS_trans   += np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(w3*Psi[8])).real
 
     else:                   # gradient tool flag
         #-----------------------------------------------------------------#
         # Terms 1-3 (i = 1)                                               #
         #-----------------------------------------------------------------#
-        SGS_trans   += np.gradient(w1*Psi[0], h, edge_order=2)[0]
+        SGS_trans   += np.gradient(w1*Psi[0], h, edge_order=2)[2]
         SGS_trans   += np.gradient(w1*Psi[1], h, edge_order=2)[1]
-        SGS_trans   += np.gradient(w1*Psi[2], h, edge_order=2)[2]
+        SGS_trans   += np.gradient(w1*Psi[2], h, edge_order=2)[0]
         #-----------------------------------------------------------------#
         # Terms 4-6 (i = 2)                                               #
         #-----------------------------------------------------------------#
-        SGS_trans   += np.gradient(w2*Psi[3], h, edge_order=2)[0]
+        SGS_trans   += np.gradient(w2*Psi[3], h, edge_order=2)[2]
         SGS_trans   += np.gradient(w2*Psi[4], h, edge_order=2)[1]
-        SGS_trans   += np.gradient(w2*Psi[5], h, edge_order=2)[2]
+        SGS_trans   += np.gradient(w2*Psi[5], h, edge_order=2)[0]
         #-----------------------------------------------------------------#
         # Terms 7-9 (i = 3)                                               #
         #-----------------------------------------------------------------#
-        SGS_trans   += np.gradient(w3*Psi[6], h, edge_order=2)[0]
+        SGS_trans   += np.gradient(w3*Psi[6], h, edge_order=2)[2]
         SGS_trans   += np.gradient(w3*Psi[7], h, edge_order=2)[1]
-        SGS_trans   += np.gradient(w3*Psi[8], h, edge_order=2)[2]
+        SGS_trans   += np.gradient(w3*Psi[8], h, edge_order=2)[0]
 
     SGS_trans *= -1
 

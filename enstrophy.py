@@ -221,5 +221,6 @@ if __name__ == "__main__":
     # Print statement                                                     #
     #---------------------------------------------------------------------#
     print('This has not been unit tested')
+    print("Trevor was here")
 
     sys.exit(0)

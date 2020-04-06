@@ -23,7 +23,7 @@ import matplotlib.pyplot as plt
 #-------------------------------------------------------------------------#
 # User packages                                                           #
 #-------------------------------------------------------------------------#
-from enstrophy_transport_term.psi_enstrophy     import psi
+from enstrophy_transport_term.psi_enstrophy     import psi_enstrophy
 #=========================================================================#
 # User defined functions                                                  #
 #=========================================================================#
@@ -46,7 +46,7 @@ def p_term_enstrophy(
     #---------------------------------------------------------------------#
     # Calculating psi                                                     #
     #---------------------------------------------------------------------#
-    Psi = psi(Tau, h, flag)
+    Psi = psi_enstrophy(Tau, h, flag)
     #---------------------------------------------------------------------#
     # Preallocating variables                                             #
     #---------------------------------------------------------------------#
@@ -62,27 +62,45 @@ def p_term_enstrophy(
     # Calculating SGS production                                          #
     #---------------------------------------------------------------------#
     if flag is False:               # spectral method
-        print("Spectral differentiation has not been added")
-        sys.exit(1)
+        kspec       = np.fft.fftfreq(dim) * dim
+        Kfield      = np.array(np.meshgrid(kspec, kspec, kspec, indexing='ij'))
+        #-----------------------------------------------------------------#
+        # terms 1-3 (i=1)                                                 #
+        #-----------------------------------------------------------------#
+        SGS_prod    += Psi[0]*np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(w1)).real
+        SGS_prod    += Psi[1]*np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(w1)).real
+        SGS_prod    += Psi[2]*np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(w1)).real
+        #-----------------------------------------------------------------#
+        # terms 4-6 (i=2)                                                 #
+        #-----------------------------------------------------------------#
+        SGS_prod    += Psi[3]*np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(w2)).real
+        SGS_prod    += Psi[4]*np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(w2)).real
+        SGS_prod    += Psi[5]*np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(w2)).real
+        #-----------------------------------------------------------------#
+        # terms 7-9 (i=3)                                                 #
+        #-----------------------------------------------------------------#
+        SGS_prod    += Psi[6]*np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(w3)).real
+        SGS_prod    += Psi[7]*np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(w3)).real
+        SGS_prod    += Psi[8]*np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(w3)).real
     else:                           # gradient tool method
         #-----------------------------------------------------------------#
         # terms 1-3 (i=1)                                                 #
         #-----------------------------------------------------------------#
-        SGS_prod    += Psi[0]*grad_w1[0]
+        SGS_prod    += Psi[0]*grad_w1[2]
         SGS_prod    += Psi[1]*grad_w1[1]
-        SGS_prod    += Psi[2]*grad_w1[2]
+        SGS_prod    += Psi[2]*grad_w1[0]
         #-----------------------------------------------------------------#
         # terms 4-6 (i=2)                                                 #
         #-----------------------------------------------------------------#
-        SGS_prod    += Psi[3]*grad_w2[0]
+        SGS_prod    += Psi[3]*grad_w2[2]
         SGS_prod    += Psi[4]*grad_w2[1]
-        SGS_prod    += Psi[5]*grad_w2[2]
+        SGS_prod    += Psi[5]*grad_w2[0]
         #-----------------------------------------------------------------#
         # terms 7-9 (i=3)                                                 #
         #-----------------------------------------------------------------#
-        SGS_prod    += Psi[6]*grad_w3[0]
+        SGS_prod    += Psi[6]*grad_w3[2]
         SGS_prod    += Psi[7]*grad_w3[1]
-        SGS_prod    += Psi[8]*grad_w3[2]
+        SGS_prod    += Psi[8]*grad_w3[0]
 
     return SGS_prod
 #=========================================================================#

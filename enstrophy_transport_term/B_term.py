@@ -26,9 +26,9 @@ from enstrophy      import enstrophy_static
 # User defined functions                                                  #
 #=========================================================================#
 #-------------------------------------------------------------------------#
-# C term                                                                  #
+# B term                                                                  #
 #-------------------------------------------------------------------------#
-def c_term_enstrophy(
+def b_term_enstrophy(
         w1,                             # vorticity-1 component
         w2,                             # vorticity-2 component
         w3,                             # vorticity-3 component
@@ -54,31 +54,23 @@ def c_term_enstrophy(
     # Calculating the Laplacian                                           #
     #---------------------------------------------------------------------#
     dim = Enst.shape[0]
-    c   = np.zeros((dim,dim,dim))
+    b   = np.zeros((dim,dim,dim))
     if flag is True:
-        c       += np.gradient(np.gradient(Enst, h, edge_order=2)[0],\
+        b       += np.gradient(np.gradient(Enst, h, edge_order=2)[0],\
                                 h, edge_order=2)[0]
-        c       += np.gradient(np.gradient(Enst, h, edge_order=2)[1],\
+        b       += np.gradient(np.gradient(Enst, h, edge_order=2)[1],\
                                 h, edge_order=2)[1]
-        c       += np.gradient(np.gradient(Enst, h, edge_order=2)[2],\
+        b       += np.gradient(np.gradient(Enst, h, edge_order=2)[2],\
                                 h, edge_order=2)[2]
-        #c       += np.sum(np.gradient(np.gradient(Enst,h, edge_order=2), h,\
-        #                edge_order=2))
+        b       *= Nu
     else:
         kspec   = np.fft.fftfreq(dim) * dim
         Kfield  = np.array(np.meshgrid(kspec, kspec, kspec, indexing='ij'))
-        term1   = np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(Enst)).real
-        c       += np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(term1)).real
-        term2   = np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(Enst)).real
-        c       += np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(term2)).real
-        term3   = np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(Enst)).real
-        c       += np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(term3)).real
-    #---------------------------------------------------------------------#
-    # Calculating dissipation term                                        #
-    #---------------------------------------------------------------------#
-    c   *= Nu
+        Ksq     = np.sum(np.square(Kfield), axis=0)
+        term1   = -Nu*Ksq*np.fft.fftn(Enst)
+        b       = np.fft.ifftn(term1).real
 
-    return c
+    return b
 #=========================================================================#
 # Main                                                                    #
 #=========================================================================#

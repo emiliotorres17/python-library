@@ -53,46 +53,46 @@ def psi_enstrophy(
         # Psi_{11}                                                        #
         #-----------------------------------------------------------------#
         Psi[0]  = np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(Tau[2])).real -\
-                    np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(Tau[1])).real
+                    np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(Tau[1])).real
         #-----------------------------------------------------------------#
         # Psi_{12}                                                        #
         #-----------------------------------------------------------------#
         Psi[1]  = np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(Tau[4])).real -\
-                    np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(Tau[3])).real
+                    np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(Tau[3])).real
         #-----------------------------------------------------------------#
         # Psi_{13}                                                        #
         #-----------------------------------------------------------------#
         Psi[2]  = np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(Tau[5])).real -\
-                    np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(Tau[4])).real
+                    np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(Tau[4])).real
         #-----------------------------------------------------------------#
         # Psi_{21}                                                        #
         #-----------------------------------------------------------------#
-        Psi[3]  = np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(Tau[0])).real -\
-                    np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(Tau[2])).real
+        Psi[3]  = np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(Tau[0])).real -\
+                    np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(Tau[2])).real
         #-----------------------------------------------------------------#
         # Psi_{22}                                                        #
         #-----------------------------------------------------------------#
-        Psi[4]  = np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(Tau[1])).real -\
-                    np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(Tau[4])).real
+        Psi[4]  = np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(Tau[1])).real -\
+                    np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(Tau[4])).real
         #-----------------------------------------------------------------#
         # Psi_{23}                                                        #
         #-----------------------------------------------------------------#
-        Psi[5]  = np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(Tau[2])).real -\
-                    np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(Tau[5])).real
+        Psi[5]  = np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(Tau[2])).real -\
+                    np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(Tau[5])).real
         #-----------------------------------------------------------------#
         # Psi_{31}                                                        #
         #-----------------------------------------------------------------#
-        Psi[6]  = np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(Tau[1])).real -\
+        Psi[6]  = np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(Tau[1])).real -\
                     np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(Tau[0])).real
         #-----------------------------------------------------------------#
         # Psi_{32}                                                        #
         #-----------------------------------------------------------------#
-        Psi[7]  = np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(Tau[3])).real -\
+        Psi[7]  = np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(Tau[3])).real -\
                     np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(Tau[1])).real
         #-----------------------------------------------------------------#
         # Psi_{33}                                                        #
         #-----------------------------------------------------------------#
-        Psi[8]  = np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(Tau[4])).real -\
+        Psi[8]  = np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(Tau[4])).real -\
                     np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(Tau[2])).real
     #---------------------------------------------------------------------#
     # Calculating psi using gradient tool                                 #
@@ -102,46 +102,46 @@ def psi_enstrophy(
         # Psi_{11}                                                        #
         #-----------------------------------------------------------------#
         Psi[0]  = np.gradient(Tau[2],h, edge_order=2)[1] -\
-                    np.gradient(Tau[1], h, edge_order=2)[2]
+                    np.gradient(Tau[1], h, edge_order=2)[0]
         #-----------------------------------------------------------------#
         # Psi_{12}                                                        #
         #-----------------------------------------------------------------#
         Psi[1]  = np.gradient(Tau[4],h, edge_order=2)[1] -\
-                    np.gradient(Tau[3], h, edge_order=2)[2]
+                    np.gradient(Tau[3], h, edge_order=2)[0]
         #-----------------------------------------------------------------#
         # Psi_{13}                                                        #
         #-----------------------------------------------------------------#
         Psi[2]  = np.gradient(Tau[5],h, edge_order=2)[1] -\
-                    np.gradient(Tau[4], h, edge_order=2)[2]
+                    np.gradient(Tau[4], h, edge_order=2)[0]
         #-----------------------------------------------------------------#
         # Psi_{21}                                                        #
         #-----------------------------------------------------------------#
-        Psi[3]  = np.gradient(Tau[0],h, edge_order=2)[2] -\
-                    np.gradient(Tau[2], h, edge_order=2)[0]
+        Psi[3]  = np.gradient(Tau[0],h, edge_order=2)[0] -\
+                    np.gradient(Tau[2], h, edge_order=2)[2]
         #-----------------------------------------------------------------#
         # Psi_{22}                                                        #
         #-----------------------------------------------------------------#
-        Psi[4]  = np.gradient(Tau[1],h, edge_order=2)[2] -\
-                    np.gradient(Tau[4], h, edge_order=2)[0]
+        Psi[4]  = np.gradient(Tau[1],h, edge_order=2)[0] -\
+                    np.gradient(Tau[4], h, edge_order=2)[2]
         #-----------------------------------------------------------------#
         # Psi_{23}                                                        #
         #-----------------------------------------------------------------#
-        Psi[5]  = np.gradient(Tau[2],h, edge_order=2)[2] -\
-                    np.gradient(Tau[5], h, edge_order=2)[0]
+        Psi[5]  = np.gradient(Tau[2],h, edge_order=2)[0] -\
+                    np.gradient(Tau[5], h, edge_order=2)[2]
         #-----------------------------------------------------------------#
         # Psi_{31}                                                        #
         #-----------------------------------------------------------------#
-        Psi[6]  = np.gradient(Tau[1],h, edge_order=2)[0] -\
+        Psi[6]  = np.gradient(Tau[1],h, edge_order=2)[2] -\
                     np.gradient(Tau[0], h, edge_order=2)[1]
         #-----------------------------------------------------------------#
         # Psi_{32}                                                        #
         #-----------------------------------------------------------------#
-        Psi[7]  = np.gradient(Tau[3],h, edge_order=2)[0] -\
+        Psi[7]  = np.gradient(Tau[3],h, edge_order=2)[2] -\
                     np.gradient(Tau[1], h, edge_order=2)[1]
         #-----------------------------------------------------------------#
         # Psi_{33}                                                        #
         #-----------------------------------------------------------------#
-        Psi[8]  = np.gradient(Tau[4],h, edge_order=2)[0] -\
+        Psi[8]  = np.gradient(Tau[4],h, edge_order=2)[2] -\
                     np.gradient(Tau[2], h, edge_order=2)[1]
 
     return Psi

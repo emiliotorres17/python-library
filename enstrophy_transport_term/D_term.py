@@ -61,15 +61,15 @@ def d_term_enstrophy(
     else:
         kspec   = np.fft.fftfreq(dim) * dim
         Kfield  = np.array(np.meshgrid(kspec, kspec, kspec, indexing='ij'))
-        d       += (np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(w1)).real)**2.0
-        d       += (np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(w1)).real)**2.0
         d       += (np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(w1)).real)**2.0
-        d       += (np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(w2)).real)**2.0
-        d       += (np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(w2)).real)**2.0
+        d       += (np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(w1)).real)**2.0
+        d       += (np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(w1)).real)**2.0
         d       += (np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(w2)).real)**2.0
-        d       += (np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(w3)).real)**2.0
-        d       += (np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(w3)).real)**2.0
+        d       += (np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(w2)).real)**2.0
+        d       += (np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(w2)).real)**2.0
         d       += (np.fft.ifftn(1j*Kfield[2]*np.fft.fftn(w3)).real)**2.0
+        d       += (np.fft.ifftn(1j*Kfield[1]*np.fft.fftn(w3)).real)**2.0
+        d       += (np.fft.ifftn(1j*Kfield[0]*np.fft.fftn(w3)).real)**2.0
     #---------------------------------------------------------------------#
     # Calculating the dissipation                                         #
     #---------------------------------------------------------------------#
