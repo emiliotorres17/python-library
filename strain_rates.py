@@ -53,15 +53,15 @@ def strain_rates(
     # Strain rates                                                        #
     #---------------------------------------------------------------------#
     St      = np.empty((6, dim, dim, dim))
-    St[0]   =  np.gradient(u1, h, edge_order=2)[0]              # S11
+    St[0]   =  np.gradient(u1, h, edge_order=2)[2]              # S11
     St[1]   = 0.5*(np.gradient(u1, h, edge_order=2)[1] +\
-                   np.gradient(u2, h, edge_order=2)[0])         # S12
-    St[2]   = 0.5*(np.gradient(u1, h, edge_order=2)[2] +\
-                   np.gradient(u3, h, edge_order=2)[0])         # S13
+                   np.gradient(u2, h, edge_order=2)[2])         # S12
+    St[2]   = 0.5*(np.gradient(u1, h, edge_order=2)[0] +\
+                   np.gradient(u3, h, edge_order=2)[2])         # S13
     St[3]   =  np.gradient(u2, h, edge_order=2)[1]              # S22
-    St[4]   = 0.5*(np.gradient(u2, h, edge_order=2)[2] +\
+    St[4]   = 0.5*(np.gradient(u2, h, edge_order=2)[0] +\
                    np.gradient(u3, h, edge_order=2)[1])         # S23
-    St[5]   = (np.gradient(u3, h, edge_order=2)[2])             # S33
+    St[5]   = (np.gradient(u3, h, edge_order=2)[0])             # S33
 
     return St
 #=========================================================================#
