@@ -76,7 +76,6 @@ def npy_time(
     #---------------------------------------------------------------------#
     # Extracting the time vector                                          #
     #---------------------------------------------------------------------#
-    Nt          = Nt - tstart
     time        = np.zeros(Nt+1)
     print_count = 0
     for i in range(Nt+1):
