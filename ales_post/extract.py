@@ -51,6 +51,9 @@ if __name__ == "__main__":
     P_path_ke       = pwd + "%c..%cP-ke%c"              %(sep, sep, sep)
     ke_path         = pwd + "%c..%cke%c"                %(sep, sep, sep)
     enst_path       = pwd + "%c..%censt%c"              %(sep, sep, sep)
+    vel1_path       = pwd + "%c..%cvelocity1%c"         %(sep, sep, sep)
+    vel2_path       = pwd + "%c..%cvelocity2%c"         %(sep, sep, sep)
+    vel3_path       = pwd + "%c..%cvelocity3%c"         %(sep, sep, sep)
     #--------------------------------------------------------------------------#
     # Domain variables                                                         #
     #--------------------------------------------------------------------------#
@@ -61,6 +64,7 @@ if __name__ == "__main__":
     ke_flag     = False
     fields_flag = True
     avg_flag    = True
+    vel_flag    = False
     #==========================================================================#
     # Time                                                                     #
     #==========================================================================#
@@ -172,6 +176,29 @@ if __name__ == "__main__":
             np.save(data_path + "enst-avg.npy", enst_avg)
             del enst_avg
             del enst
+    #==========================================================================#
+    # Velocity fields                                                          #
+    #==========================================================================#
+    if vel_flag is True:
+        #----------------------------------------------------------------------#
+        # velocity-1                                                           #
+        #----------------------------------------------------------------------#
+        vel1    = npy_velocity_general(1, 64, 16, 0 tf, vel1_path)
+        np.save(data_path + 'velocity1.npy', vel1)
+        del vel1
+        #----------------------------------------------------------------------#
+        # velocity-2                                                           #
+        #----------------------------------------------------------------------#
+        vel2    = npy_velocity_general(2, 64, 16, 0 tf, vel2_path)
+        np.save(data_path + 'velocity2.npy', vel2)
+        del vel2
+        #----------------------------------------------------------------------#
+        # velocity-3                                                           #
+        #----------------------------------------------------------------------#
+        vel3    = npy_velocity_general(3, 64, 16, 0 tf, vel3_path)
+        np.save(data_path + 'velocity3.npy', vel3)
+        del vel3
+
 
     print("**** Successful Run ****")
     sys.exit(0)
