@@ -51,9 +51,9 @@ def find_max3D(
     # Finding the maximum subroutine                                      #
     #---------------------------------------------------------------------#
     index   = np.unravel_index(np.argmax(field, axis=None), field.shape)
-    Loc1    = index[0]
-    Loc2    = index[1]
-    Loc3    = index[2]
+    Loc1    = int(index[0])
+    Loc2    = int(index[1])
+    Loc3    = int(index[2])
     Val     = np.amax(field)
     if Val != field[Loc1, Loc2, Loc3]:
         print("**** Error in finding the maximum value")
