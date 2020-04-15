@@ -24,56 +24,9 @@ import matplotlib.pyplot as plt
 # User packages                                                                #
 #------------------------------------------------------------------------------#
 from  min_max       import find_max3D
-from  min_max       import find_min3D
-#from normalize      import norm_min_max
 #==============================================================================#
 # User defined functions                                                       #
 #==============================================================================#
-#------------------------------------------------------------------------------#
-# Generating color fields                                                      #
-#------------------------------------------------------------------------------#
-def contour_gen(
-        field,
-        Xin,
-        Yin,
-        Zin,
-        tval):
-
-    """ Generating the contours in order to visually track """
-    #--------------------------------------------------------------------------#
-    # domain variables                                                         #
-    #--------------------------------------------------------------------------#
-    print(Xin)
-    print(Yin)
-    print(Zin)
-    xvec        = np.linspace(0.0, 2.0*np.pi, 64)
-    [X1, X2]    = np.meshgrid(xvec,xvec)
-    field       = field[:,:,:,tval]
-    #--------------------------------------------------------------------------#
-    # colorbar settings                                                        #
-    #--------------------------------------------------------------------------#
-    Vmin        = np.amin(field[:,:,Zin])
-    Vmax        = np.amax(field[:,:,Zin])
-    print(field[Xin, Yin, Zin])
-    print(Vmax)
-    #sys.exit(100)
-    Dp          = (Vmax - Vmin)/500.0
-    #--------------------------------------------------------------------------#
-    # generating plots                                                         #
-    #--------------------------------------------------------------------------#
-    fig0, ax0   = plt.subplots(1,1,)
-    cnt         = ax0.contourf(X1, X2, field[:,:,Zin], np.arange(Vmin, Vmax, Dp),\
-                            cmap='jet', extend='both')
-    for c in cnt.collections:
-        c.set_edgecolors("face")
-    cbar0   = plt.colorbar(cnt)
-    #--------------------------------------------------------------------------#
-    # saving picture                                                           #
-    #--------------------------------------------------------------------------#
-    plt.savefig('media/Dk_DT-' + str(int(tval)) + '.png')
-    plt.clf()
-
-    return
 #------------------------------------------------------------------------------#
 # Periodic boundary conditions                                                 #
 #------------------------------------------------------------------------------#
@@ -135,6 +88,7 @@ def tracking(
         Ux,                         # x-velocity
         Uy,                         # y-velocity
         Uz,                         # z-velocity
+        box_size,                   # box size fir averaging
         BA_flag = True,             # box average flag
         debug   = False):           # debug flag
 
@@ -186,9 +140,9 @@ def tracking(
         # Finding x, y, and z velocities                                       #
         #----------------------------------------------------------------------#
         if BA_flag is True:
-            vel_x   = box_average(Ux[:,:,:,t],Nx, Ny, Nz)   # corresponding x-vel.
-            vel_y   = box_average(Uy[:,:,:,t],Nx, Ny, Nz)   # corresponding x-vel.
-            vel_z   = box_average(Uz[:,:,:,t],Nx, Ny, Nz)   # corresponding x-vel.
+            vel_x   = box_average(Ux[:,:,:,t],Nx, Ny, Nz, box_size)     # corresponding x-vel.
+            vel_y   = box_average(Uy[:,:,:,t],Nx, Ny, Nz, box_size)     # corresponding x-vel.
+            vel_z   = box_average(Uz[:,:,:,t],Nx, Ny, Nz, box_size)     # corresponding x-vel.
         else:
             vel_x   = star_average(Ux[:,:,:,t],Nx, Ny, Nz)  # corresponding x-vel.
             vel_y   = star_average(Uy[:,:,:,t],Nx, Ny, Nz)  # corresponding x-vel.
@@ -282,66 +236,45 @@ def coordinate_adjustment(
 
     return Coor
 #------------------------------------------------------------------------------#
-# Box averaging                                                                #
+# Box average                                                                  #
 #------------------------------------------------------------------------------#
 def box_average(
-        field,                  # field
-        Nx,                     # x-coordinate
-        Ny,                     # y-coordinate
-        Nz):                    # z-coordinate
+        field,
+        Nx,
+        Ny,
+        Nz,
+        size,
+        debug   = False):
 
-    """ Calculating the average of a 3x3x3 box around the point of interest """
+    """ Calculating the box average using a different methods """
     #--------------------------------------------------------------------------#
-    # i-pts                                                                    #
+    # Setting the box limits                                                   #
     #--------------------------------------------------------------------------#
-    xpt         = coordinate_adjustment(Nx)
-    xpt_p1      = coordinate_adjustment(Nx+1)
-    xpt_m1      = coordinate_adjustment(Nx-1)
+    num = int((size-1)/2)
     #--------------------------------------------------------------------------#
-    # j-pts                                                                    #
+    # Looping over the box points                                              #
     #--------------------------------------------------------------------------#
-    ypt         = coordinate_adjustment(Ny)
-    ypt_p1      = coordinate_adjustment(Ny+1)
-    ypt_m1      = coordinate_adjustment(Ny-1)
+    Vals    = 0.0
+    count   = 0
+    for K in range(-num,num+1):
+        for J in range(-num, num+1):
+            for I in range(-num,num+1):
+                xcoor   = coordinate_adjustment(Nx+I)
+                ycoor   = coordinate_adjustment(Ny+J)
+                zcoor   = coordinate_adjustment(Nz+K)
+                Vals    += field[xcoor, ycoor, zcoor]
+                count   += 1
     #--------------------------------------------------------------------------#
-    # k-pts                                                                    #
+    # Debug print                                                              #
     #--------------------------------------------------------------------------#
-    zpt         = coordinate_adjustment(Nz)
-    zpt_p1      = coordinate_adjustment(Nz+1)
-    zpt_m1      = coordinate_adjustment(Nz-1)
+    if debug is True:
+        print('c=%.2f'      %(count))
+        print('Vals=%.5f'   %(Vals))
     #--------------------------------------------------------------------------#
-    # Finding the values and mean of the 27 pts                                #
+    # Taking the average                                                       #
     #--------------------------------------------------------------------------#
-    Vals        = np.zeros(27)
-    Vals[0]     = field[xpt,    ypt, zpt]
-    Vals[1]     = field[xpt_p1, ypt, zpt]
-    Vals[2]     = field[xpt_m1, ypt, zpt]
-    Vals[3]     = field[xpt,    ypt, zpt_m1]
-    Vals[4]     = field[xpt,    ypt, zpt_p1]
-    Vals[5]     = field[xpt_m1, ypt, zpt_m1]
-    Vals[6]     = field[xpt_p1, ypt, zpt_m1]
-    Vals[7]     = field[xpt_m1, ypt, zpt_p1]
-    Vals[8]     = field[xpt_p1, ypt, zpt_p1]
-    Vals[9]     = field[xpt,    ypt_p1, zpt]
-    Vals[10]    = field[xpt_p1, ypt_p1, zpt]
-    Vals[11]    = field[xpt_m1, ypt_p1, zpt]
-    Vals[12]    = field[xpt,    ypt_p1, zpt_m1]
-    Vals[13]    = field[xpt,    ypt_p1, zpt_p1]
-    Vals[14]    = field[xpt_m1, ypt_p1, zpt_m1]
-    Vals[15]    = field[xpt_p1, ypt_p1, zpt_m1]
-    Vals[16]    = field[xpt_m1, ypt_p1, zpt_p1]
-    Vals[17]    = field[xpt_p1, ypt_p1, zpt_p1]
-    Vals[18]    = field[xpt,    ypt_m1, zpt]
-    Vals[19]    = field[xpt_p1, ypt_m1, zpt]
-    Vals[20]    = field[xpt_m1, ypt_m1, zpt]
-    Vals[21]    = field[xpt,    ypt_m1, zpt_m1]
-    Vals[22]    = field[xpt,    ypt_m1, zpt_p1]
-    Vals[23]    = field[xpt_m1, ypt_m1, zpt_m1]
-    Vals[24]    = field[xpt_p1, ypt_m1, zpt_m1]
-    Vals[25]    = field[xpt_m1, ypt_m1, zpt_p1]
-    Vals[26]    = field[xpt_p1, ypt_m1, zpt_p1]
-    Vals        = np.mean(Vals)
-
+    Vals    = Vals/count
+    
     return Vals
 #=========================================================================#
 # Main                                                                    #
@@ -390,11 +323,17 @@ if __name__ == '__main__':
     #---------------------------------------------------------------------#
     # Tracking                                                            #
     #---------------------------------------------------------------------#
-    [X,Y,Z] = tracking(1, tfinal, time, (x,y,z), [X,Y,Z], u_x, u_y,\
-                        u_z, True, True)
-    print(X)
-    print(Y)
-    print(Z)
+    [X,Y,Z] = tracking(1, tfinal, time, (x,y,z), [0,0,0], u_x, u_y,\
+                        u_z, 3, True, True)
+    #---------------------------------------------------------------------#
+    # Writing data                                                        #
+    #---------------------------------------------------------------------#
+    string = ''
+    for i, nx in enumerate(X):
+        string  += '%i\t%i\t%i\n'               %(X[i], Y[i], Z[i])
+    f   = open(data_path + 'box-average-7-pts.txt',  'w')
+    f.write(string)
+    f.close()
 
     print('**** Successful run ****')
     sys.exit(0)
