@@ -19,7 +19,6 @@ import os
 import sys
 from subprocess import call
 import numpy as np
-import matplotlib.pyplot as plt
 #------------------------------------------------------------------------------#
 # User packages                                                                #
 #------------------------------------------------------------------------------#
@@ -319,7 +318,7 @@ if __name__ == '__main__':
         val = find_max3D(Dk[:,:,:,i])[0]
         print('maximum value=%.7f\tx-loc=%.5f\ty-loc=%.5f\tz-loc=%.5f'\
                     %(val, X, Y, Z))
-        contour_gen(Dk, X, Y, Z, i)
+        #contour_gen(Dk, X, Y, Z, i)
     #---------------------------------------------------------------------#
     # Tracking                                                            #
     #---------------------------------------------------------------------#
