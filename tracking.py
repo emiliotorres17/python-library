@@ -25,7 +25,7 @@ import matplotlib.pyplot as plt
 #------------------------------------------------------------------------------#
 from  min_max       import find_max3D
 from  min_max       import find_min3D
-from normalize      import norm_min_max
+#from normalize      import norm_min_max
 #==============================================================================#
 # User defined functions                                                       #
 #==============================================================================#
@@ -216,8 +216,15 @@ def tracking(
         # Debug print                                                          #
         #----------------------------------------------------------------------#
         if debug is True:
-            print('time=%.5f\tdt=%.5e\tvel_{x}=%.5f\tx_{n+1}=%.5f\tx_{n}=%.5f\tNx_{n+1}=%i\tNx_{n}=%i'\
+            print('x-values:')
+            print('\ttime=%.5f\tdt=%.5e\tvel_{x}=%.5f\tx_{n+1}=%.5f\tx_{n}=%.5f\tNx_{n+1}=%i\tNx_{n}=%i'\
                     %(t,dt,vel_x,xt_old,xt,Nx_old,Nx))
+            print('y-values:')
+            print('\ttime=%.5f\tdt=%.5e\tvel_{y}=%.5f\ty_{n+1}=%.5f\ty_{n}=%.5f\tNy_{n+1}=%i\tNy_{n}=%i'\
+                    %(t,dt,vel_y,yt_old,yt,Ny_old,Ny))
+            print('z-values:')
+            print('\ttime=%.5f\tdt=%.5e\tvel_{z}=%.5f\tz_{n+1}=%.5f\tz_{n}=%.5f\tNz_{n+1}=%i\tNz_{n}=%i'\
+                    %(t,dt,vel_z,zt_old,zt,Nz_old,Nz))
 
     return x_pts, y_pts, z_pts
 #------------------------------------------------------------------------------#
@@ -333,58 +340,61 @@ def box_average(
     Vals[24]    = field[xpt_p1, ypt_m1, zpt_m1]
     Vals[25]    = field[xpt_m1, ypt_m1, zpt_p1]
     Vals[26]    = field[xpt_p1, ypt_m1, zpt_p1]
-    Value   = np.mean(Vals)
+    Vals        = np.mean(Vals)
 
-    return Value
-#==============================================================================#
-# Main                                                                         #
-#==============================================================================#
+    return Vals
+#=========================================================================#
+# Main                                                                    #
+#=========================================================================#
 if __name__ == '__main__':
-        #----------------------------------------------------------------------#
-        # Main preamble                                                        #
-        #----------------------------------------------------------------------#
-        call(['clear'])
-        sep         = os.sep
-        pwd         = os.getcwd()
-        data_path   = 'data%c'                  %(sep) 
-        #----------------------------------------------------------------------#
-        # Loading data                                                         #
-        #----------------------------------------------------------------------#
-        print('Loading data:')
-        time    = np.load(data_path + 'time.npy')
-        print('\ttime')
-        u_x     = np.load(data_path + 'vel_x.npy')
-        print('\tx-veloccity')
-        u_y     = np.load(data_path + 'vel_y.npy')
-        print('\ty-velocity')
-        u_z     = np.load(data_path + 'vel_z.npy')
-        print('\tz-velocity')
-        Dk      = np.load(data_path + 'Dk_Dt.npy')
-        print('\tDk/Dt')
-        #----------------------------------------------------------------------#
-        # Domain variables                                                     #
-        #----------------------------------------------------------------------#
-        x   = np.linspace(0, 2.0*np.pi, 64)
-        y   = np.linspace(0, 2.0*np.pi, 64)
-        z   = np.linspace(0, 2.0*np.pi, 64)
-        #----------------------------------------------------------------------#
-        # Finding the maximum value of the field                               #
-        #----------------------------------------------------------------------#
-        tfinal          = 19
-        [Val, X, Y, Z]  = find_max3D(Dk[:,:,:,tfinal])
-        #----------------------------------------------------------------------#
-        # Generating contours plots starting at T=t_{f}                        #
-        #----------------------------------------------------------------------#
-        for i in range(tfinal, tfinal-6, -1):
-            val = find_max3D(Dk[:,:,:,i])[0]
-            print('maximum value=%.7f\tx-loc=%.5f\ty-loc=%.5f\tz-loc=%.5f'\
-                        %(val, X, Y, Z))
-            contour_gen(Dk, X, Y, Z, i)
-        #----------------------------------------------------------------------#
-        # Tracking                                                             #
-        #----------------------------------------------------------------------#
-        [X,Y,Z] = tracking(1, tfinal, time, (x,y,z), [X,Y,Z], u_x, u_y,\
-                            u_z, True, True)
-        print(X)
-        print(Y)
-        print(Z)
+    #---------------------------------------------------------------------#
+    # Main preamble                                                       #
+    #---------------------------------------------------------------------#
+    call(['clear'])
+    sep         = os.sep
+    pwd         = os.getcwd()
+    data_path   = 'data%c'                  %(sep)
+    #---------------------------------------------------------------------#
+    # Loading data                                                        #
+    #---------------------------------------------------------------------#
+    print('Loading data:')
+    time    = np.load(data_path + 'time.npy')
+    print('\ttime')
+    u_x     = np.load(data_path + 'vel_x.npy')
+    print('\tx-veloccity')
+    u_y     = np.load(data_path + 'vel_y.npy')
+    print('\ty-velocity')
+    u_z     = np.load(data_path + 'vel_z.npy')
+    print('\tz-velocity')
+    Dk      = np.load(data_path + 'Dk_Dt.npy')
+    print('\tDk/Dt')
+    #---------------------------------------------------------------------#
+    # Domain variables                                                    #
+    #---------------------------------------------------------------------#
+    x   = np.linspace(0, 2.0*np.pi, 64)
+    y   = np.linspace(0, 2.0*np.pi, 64)
+    z   = np.linspace(0, 2.0*np.pi, 64)
+    #---------------------------------------------------------------------#
+    # Finding the maximum value of the field                              #
+    #---------------------------------------------------------------------#
+    tfinal          = 19
+    [val, X, Y, Z]  = find_max3D(Dk[:,:,:,tfinal])
+    #---------------------------------------------------------------------#
+    # Generating contours plots starting at T=t_{f}                       #
+    #---------------------------------------------------------------------#
+    for i in range(tfinal, tfinal-6, -1):
+        val = find_max3D(Dk[:,:,:,i])[0]
+        print('maximum value=%.7f\tx-loc=%.5f\ty-loc=%.5f\tz-loc=%.5f'\
+                    %(val, X, Y, Z))
+        contour_gen(Dk, X, Y, Z, i)
+    #---------------------------------------------------------------------#
+    # Tracking                                                            #
+    #---------------------------------------------------------------------#
+    [X,Y,Z] = tracking(1, tfinal, time, (x,y,z), [X,Y,Z], u_x, u_y,\
+                        u_z, True, True)
+    print(X)
+    print(Y)
+    print(Z)
+
+    print('**** Successful run ****')
+    sys.exit(0)
