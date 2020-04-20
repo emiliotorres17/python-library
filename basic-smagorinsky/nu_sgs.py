@@ -13,7 +13,6 @@ Author:
 #-------------------------------------------------------------------------#
 # Python packages                                                         #
 #-------------------------------------------------------------------------#
-import os
 import sys
 from subprocess import call
 import numpy as np
@@ -23,7 +22,9 @@ import numpy as np
 def nu_sgs_BS(
         S,
         cs      = True,         # C_{S} value; default C_{S} = 0.17
-        delta   = True):        # Delta value; default is 2*pi/30 
+        delta   = True):        # Delta value; default is 2*pi/30
+
+    """ Calculating the turbulent viscosity """
     #---------------------------------------------------------------------#
     # Setting default values                                              #
     #---------------------------------------------------------------------#
