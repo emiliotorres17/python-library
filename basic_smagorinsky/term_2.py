@@ -26,17 +26,72 @@ from basic_smagorinsky.nu_sgs       import nu_sgs
 # User defined functions                                                  #
 #=========================================================================#
 def term_2(
-        omega,
-        S):
+        omega1,
+        omega2,
+        omega3,
+        S,
+        nu_sgs):
 
     """ Calculating the second term 2 in the enstrophy study equation """
     #---------------------------------------------------------------------#
-    # Calculating the turbulent viscosity                                 #
+    # defining domain variables and preallocating variables               #
     #---------------------------------------------------------------------#
-    nu  = nu_sgs(S)
+    term        = np.zeros((64,64,64))
+    h           = 2.0*np.pi/64.0
+    grad_sgs    = np.gradient(sgs, h, edge_order=2)
     #---------------------------------------------------------------------#
-    # Looping over the indices                                            #
+    # i=1, j=2, and k=3 term                                              #
     #---------------------------------------------------------------------#
-    for i in range(
-            test 
-            test
+    term    += omega1* grad_sgs[1]*\
+                        (np.gradient(S[2], h, edge_order=2)[2]  +\
+                        np.gradient(S[4], h, edge_order=2)[1]   +\
+                        np.gradient(S[5], h, edge_order=2)[0])
+    #---------------------------------------------------------------------#
+    # i=1, j=3, and k=2 term                                              #
+    #---------------------------------------------------------------------#
+    term    -= omega1* grad_sgs[0]*\
+                        (np.gradient(S[1], h, edge_order=2)[2]  +\
+                        np.gradient(S[3], h, edge_order=2)[1]   +\
+                        np.gradient(S[4], h, edge_order=2)[0])
+    #---------------------------------------------------------------------#
+    # i=2, j=3, and k=1 term                                              #
+    #---------------------------------------------------------------------#
+    term    += omega2* grad_sgs[0]*\
+                        (np.gradient(S[0], h, edge_order=2)[2]  +\
+                        np.gradient(S[1], h, edge_order=2)[1]   +\
+                        np.gradient(S[2], h, edge_order=2)[0])
+    #---------------------------------------------------------------------#
+    # i=2, j=1, and k=3 term                                              #
+    #---------------------------------------------------------------------#
+    term    -= omega2* grad_sgs[2]*\
+                        (np.gradient(S[2], h, edge_order=2)[2]  +\
+                        np.gradient(S[4], h, edge_order=2)[1]   +\
+                        np.gradient(S[5], h, edge_order=2)[0])
+    #---------------------------------------------------------------------#
+    # i=3, j=1, and k=2 term                                              #
+    #---------------------------------------------------------------------#
+    term    += omega2* grad_sgs[2]*\
+                        (np.gradient(S[1], h, edge_order=2)[2]  +\
+                        np.gradient(S[3], h, edge_order=2)[1]   +\
+                        np.gradient(S[4], h, edge_order=2)[0])
+    #---------------------------------------------------------------------#
+    # i=3, j=2, and k=1 term                                              #
+    #---------------------------------------------------------------------#
+    term    -= omega2* grad_sgs[1]*\
+                        (np.gradient(S[0], h, edge_order=2)[2]  +\
+                        np.gradient(S[1], h, edge_order=2)[1]   +\
+                        np.gradient(S[2], h, edge_order=2)[0])
+    
+    return term
+#=========================================================================#
+# Main                                                                    #
+#=========================================================================#
+if __name__ == "__main__":
+    #---------------------------------------------------------------------#
+    # Main preamble                                                       #
+    #---------------------------------------------------------------------#
+    call(['clear'])
+
+    print('**** This has not been unit test ****'])
+
+    sys.exit(0)
