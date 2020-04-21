@@ -18,19 +18,18 @@ Author:
 import sys
 from subprocess import call
 import numpy as np
-#-------------------------------------------------------------------------#
-# User packages                                                           #
-#-------------------------------------------------------------------------#
-from basic_smagorinsky.nu_sgs       import nu_sgs
 #=========================================================================#
 # User defined functions                                                  #
 #=========================================================================#
+#-------------------------------------------------------------------------#
+# Term 2 in the enstrophy evaluation                                      #
+#-------------------------------------------------------------------------#
 def term_2(
         omega1,
         omega2,
         omega3,
         S,
-        nu_sgs):
+        sgs):
 
     """ Calculating the second term 2 in the enstrophy study equation """
     #---------------------------------------------------------------------#
@@ -70,18 +69,18 @@ def term_2(
     #---------------------------------------------------------------------#
     # i=3, j=1, and k=2 term                                              #
     #---------------------------------------------------------------------#
-    term    += omega2* grad_sgs[2]*\
+    term    += omega3* grad_sgs[2]*\
                         (np.gradient(S[1], h, edge_order=2)[2]  +\
                         np.gradient(S[3], h, edge_order=2)[1]   +\
                         np.gradient(S[4], h, edge_order=2)[0])
     #---------------------------------------------------------------------#
     # i=3, j=2, and k=1 term                                              #
     #---------------------------------------------------------------------#
-    term    -= omega2* grad_sgs[1]*\
+    term    -= omega3* grad_sgs[1]*\
                         (np.gradient(S[0], h, edge_order=2)[2]  +\
                         np.gradient(S[1], h, edge_order=2)[1]   +\
                         np.gradient(S[2], h, edge_order=2)[0])
-    
+
     return term
 #=========================================================================#
 # Main                                                                    #
@@ -92,6 +91,6 @@ if __name__ == "__main__":
     #---------------------------------------------------------------------#
     call(['clear'])
 
-    print('**** This has not been unit test ****'])
+    print('**** This has not been unit test ****')
 
     sys.exit(0)
