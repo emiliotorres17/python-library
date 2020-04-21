@@ -24,12 +24,18 @@ import numpy as np
 #-------------------------------------------------------------------------#
 # Term 1                                                                  #
 #-------------------------------------------------------------------------#
-def term(
+def term_1(
         nu_sgs,         # strain rates
         b,              # B term in the enstrophy transport equation
-        d):             # D term in the enstrophy transport equation
+        d,              # D term in the enstrophy transport equation
+        nu  = True):    # kinematic viscosity; default is set to 0.000185 
 
     """ Calculating term 1 in the SGS enstrophy study """
+    #---------------------------------------------------------------------#
+    # Setting default values                                              #
+    #---------------------------------------------------------------------#
+    if nu is True:
+        nu = 0.000185
     #---------------------------------------------------------------------#
     # Term 1                                                              #
     #---------------------------------------------------------------------#
