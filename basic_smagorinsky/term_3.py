@@ -39,7 +39,7 @@ def term_3(
     #---------------------------------------------------------------------#
     term    += np.gradient(nu_sgs, h, edge_order=2)[2]*\
                 np.gradient(enst, h, edge_order=2)[2]
-    term    += np.gradient(nu_sgs, h, edge_order)[1]*\
+    term    += np.gradient(nu_sgs, h, edge_order=2)[1]*\
                 np.gradient(enst, h, edge_order=2)[1]
     term    += np.gradient(nu_sgs, h, edge_order=2)[0]*\
                 np.gradient(enst, h, edge_order=2)[0]
