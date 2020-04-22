@@ -57,19 +57,19 @@ def term_1(
     omega1_grad = np.gradient(omega1, h, edge_order=2)
     omega2_grad = np.gradient(omega2, h, edge_order=2)
     omega3_grad = np.gradient(omega3, h, edge_order=2)
-    term        += np.square(omega1_grad[2])
-    term        += np.square(omega1_grad[1])
-    term        += np.square(omega1_grad[0])
-    term        += np.square(omega2_grad[2])
-    term        += np.square(omega2_grad[1])
-    term        += np.square(omega2_grad[0])
-    term        += np.square(omega3_grad[2])
-    term        += np.square(omega3_grad[1])
-    term        += np.square(omega3_grad[0])
+    term        -= np.square(omega1_grad[2])
+    term        -= np.square(omega1_grad[1])
+    term        -= np.square(omega1_grad[0])
+    term        -= np.square(omega2_grad[2])
+    term        -= np.square(omega2_grad[1])
+    term        -= np.square(omega2_grad[0])
+    term        -= np.square(omega3_grad[2])
+    term        -= np.square(omega3_grad[1])
+    term        -= np.square(omega3_grad[0])
     #---------------------------------------------------------------------#
     # Applying the subgrid stress                                         #
     #---------------------------------------------------------------------#
-    term    *= nu_sgs
+    term        *= nu_sgs
 
     return term
 #=========================================================================#

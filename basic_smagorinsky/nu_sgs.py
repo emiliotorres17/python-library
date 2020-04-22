@@ -42,10 +42,11 @@ def nu_sgs_BS(
     Smag    += np.square(S[3])              # S_{22}^2
     Smag    += 2.0*np.square(S[4])          # S_{23}^2
     Smag    += np.square(S[5])              # S_{33}^3
+    Smag    = np.sqrt(Smag)                 # square root
     #---------------------------------------------------------------------#
     # Calculating nu_{sgs}                                                #
     #---------------------------------------------------------------------#
-    nu_sgs = 2.0*cs*delta*Smag
+    nu_sgs = 2.0*(cs*delta)**2.0*Smag
 
     return nu_sgs
 #=========================================================================#
@@ -56,6 +57,7 @@ if __name__ == "__main__":
     # Main preamble                                                       #
     #---------------------------------------------------------------------#
     call(['clear'])
+
     print('**** This has not been unit tested ****')
 
     sys.exit(0)

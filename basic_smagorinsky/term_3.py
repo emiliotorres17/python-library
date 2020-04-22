@@ -35,14 +35,16 @@ def term_3(
     h       = 2.0*np.pi/64.0
     term    = np.zeros((64,64,64))
     #---------------------------------------------------------------------#
+    # calculating gradients                                               #
+    #---------------------------------------------------------------------#
+    enst_grad   = np.gradient(enst,     h, edge_order=2)
+    nu_grad     = np.gradient(nu_sgs,   h, edge_order=2)
+    #---------------------------------------------------------------------#
     # calculating term 3                                                  #
     #---------------------------------------------------------------------#
-    term    += np.gradient(nu_sgs, h, edge_order=2)[2]*\
-                np.gradient(enst, h, edge_order=2)[2]
-    term    += np.gradient(nu_sgs, h, edge_order=2)[1]*\
-                np.gradient(enst, h, edge_order=2)[1]
-    term    += np.gradient(nu_sgs, h, edge_order=2)[0]*\
-                np.gradient(enst, h, edge_order=2)[0]
+    term    += enst_grad[2]*nu_grad[2]
+    term    += enst_grad[1]*nu_grad[1]
+    term    += enst_grad[0]*nu_grad[0]
 
     return term
 #=========================================================================#

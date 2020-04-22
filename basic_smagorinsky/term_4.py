@@ -53,7 +53,7 @@ def term_4(
                             np.gradient(nu_sgs, h, edge_order=2)[2], h, edge_order=2)[0] +\
                         S[3]*np.gradient(\
                             np.gradient(nu_sgs, h, edge_order=2)[1], h, edge_order=2)[0] +\
-                        S[5]*np.gradient(\
+                        S[4]*np.gradient(\
                             np.gradient(nu_sgs, h, edge_order=2)[0], h, edge_order=2)[0])
     #---------------------------------------------------------------------#
     # i=2, j=3, and k=1                                                   #
@@ -68,24 +68,24 @@ def term_4(
     # i=2, j=1, and k=3                                                   #
     #---------------------------------------------------------------------#
     term    -= omega2*(S[2]*np.gradient(\
-                            np.gradient(nu_sgs, h, edge_order=2)[2], h, edge_order=2)[2] +\
+                            np.gradient(nu_sgs, h, edge_order=2)[2], h, edge_order=2)[1] +\
                         S[4]*np.gradient(\
-                            np.gradient(nu_sgs, h, edge_order=2)[1], h, edge_order=2)[2] +\
+                            np.gradient(nu_sgs, h, edge_order=2)[1], h, edge_order=2)[1] +\
                         S[5]*np.gradient(\
-                            np.gradient(nu_sgs, h, edge_order=2)[0], h, edge_order=2)[2])
+                            np.gradient(nu_sgs, h, edge_order=2)[0], h, edge_order=2)[1])
     #---------------------------------------------------------------------#
     # i=3, j=1, and k=2                                                   #
     #---------------------------------------------------------------------#
-    term    += omega2*(S[1]*np.gradient(\
-                            np.gradient(nu_sgs, h, edge_order=2)[2], h, edge_order=2)[2] +\
+    term    += omega3*(S[1]*np.gradient(\
+                            np.gradient(nu_sgs, h, edge_order=2)[2], h, edge_order=2)[1] +\
                         S[3]*np.gradient(\
-                            np.gradient(nu_sgs, h, edge_order=2)[1], h, edge_order=2)[2] +\
+                            np.gradient(nu_sgs, h, edge_order=2)[1], h, edge_order=2)[1] +\
                         S[4]*np.gradient(\
-                            np.gradient(nu_sgs, h, edge_order=2)[0], h, edge_order=2)[2])
+                            np.gradient(nu_sgs, h, edge_order=2)[0], h, edge_order=2)[1])
     #---------------------------------------------------------------------#
     # i=3, j=2, and k=1                                                   #
     #---------------------------------------------------------------------#
-    term    -= omega2*(S[0]*np.gradient(\
+    term    -= omega3*(S[0]*np.gradient(\
                             np.gradient(nu_sgs, h, edge_order=2)[2], h, edge_order=2)[1] +\
                         S[1]*np.gradient(\
                             np.gradient(nu_sgs, h, edge_order=2)[1], h, edge_order=2)[1] +\
