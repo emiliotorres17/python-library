@@ -23,6 +23,7 @@ import numpy as np
 #-------------------------------------------------------------------------#
 def grad_omega(
         comp,
+        data_path,
         h   = True):
 
     """ Calculating grad omega  """
