@@ -5,7 +5,7 @@ Purpose:
     from an ALES simulation.
 
     **** Warning: This has not been tested, and there is no proof it works as
-                  intended.
+                  intended.                                         
 Author:
     Emilio Torres
 ========================================================================"""
@@ -24,9 +24,97 @@ import matplotlib.pyplot as plt
 # User packages                                                           #
 #-------------------------------------------------------------------------#
 from  min_max       import find_max3D
+from  min_max       import find_min3D
 #=========================================================================#
 # User defined functions                                                  #
 #=========================================================================#
+#-------------------------------------------------------------------------#
+# Distance formula                                                        #
+#-------------------------------------------------------------------------#
+def distance(
+        x1,
+        x2,
+        y1,
+        y2,
+        z1,
+        z2):
+
+    """ Calculating the distance between two points """
+    #---------------------------------------------------------------------#
+    # Calculating distance                                                #
+    #---------------------------------------------------------------------#
+    dist    = np.sqrt((x1-x2)**2.0 + (y1-y2)**2.0 + (z1-z2)**2.0)
+
+    return dist
+#-------------------------------------------------------------------------#
+# Tracking subroutine 2                                                   #
+#-------------------------------------------------------------------------#
+def tracking2(
+        start,                      # start time point
+        end,                        # end time point
+        Time,                       # time vector
+        loc_vec,                    # x, y, and z vectors
+        crd_vec,                    # x, y, and z starting coordinates
+        vel,                        # vel_x, vel_y, vel_z
+        debug   = False):           # debug flag
+
+    """ Subroutine to track a particle part dos """
+    #---------------------------------------------------------------------#
+    # Preallocating variables                                             #
+    #---------------------------------------------------------------------#
+    dist        = np.zeros((64,64,64))
+    xpt         = np.zeros(end-start)
+    ypt         = np.zeros(end-start)
+    zpt         = np.zeros(end-start)
+    #---------------------------------------------------------------------#
+    # Setting coordinates                                                 #
+    #---------------------------------------------------------------------#
+    Nx          = crd_vec[0]
+    Ny          = crd_vec[1]
+    Nz          = crd_vec[2]
+    #---------------------------------------------------------------------#
+    # setting the target values                                           #
+    #---------------------------------------------------------------------#
+    xtarget     = loc_vec[0][Nx]
+    ytarget     = loc_vec[1][Ny]
+    ztarget     = loc_vec[2][Nz]
+    #---------------------------------------------------------------------#
+    # time loop                                                           #
+    #---------------------------------------------------------------------#
+    pcount = 0
+    for count, t in enumerate(range(end, start, -1)):
+        dt  = time[t] - time[t-1]
+        for k in range(0,64):
+            for j in range(0,64):
+                for i in range(0,64):
+                    #-----------------------------------------------------#
+                    # finding new points and distance                     #
+                    #-----------------------------------------------------#
+                    xnew        = loc_vec[0][i] + vel[0][i,j,k,t-1]*dt
+                    ynew        = loc_vec[1][j] + vel[1][i,j,k,t-1]*dt
+                    znew        = loc_vec[2][k] + vel[2][i,j,k,t-1]*dt
+                    dist[i,j,k] = distance(xtarget, xnew, ytarget, ynew, ztarget, znew)
+        #-----------------------------------------------------------------#
+        # setting new targets and storing points                          #
+        #----------------------------------------------------------------#
+        [val, Nx, Ny, Nz]   = find_min3D(dist)
+        xpt[count]  = Nx
+        ypt[count]  = Ny
+        zpt[count]  = Nz
+        xtarget     = loc_vec[0][Nx]
+        ytarget     = loc_vec[1][Ny]
+        ztarget     = loc_vec[2][Nz]
+        #-----------------------------------------------------------------#
+        # print statement                                                 #
+        #-----------------------------------------------------------------#
+        if pcount > 20:
+            print('time step --> %i'        %(count))
+            pcount  = 0
+        pcount += 1
+
+    return xpt, ypt, zpt
+
+
 #-------------------------------------------------------------------------#
 # Periodic boundary conditions                                            #
 #-------------------------------------------------------------------------#
@@ -276,7 +364,7 @@ if __name__ == '__main__':
     #---------------------------------------------------------------------#
     # Loading data                                                        #
     #---------------------------------------------------------------------#
-    DS  = False
+    DS  = True
     print('Loading data:')
     if DS is True:
         time    = np.load(data_path + 'time-2.npy')
@@ -287,8 +375,6 @@ if __name__ == '__main__':
         print('\ty-velocity')
         u_z     = np.load(data_path + 'velocity3-2.npy')
         print('\tz-velocity')
-        Dk      = np.load(data_path + 'Dk_Dt.npy')
-        print('\tDk/Dt')
     else:
         time    = np.load(data_path + 'time.npy')
         print('\ttime')
@@ -307,23 +393,24 @@ if __name__ == '__main__':
     y   = np.linspace(0, 2.0*np.pi, 64)
     z   = np.linspace(0, 2.0*np.pi, 64)
     #---------------------------------------------------------------------#
-    # Finding the maximum value of the field                              #
+    # Defining final time                                                 #
     #---------------------------------------------------------------------#
     tfinal          = 99
-    [val, X, Y, Z]  = find_max3D(Dk[:,:,:,tfinal])
     #---------------------------------------------------------------------#
     # Generating contours plots starting at T=t_{f}                       #
     #---------------------------------------------------------------------#
-    for i in range(tfinal, tfinal-6, -1):
-        val = find_max3D(Dk[:,:,:,i])[0]
-        print('maximum value=%.7f\tx-loc=%.5f\ty-loc=%.5f\tz-loc=%.5f'\
-                    %(val, X, Y, Z))
-        #contour_gen(Dk, X, Y, Z, i)
+    if DS is not True:
+        [val, X, Y, Z]  = find_max3D(Dk[:,:,:,tfinal])
+        for i in range(tfinal, tfinal-6, -1):
+            val = find_max3D(Dk[:,:,:,i])[0]
+            print('maximum value=%.7f\tx-loc=%.5f\ty-loc=%.5f\tz-loc=%.5f'\
+                        %(val, X, Y, Z))
+            #contour_gen(Dk, X, Y, Z, i)
     #---------------------------------------------------------------------#
     # Tracking                                                            #
     #---------------------------------------------------------------------#
-    [X,Y,Z] = tracking(tfinal-20, tfinal, time, (x,y,z), [12,60,23], [u_x, u_y,\
-                        u_z], 3, True, True)
+    [X,Y,Z] = tracking2(tfinal-90, tfinal, time, (x,y,z), [12,60,23], [u_x, u_y,\
+                        u_z])
     #---------------------------------------------------------------------#
     # Writing data                                                        #
     #---------------------------------------------------------------------#
