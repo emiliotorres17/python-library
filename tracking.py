@@ -19,6 +19,7 @@ import os
 import sys
 from subprocess import call
 import numpy as np
+import matplotlib.pyplot as plt
 #-------------------------------------------------------------------------#
 # User packages                                                           #
 #-------------------------------------------------------------------------#
@@ -85,7 +86,7 @@ def tracking(
         loc_vec,                    # x, y, and z vectors
         crd_vec,                    # x, y, and z starting coordinates
         vel,                        # vel_x, vel_y, vel_z
-        box_size,                   # box size fir averaging
+        box_size,                   # box size for averaging
         BA_flag = True,             # box average flag
         debug   = False):           # debug flag
 
@@ -115,9 +116,11 @@ def tracking(
         #-----------------------------------------------------------------#
         # Storing coordinate values                                       #
         #-----------------------------------------------------------------#
-        x_pts[t-1]  = Nx
-        y_pts[t-1]  = Ny
-        z_pts[t-1]  = Nz
+        index           = t-start
+        print(index)
+        x_pts[index]    = Nx
+        y_pts[index]    = Ny
+        z_pts[index]    = Nz
         #-----------------------------------------------------------------#
         # previous x, y, and z values                                     #
         #-----------------------------------------------------------------#
@@ -165,14 +168,15 @@ def tracking(
         #-----------------------------------------------------------------#
         if debug is True:
             print('x-values:')
-            print('\ttime=%.5f\tdt=%.5e\tvel_{x}=%.5f\tx_{n+1}=%.5f\tx_{n}=%.5f\tNx_{n+1}=%i\tNx_{n}=%i'\
+            print('\t\t\ttime=%.5f\t\t\tdt=%.5e\t\t\tvel_{x}=%.5f\t\t\tx_{n+1}=%.5f\t\t\tx_{n}=%.5f\t\t\tNx_{n+1}=%i\t\t\tNx_{n}=%i'\
                     %(t,dt,vel_x,xt_old,xt,Nx_old,Nx))
             print('y-values:')
-            print('\ttime=%.5f\tdt=%.5e\tvel_{y}=%.5f\ty_{n+1}=%.5f\ty_{n}=%.5f\tNy_{n+1}=%i\tNy_{n}=%i'\
+            print('\t\t\ttime=%.5f\t\t\tdt=%.5e\t\t\tvel_{y}=%.5f\t\t\ty_{n+1}=%.5f\t\t\ty_{n}=%.5f\t\t\tNy_{n+1}=%i\t\t\tNy_{n}=%i'\
                     %(t,dt,vel_y,yt_old,yt,Ny_old,Ny))
             print('z-values:')
-            print('\ttime=%.5f\tdt=%.5e\tvel_{z}=%.5f\tz_{n+1}=%.5f\tz_{n}=%.5f\tNz_{n+1}=%i\tNz_{n}=%i'\
+            print('\t\t\ttime=%.5f\t\t\tdt=%.5e\t\t\tvel_{z}=%.5f\t\t\tz_{n+1}=%.5f\t\t\tz_{n}=%.5f\t\t\tNz_{n+1}=%i\t\t\tNz_{n}=%i'\
                     %(t,dt,vel_z,zt_old,zt,Nz_old,Nz))
+            print('\n\n')
 
     return x_pts, y_pts, z_pts
 #-------------------------------------------------------------------------#
@@ -272,17 +276,30 @@ if __name__ == '__main__':
     #---------------------------------------------------------------------#
     # Loading data                                                        #
     #---------------------------------------------------------------------#
+    DS  = False
     print('Loading data:')
-    time    = np.load(data_path + 'time.npy')
-    print('\ttime')
-    u_x     = np.load(data_path + 'vel_x.npy')
-    print('\tx-veloccity')
-    u_y     = np.load(data_path + 'vel_y.npy')
-    print('\ty-velocity')
-    u_z     = np.load(data_path + 'vel_z.npy')
-    print('\tz-velocity')
-    Dk      = np.load(data_path + 'Dk_Dt.npy')
-    print('\tDk/Dt')
+    if DS is True:
+        time    = np.load(data_path + 'time-2.npy')
+        print('\ttime')
+        u_x     = np.load(data_path + 'velocity1-2.npy')
+        print('\tx-veloccity')
+        u_y     = np.load(data_path + 'velocity2-2.npy')
+        print('\ty-velocity')
+        u_z     = np.load(data_path + 'velocity3-2.npy')
+        print('\tz-velocity')
+        Dk      = np.load(data_path + 'Dk_Dt.npy')
+        print('\tDk/Dt')
+    else:
+        time    = np.load(data_path + 'time.npy')
+        print('\ttime')
+        u_x     = np.load(data_path + 'vel_x.npy')
+        print('\tx-veloccity')
+        u_y     = np.load(data_path + 'vel_y.npy')
+        print('\ty-velocity')
+        u_z     = np.load(data_path + 'vel_z.npy')
+        print('\tz-velocity')
+        Dk      = np.load(data_path + 'Dk_Dt.npy')
+        print('\tDk/Dt')
     #---------------------------------------------------------------------#
     # Domain variables                                                    #
     #---------------------------------------------------------------------#
@@ -292,7 +309,7 @@ if __name__ == '__main__':
     #---------------------------------------------------------------------#
     # Finding the maximum value of the field                              #
     #---------------------------------------------------------------------#
-    tfinal          = 19
+    tfinal          = 99
     [val, X, Y, Z]  = find_max3D(Dk[:,:,:,tfinal])
     #---------------------------------------------------------------------#
     # Generating contours plots starting at T=t_{f}                       #
@@ -305,7 +322,7 @@ if __name__ == '__main__':
     #---------------------------------------------------------------------#
     # Tracking                                                            #
     #---------------------------------------------------------------------#
-    [X,Y,Z] = tracking(1, tfinal, time, (x,y,z), [0,0,0], [u_x, u_y,\
+    [X,Y,Z] = tracking(tfinal-20, tfinal, time, (x,y,z), [12,60,23], [u_x, u_y,\
                         u_z], 3, True, True)
     #---------------------------------------------------------------------#
     # Writing data                                                        #
@@ -316,6 +333,12 @@ if __name__ == '__main__':
     f   = open(data_path + 'box-average-7-pts.txt',  'w')
     f.write(string)
     f.close()
+    #---------------------------------------------------------------------#
+    # Example plot                                                        #
+    #---------------------------------------------------------------------#
+    plt.plot(time, u_x[31,31,31,:], 'r', lw=1.5)
+    plt.grid(True)
+    plt.show()
 
     print('**** Successful run ****')
     sys.exit(0)
