@@ -17,6 +17,7 @@ import os
 import sys
 from subprocess import call
 import numpy as np
+import scipy.interpolate as interp
 import matplotlib.pyplot as plt
 #=========================================================================#
 # User defined functions                                                  #
@@ -50,11 +51,13 @@ def interp_1D_2(
     #---------------------------------------------------------------------#
     # Interpolating                                                       # 
     #---------------------------------------------------------------------#
+    F       = interp.interp1d(x,y)
+    yval    = F(xval)
     coor    = find_xval(x,xval)
     m       = (y[coor] - y[coor-1])/(x[coor] - x[coor-1])
-    yval    = y[coor] - m*(x[coor]-xval)   
+    yval2   = y[coor] - m*(x[coor]-xval)   
 
-    return yval
+    return yval, yval2
 #=========================================================================#
 # Main                                                                    #
 #=========================================================================#
@@ -66,43 +69,47 @@ if __name__ == '__main__':
     #---------------------------------------------------------------------#
     # Domain variables                                                    #
     #---------------------------------------------------------------------#
-    N   = [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, \
-                int(4096*2)]
-    err = np.zeros(len(N))
-    dx  = np.zeros(len(N))
+    N       = [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, \
+                int(4096*2), int(4096*4), int(4096*8), int(4096*16),\
+                int(4096*32), int(4096*64), int(4096*128)]
+    err     = np.zeros(len(N))
+    err2    = np.zeros(len(N))
+    dx      = np.zeros(len(N))
     #---------------------------------------------------------------------#
     # Looping over N                                                      #
     #---------------------------------------------------------------------#
     for i, n in enumerate(N):
         print(n)
-        xint    = 0.554654512121354774524567578
-        xvec    = np.linspace(0.0, 1.0, n+1)
-        yvec    = np.sin(xvec)**2.0 + 3.0*np.cos(xvec)**2.0
-        ycalc   = interp_1D_2(xvec, yvec, xint)  
-        yexac   = np.sin(xint)**2.0 + 3.0*np.cos(xint)**2.0
-        err[i]  = abs(yexac -  ycalc) 
-        dx[i]   = 1.0/n
+        xint            = 0.554654512121354774524567578
+        xvec            = np.linspace(0.0, 1.0, n+1)
+        yvec            = np.sin(xvec)**2.0 + 3.0*np.cos(xvec)**2.0
+        [ycalc, ycalc2] = interp_1D_2(xvec, yvec, xint)  
+        yexac           = np.sin(xint)**2.0 + 3.0*np.cos(xint)**2.0
+        err[i]          = abs(yexac -  ycalc) 
+        err2[i]         = abs(yexac -  ycalc2) 
+        dx[i]           = 1.0/n
     #---------------------------------------------------------------------#
     # Font settings                                                       #
     #---------------------------------------------------------------------#
-    #plt.rc('text', usetex=True)
-    #plt.rc('font', family='serif')
-    #SMALL_SIZE = 14
-    #MEDIUM_SIZE = 18
-    #BIGGER_SIZE = 12
-    #plt.rc('font',      size=SMALL_SIZE)            # controls default text sizes
-    #plt.rc('axes',      titlesize=SMALL_SIZE)       # fontsize of the axes title
-    #plt.rc('axes',      labelsize=MEDIUM_SIZE)      # fontsize of the x and y labels
-    #plt.rc('xtick',     labelsize=SMALL_SIZE)       # fontsize of the tick labels
-    #plt.rc('ytick',     labelsize=SMALL_SIZE)       # fontsize of the tick labels
-    #plt.rc('legend',    fontsize=SMALL_SIZE)        # legend fontsize
-    #plt.rc('figure',    titlesize=BIGGER_SIZE)      # fontsize of the figure title
+    plt.rc('text', usetex=True)
+    plt.rc('font', family='serif')
+    SMALL_SIZE = 14
+    MEDIUM_SIZE = 18
+    BIGGER_SIZE = 12
+    plt.rc('font',      size=SMALL_SIZE)            # controls default text sizes
+    plt.rc('axes',      titlesize=SMALL_SIZE)       # fontsize of the axes title
+    plt.rc('axes',      labelsize=MEDIUM_SIZE)      # fontsize of the x and y labels
+    plt.rc('xtick',     labelsize=SMALL_SIZE)       # fontsize of the tick labels
+    plt.rc('ytick',     labelsize=SMALL_SIZE)       # fontsize of the tick labels
+    plt.rc('legend',    fontsize=SMALL_SIZE)        # legend fontsize
+    plt.rc('figure',    titlesize=BIGGER_SIZE)      # fontsize of the figure title
     #---------------------------------------------------------------------#
     # Plotting                                                            #
     #---------------------------------------------------------------------#
     plt.loglog(dx, err, 'ro--', lw=1.5)
+    plt.loglog(dx, err2, 'b*--', lw=1.5)
     plt.grid(True)
     #plt.yticks([1e-16, 1e-14, 1e-12, 1e-10, 1e-8, 1e-6, 1e-4, 1e-3, 1e-2])
     #plt.yticks(np.linspace(1e-16, 1e-2, 10))
-    #plt.ylim([1e-16, 1e-02])
+    plt.ylim([1e-14, 1e-01])
     plt.show()
