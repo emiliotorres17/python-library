@@ -91,12 +91,15 @@ if __name__ == "__main__":
     omega3_path     = pwd + "%c..%comega3%c"            %(sep, sep, sep)
     tau_path        = pwd + "%c..%ctau%c"               %(sep, sep, sep)
     S_path          = pwd + "%c..%cstrain-rates%c"      %(sep, sep, sep)
+    cs2_path        = pwd + "%c..%ccs2%c"               %(sep, sep, sep)
     #---------------------------------------------------------------------#
     # Domain variables                                                    #
     #---------------------------------------------------------------------#
     tstart      = 0
-    tf          = 299
-    del_flag    = True
+    tf          = 503
+    num_proc    = 16
+    N           = 64
+    del_flag    = False
     time_flag   = True
     enst_flag   = True
     ke_flag     = True
@@ -106,6 +109,7 @@ if __name__ == "__main__":
     omega_flag  = False
     S_flag      = False
     tau_flag    = False
+    cs2_flag    = False
     #=====================================================================#
     # Time                                                                #
     #=====================================================================#
@@ -125,15 +129,15 @@ if __name__ == "__main__":
         #-----------------------------------------------------------------#
         # Extracting A spectral                                           #
         #-----------------------------------------------------------------#
-        A   = npy_transport_term_general('A', 64, 16, tstart, tf, A_path_enst)
+        A   = npy_transport_term_general('A', N, num_proc, tstart, tf, A_path_enst)
         np.save(data_path + "A-enst.npy", A)
         if del_flag is True:
             delete_var(A_path_enst, 'A-enst')
-        #del A
+        del A
         #-----------------------------------------------------------------#
         # Extracting B spectral                                           #
         #-----------------------------------------------------------------#
-        B   = npy_transport_term_general('B', 64, 16, tstart, tf, B_path_enst)
+        B   = npy_transport_term_general('B', N, num_proc, tstart, tf, B_path_enst)
         np.save(data_path + "B-enst.npy", B)
         if del_flag is True:
             delete_var(B_path_enst, 'B-enst')
@@ -141,23 +145,23 @@ if __name__ == "__main__":
         #-----------------------------------------------------------------#
         # Extracting D spectral                                           #
         #-----------------------------------------------------------------#
-        D   = npy_transport_term_general('D', 64, 16, tstart, tf, D_path_enst)
+        D   = npy_transport_term_general('D', N, num_proc, tstart, tf, D_path_enst)
         np.save(data_path + "D-enst.npy", D)
         if del_flag is True:
             delete_var(D_path_enst, 'D-enst')
         del D
         #-----------------------------------------------------------------#
-        # Extracting Pi spectral                                          #
+        # Extracting C spectral                                           #
         #-----------------------------------------------------------------#
-        Pi   = npy_transport_term_general('Pi', 64, 16, tstart, tf, Pi_path_enst)
-        np.save(data_path + "Pi-enst.npy", Pi)
+        C   = npy_transport_term_general('C', N, num_proc, tstart, tf, C_path_enst)
+        np.save(data_path + "C-enst.npy", C)
         if del_flag is True:
-            delete_var(Pi_path_enst, 'Pi-enst')
-        del Pi
+            delete_var(C_path_enst, 'C-enst')
+        del C
         #-----------------------------------------------------------------#
         # Extracting P spectral                                           #
         #-----------------------------------------------------------------#
-        P   = npy_transport_term_general('P', 64, 16, tstart, tf, P_path_enst)
+        P   = npy_transport_term_general('P', N, num_proc, tstart, tf, P_path_enst)
         np.save(data_path + "P-enst.npy", P)
         if del_flag is True:
             delete_var(P_path_enst, 'P-enst')
@@ -169,7 +173,7 @@ if __name__ == "__main__":
         #-----------------------------------------------------------------#
         # Extracting A spectral                                           #
         #-----------------------------------------------------------------#
-        A   = npy_transport_term_general('A', 64, 16, tstart, tf, A_path_ke)
+        A   = npy_transport_term_general('A', N, num_proc, tstart, tf, A_path_ke)
         np.save(data_path + "A-ke.npy", A)
         if del_flag is True:
             delete_var(A_path_ke, 'A-ke')
@@ -177,7 +181,7 @@ if __name__ == "__main__":
         #-----------------------------------------------------------------#
         # Extracting B spectral                                           #
         #-----------------------------------------------------------------#
-        B   = npy_transport_term_general('B', 64, 16, tstart, tf, B_path_ke)
+        B   = npy_transport_term_general('B', N, num_proc, tstart, tf, B_path_ke)
         np.save(data_path + "B-ke.npy", B)
         if del_flag is True:
             delete_var(B_path_ke, 'B-ke')
@@ -185,7 +189,7 @@ if __name__ == "__main__":
         #-----------------------------------------------------------------#
         # Extracting D spectral                                           #
         #-----------------------------------------------------------------#
-        D   = npy_transport_term_general('D', 64, 16, tstart, tf, D_path_ke)
+        D   = npy_transport_term_general('D', N, num_proc, tstart, tf, D_path_ke)
         np.save(data_path + "D-ke.npy", D)
         if del_flag is True:
             delete_var(D_path_ke, 'D-ke')
@@ -193,7 +197,7 @@ if __name__ == "__main__":
         #-----------------------------------------------------------------#
         # Extracting Pi spectral                                          #
         #-----------------------------------------------------------------#
-        C   = npy_transport_term_general('C', 64, 16, tstart, tf, C_path_ke)
+        C   = npy_transport_term_general('C', N, num_proc, tstart, tf, C_path_ke)
         np.save(data_path + "C-ke.npy", C)
         if del_flag is True:
             delete_var(C_path_ke, 'C-ke')
@@ -201,7 +205,7 @@ if __name__ == "__main__":
         #-----------------------------------------------------------------#
         # Extracting P spectral                                           #
         #-----------------------------------------------------------------#
-        P   = npy_transport_term_general('P', 64, 16, tstart, tf, P_path_ke)
+        P   = npy_transport_term_general('P', N, num_proc, tstart, tf, P_path_ke)
         np.save(data_path + "P-ke.npy", P)
         if del_flag is True:
             delete_var(P_path_ke, 'P-ke')
@@ -213,7 +217,7 @@ if __name__ == "__main__":
         #-----------------------------------------------------------------#
         # KE fields                                                       #
         #-----------------------------------------------------------------#
-        ke      = npy_transport_term_general('ke', 64, 16, tstart, tf, ke_path)
+        ke      = npy_transport_term_general('ke', N, num_proc, tstart, tf, ke_path)
         np.save(data_path + "ke.npy", ke)
         if del_flag is True:
             delete_var(ke_path, 'ke')
@@ -221,7 +225,7 @@ if __name__ == "__main__":
         #-----------------------------------------------------------------#
         # Enstrophy fields                                                #
         #-----------------------------------------------------------------#
-        enst    = npy_transport_term_general('enstrophy', 64, 16, tstart, tf, enst_path)
+        enst    = npy_transport_term_general('enstrophy', N, num_proc, tstart, tf, enst_path)
         np.save(data_path + "enst.npy", enst)
         if del_flag is True:
             delete_var(enst_path, 'enst')
@@ -233,7 +237,7 @@ if __name__ == "__main__":
         #-----------------------------------------------------------------#
         # velocity-1                                                      #
         #-----------------------------------------------------------------#
-        vel1    = npy_velocity_general(1, 64, 16, 0, tf, vel1_path)
+        vel1    = npy_velocity_general(1, N, num_proc, 0, tf, vel1_path)
         np.save(data_path + 'velocity1.npy', vel1)
         if del_flag is True:
             delete_var(vel1_path, 'vel-1')
@@ -241,7 +245,7 @@ if __name__ == "__main__":
         #-----------------------------------------------------------------#
         # velocity-2                                                      #
         #-----------------------------------------------------------------#
-        vel2    = npy_velocity_general(2, 64, 16, 0, tf, vel2_path)
+        vel2    = npy_velocity_general(2, N, num_proc, 0, tf, vel2_path)
         np.save(data_path + 'velocity2.npy', vel2)
         if del_flag is True:
             delete_var(vel2_path, 'vel-2')
@@ -249,7 +253,7 @@ if __name__ == "__main__":
         #-----------------------------------------------------------------#
         # velocity-3                                                      #
         #-----------------------------------------------------------------#
-        vel3    = npy_velocity_general(3, 64, 16, 0, tf, vel3_path)
+        vel3    = npy_velocity_general(3, N, num_proc, 0, tf, vel3_path)
         np.save(data_path + 'velocity3.npy', vel3)
         if del_flag is True:
             delete_var(vel3_path, 'vel-3')
@@ -261,7 +265,7 @@ if __name__ == "__main__":
         #-----------------------------------------------------------------#
         # velocity-1                                                      #
         #-----------------------------------------------------------------#
-        omega1  = npy_vorticity_general(1, 64, 16, 0, tf, omega1_path)
+        omega1  = npy_vorticity_general(1, N, num_proc, 0, tf, omega1_path)
         np.save(data_path + 'omega1.npy', omega1)
         if del_flag is True:
             delete_var(omega1_path, 'omega-1')
@@ -269,7 +273,7 @@ if __name__ == "__main__":
         #-----------------------------------------------------------------#
         # velocity-2                                                      #
         #-----------------------------------------------------------------#
-        omega2  = npy_vorticity_general(2, 64, 16, 0, tf, omega2_path)
+        omega2  = npy_vorticity_general(2, N, num_proc, 0, tf, omega2_path)
         np.save(data_path + 'omega2.npy', omega2)
         if del_flag is True:
             delete_var(omega2_path, 'omega-2')
@@ -277,7 +281,7 @@ if __name__ == "__main__":
         #-----------------------------------------------------------------#
         # velocity-3                                                      #
         #-----------------------------------------------------------------#
-        omega3  = npy_vorticity_general(3, 64, 16, 0, tf, omega3_path)
+        omega3  = npy_vorticity_general(3, N, num_proc, 0, tf, omega3_path)
         np.save(data_path + 'omega3.npy', omega3)
         if del_flag is True:
             delete_var(omega3_path, 'omega-3')
@@ -289,37 +293,37 @@ if __name__ == "__main__":
         #-----------------------------------------------------------------#
         # S-11                                                            #
         #-----------------------------------------------------------------#
-        s11     = npy_S_general(11, 64, 16, 0, tf, S_path)
+        s11     = npy_S_general(11, N, num_proc, 0, tf, S_path)
         np.save(data_path + 's11.npy', s11)
         del s11
         #-----------------------------------------------------------------#
         # S-12                                                            #
         #-----------------------------------------------------------------#
-        s12 = npy_S_general(12, 64, 16, 0, tf, S_path)
+        s12 = npy_S_general(12, N, num_proc, 0, tf, S_path)
         np.save(data_path + 's12.npy', s12)
         del s12
         #-----------------------------------------------------------------#
         # S-13                                                            #
         #-----------------------------------------------------------------#
-        s13 = npy_S_general(13, 64, 16, 0, tf, S_path)
+        s13 = npy_S_general(13, N, num_proc, 0, tf, S_path)
         np.save(data_path + 's13.npy', s13)
         del s13
         #-----------------------------------------------------------------#
         # S-22                                                            #
         #-----------------------------------------------------------------#
-        s22 = npy_S_general(22, 64, 16, 0, tf, S_path)
+        s22 = npy_S_general(22, N, num_proc, 0, tf, S_path)
         np.save(data_path + 's22.npy', s22)
         del s22
         #-----------------------------------------------------------------#
         # S-23                                                            #
         #-----------------------------------------------------------------#
-        s23 = npy_S_general(23, 64, 16, 0, tf, S_path)
+        s23 = npy_S_general(23, N, num_proc, 0, tf, S_path)
         np.save(data_path + 's23.npy', s23)
         del s23
         #-----------------------------------------------------------------#
         # S-33                                                            #
         #-----------------------------------------------------------------#
-        s33 = npy_S_general(33, 64, 16, 0, tf, S_path)
+        s33 = npy_S_general(33, N, num_proc, 0, tf, S_path)
         np.save(data_path + 's33.npy', s33)
         del s33
         if del_flag is True:
@@ -329,43 +333,51 @@ if __name__ == "__main__":
     #=====================================================================#
     if tau_flag is True:
         #-----------------------------------------------------------------#
-        # S-11                                                            #
+        # tau-11                                                          #
         #-----------------------------------------------------------------#
-        tau11   = npy_tau_general(11, 64, 16, 0, tf, tau_path)
+        tau11   = npy_tau_general(11, N, num_proc, 0, tf, tau_path)
         np.save(data_path + 'tau11.npy', tau11)
         del tau11
         #-----------------------------------------------------------------#
-        # S-12                                                            #
+        # tau-12                                                          #
         #-----------------------------------------------------------------#
-        tau12   = npy_tau_general(12, 64, 16, 0, tf, tau_path)
+        tau12   = npy_tau_general(12, N, num_proc, 0, tf, tau_path)
         np.save(data_path + 'tau12.npy', tau12)
         del tau12
         #-----------------------------------------------------------------#
-        # S-13                                                            #
+        # tau-13                                                          #
         #-----------------------------------------------------------------#
-        tau13   = npy_tau_general(13, 64, 16, 0, tf, tau_path)
+        tau13   = npy_tau_general(13, N, num_proc, 0, tf, tau_path)
         np.save(data_path + 'tau13.npy', tau13)
         del tau13
         #-----------------------------------------------------------------#
-        # S-22                                                            #
+        # tau-22                                                          #
         #-----------------------------------------------------------------#
-        tau22   = npy_tau_general(22, 64, 16, 0, tf, tau_path)
+        tau22   = npy_tau_general(22, N, num_proc, 0, tf, tau_path)
         np.save(data_path + 'tau22.npy', tau22)
         del tau22
         #-----------------------------------------------------------------#
-        # S-23                                                            #
+        # tau-23                                                          #
         #-----------------------------------------------------------------#
-        tau23   = npy_tau_general(23, 64, 16, 0, tf, tau_path)
+        tau23   = npy_tau_general(23, N, num_proc, 0, tf, tau_path)
         np.save(data_path + 'tau23.npy', tau23)
         del tau23
         #-----------------------------------------------------------------#
-        # S-33                                                            #
+        # tau-33                                                          #
         #-----------------------------------------------------------------#
-        tau33   = npy_tau_general(33, 64, 16, 0, tf, tau_path)
+        tau33   = npy_tau_general(33, N, num_proc, 0, tf, tau_path)
         np.save(data_path + 'tau33.npy', tau33)
         del tau33
         if del_flag is True:
             delete_var(tau_path, 'subgrid-stress')
-
+    #=====================================================================#
+    # Dynamic Smagorinsky                                                 #
+    #=====================================================================#
+    if cs2_flag is True:
+        cs2 = npy_transport_term_general('Cs2', N, 4, 0, tf, cs2_path)
+        np.save(data_path + 'cs2.npy', cs2)
+        del cs2
+        if del_flag is True:
+            delete_var(cs2_path, 'cs2')
     print("**** Successful Run ****")
     sys.exit(0)
