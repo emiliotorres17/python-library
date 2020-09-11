@@ -237,7 +237,7 @@ if __name__ == "__main__":
         #-----------------------------------------------------------------#
         # velocity-1                                                      #
         #-----------------------------------------------------------------#
-        vel1    = npy_velocity_general(1, N, num_proc, 0, tf, vel1_path)
+        vel1    = npy_velocity_general(1, N, num_proc, tstart, tf, vel1_path)
         np.save(data_path + 'velocity1.npy', vel1)
         if del_flag is True:
             delete_var(vel1_path, 'vel-1')
@@ -245,7 +245,7 @@ if __name__ == "__main__":
         #-----------------------------------------------------------------#
         # velocity-2                                                      #
         #-----------------------------------------------------------------#
-        vel2    = npy_velocity_general(2, N, num_proc, 0, tf, vel2_path)
+        vel2    = npy_velocity_general(2, N, num_proc, tstart, tf, vel2_path)
         np.save(data_path + 'velocity2.npy', vel2)
         if del_flag is True:
             delete_var(vel2_path, 'vel-2')
@@ -253,7 +253,7 @@ if __name__ == "__main__":
         #-----------------------------------------------------------------#
         # velocity-3                                                      #
         #-----------------------------------------------------------------#
-        vel3    = npy_velocity_general(3, N, num_proc, 0, tf, vel3_path)
+        vel3    = npy_velocity_general(3, N, num_proc, tstart, tf, vel3_path)
         np.save(data_path + 'velocity3.npy', vel3)
         if del_flag is True:
             delete_var(vel3_path, 'vel-3')
@@ -265,7 +265,7 @@ if __name__ == "__main__":
         #-----------------------------------------------------------------#
         # velocity-1                                                      #
         #-----------------------------------------------------------------#
-        omega1  = npy_vorticity_general(1, N, num_proc, 0, tf, omega1_path)
+        omega1  = npy_vorticity_general(1, N, num_proc, tstart, tf, omega1_path)
         np.save(data_path + 'omega1.npy', omega1)
         if del_flag is True:
             delete_var(omega1_path, 'omega-1')
@@ -273,7 +273,7 @@ if __name__ == "__main__":
         #-----------------------------------------------------------------#
         # velocity-2                                                      #
         #-----------------------------------------------------------------#
-        omega2  = npy_vorticity_general(2, N, num_proc, 0, tf, omega2_path)
+        omega2  = npy_vorticity_general(2, N, num_proc, tstart, tf, omega2_path)
         np.save(data_path + 'omega2.npy', omega2)
         if del_flag is True:
             delete_var(omega2_path, 'omega-2')
@@ -281,7 +281,7 @@ if __name__ == "__main__":
         #-----------------------------------------------------------------#
         # velocity-3                                                      #
         #-----------------------------------------------------------------#
-        omega3  = npy_vorticity_general(3, N, num_proc, 0, tf, omega3_path)
+        omega3  = npy_vorticity_general(3, N, num_proc, tstart, tf, omega3_path)
         np.save(data_path + 'omega3.npy', omega3)
         if del_flag is True:
             delete_var(omega3_path, 'omega-3')
@@ -293,37 +293,37 @@ if __name__ == "__main__":
         #-----------------------------------------------------------------#
         # S-11                                                            #
         #-----------------------------------------------------------------#
-        s11     = npy_S_general(11, N, num_proc, 0, tf, S_path)
+        s11     = npy_S_general(11, N, num_proc, tstart, tf, S_path)
         np.save(data_path + 's11.npy', s11)
         del s11
         #-----------------------------------------------------------------#
         # S-12                                                            #
         #-----------------------------------------------------------------#
-        s12 = npy_S_general(12, N, num_proc, 0, tf, S_path)
+        s12 = npy_S_general(12, N, num_proc, tstart, tf, S_path)
         np.save(data_path + 's12.npy', s12)
         del s12
         #-----------------------------------------------------------------#
         # S-13                                                            #
         #-----------------------------------------------------------------#
-        s13 = npy_S_general(13, N, num_proc, 0, tf, S_path)
+        s13 = npy_S_general(13, N, num_proc, tstart, tf, S_path)
         np.save(data_path + 's13.npy', s13)
         del s13
         #-----------------------------------------------------------------#
         # S-22                                                            #
         #-----------------------------------------------------------------#
-        s22 = npy_S_general(22, N, num_proc, 0, tf, S_path)
+        s22 = npy_S_general(22, N, num_proc, tstart, tf, S_path)
         np.save(data_path + 's22.npy', s22)
         del s22
         #-----------------------------------------------------------------#
         # S-23                                                            #
         #-----------------------------------------------------------------#
-        s23 = npy_S_general(23, N, num_proc, 0, tf, S_path)
+        s23 = npy_S_general(23, N, num_proc, tstart, tf, S_path)
         np.save(data_path + 's23.npy', s23)
         del s23
         #-----------------------------------------------------------------#
         # S-33                                                            #
         #-----------------------------------------------------------------#
-        s33 = npy_S_general(33, N, num_proc, 0, tf, S_path)
+        s33 = npy_S_general(33, N, num_proc, tstart, tf, S_path)
         np.save(data_path + 's33.npy', s33)
         del s33
         if del_flag is True:
@@ -335,37 +335,37 @@ if __name__ == "__main__":
         #-----------------------------------------------------------------#
         # tau-11                                                          #
         #-----------------------------------------------------------------#
-        tau11   = npy_tau_general(11, N, num_proc, 0, tf, tau_path)
+        tau11   = npy_tau_general(11, N, num_proc, tstart, tf, tau_path)
         np.save(data_path + 'tau11.npy', tau11)
         del tau11
         #-----------------------------------------------------------------#
         # tau-12                                                          #
         #-----------------------------------------------------------------#
-        tau12   = npy_tau_general(12, N, num_proc, 0, tf, tau_path)
+        tau12   = npy_tau_general(12, N, num_proc, tstart, tf, tau_path)
         np.save(data_path + 'tau12.npy', tau12)
         del tau12
         #-----------------------------------------------------------------#
         # tau-13                                                          #
         #-----------------------------------------------------------------#
-        tau13   = npy_tau_general(13, N, num_proc, 0, tf, tau_path)
+        tau13   = npy_tau_general(13, N, num_proc, tstart, tf, tau_path)
         np.save(data_path + 'tau13.npy', tau13)
         del tau13
         #-----------------------------------------------------------------#
         # tau-22                                                          #
         #-----------------------------------------------------------------#
-        tau22   = npy_tau_general(22, N, num_proc, 0, tf, tau_path)
+        tau22   = npy_tau_general(22, N, num_proc, tstart, tf, tau_path)
         np.save(data_path + 'tau22.npy', tau22)
         del tau22
         #-----------------------------------------------------------------#
         # tau-23                                                          #
         #-----------------------------------------------------------------#
-        tau23   = npy_tau_general(23, N, num_proc, 0, tf, tau_path)
+        tau23   = npy_tau_general(23, N, num_proc, tstart, tf, tau_path)
         np.save(data_path + 'tau23.npy', tau23)
         del tau23
         #-----------------------------------------------------------------#
         # tau-33                                                          #
         #-----------------------------------------------------------------#
-        tau33   = npy_tau_general(33, N, num_proc, 0, tf, tau_path)
+        tau33   = npy_tau_general(33, N, num_proc, tstart, tf, tau_path)
         np.save(data_path + 'tau33.npy', tau33)
         del tau33
         if del_flag is True:
@@ -374,7 +374,7 @@ if __name__ == "__main__":
     # Dynamic Smagorinsky                                                 #
     #=====================================================================#
     if cs2_flag is True:
-        cs2 = npy_transport_term_general('Cs2', N, 4, 0, tf, cs2_path)
+        cs2 = npy_transport_term_general('Cs2', N, 4, tstart, tf, cs2_path)
         np.save(data_path + 'cs2.npy', cs2)
         del cs2
         if del_flag is True:
