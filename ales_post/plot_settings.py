@@ -31,13 +31,13 @@ def plot_setting(
     #---------------------------------------------------------------------#
     # Setting tick marks                                                  #
     #---------------------------------------------------------------------#
-    fig, ax = plt.subplots()
-    if major_tick is not False:
-        ax.xaxis.set_major_locator(MultipleLocator(major_tick))
-        ax.xaxis.set_major_formatter(FormatStrFormatter(tick_format))
-        ax.xaxis.set_minor_locator(MultipleLocator(minor_tick))
-    if y_tick is not False:
-        ax.yaxis.set_major_locator(MultipleLocator(major_tick))
-        ax.yaxis.set_major_formatter(FormatStrFormatter(tick_format))
-        ax.yaxis.set_minor_locator(MultipleLocator(minor_tick))
-    return fig, ax 
+    #fig, ax = plt.subplots()
+    #if major_tick is not False:
+    #    ax.xaxis.set_major_locator(MultipleLocator(major_tick))
+    #    ax.xaxis.set_major_formatter(FormatStrFormatter(tick_format))
+    #    ax.xaxis.set_minor_locator(MultipleLocator(minor_tick))
+    #if y_tick is not False:
+    #    ax.yaxis.set_major_locator(MultipleLocator(major_tick))
+    #    ax.yaxis.set_major_formatter(FormatStrFormatter(tick_format))
+    #    ax.yaxis.set_minor_locator(MultipleLocator(minor_tick))
+    return

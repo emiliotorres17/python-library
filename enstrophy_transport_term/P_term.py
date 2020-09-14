@@ -32,6 +32,7 @@ def p_term_enstrophy(
         w2,                 # vorticity-2 component
         w3,                 # vorticity-3 component
         Tau,                # SGS; (6,64,64,64)
+        num,                # number of grid points
         h       = False,    # spatial step size
         flag    = True):    # spectral flag; default gradient tool
 
@@ -41,7 +42,6 @@ def p_term_enstrophy(
     #---------------------------------------------------------------------#
     if h is False:
         Pi  = np.pi
-        num = 64
         h   = (2.0*Pi)/num
     #---------------------------------------------------------------------#
     # Calculating psi                                                     #
@@ -175,7 +175,7 @@ if __name__ == "__main__":
     #---------------------------------------------------------------------#
     # Approximate solution                                                #
     #---------------------------------------------------------------------#
-    sgs_approx  = p_term_enstrophy(omega1, omega2, omega3, tau,\
+    sgs_approx  = p_term_enstrophy(omega1, omega2, omega3, tau, N,\
                     dx, True)
     #---------------------------------------------------------------------#
     # Plotting approximate solution                                       #
