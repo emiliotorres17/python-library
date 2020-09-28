@@ -80,7 +80,9 @@ def rk4_forward_tracking(
         Z,
         Time,
         tstart,
-        tfinish):
+        tfinish,
+        file1,
+        file2):
 
     """ Forward tracking particle subroutine """
     #---------------------------------------------------------------------#
@@ -171,13 +173,13 @@ def rk4_forward_tracking(
     #---------------------------------------------------------------------#
     # Storing print out                                                   #
     #---------------------------------------------------------------------#
-    f   = open('forward-printout-new.out', 'w')
+    f   = open(file1, 'w')
     f.write(out)
     f.close()
     #---------------------------------------------------------------------#
     # Storing output                                                      #
     #---------------------------------------------------------------------#
-    f   = open('forward-output-new.out', 'w')
+    f   = open(file2, 'w')
     f.write(output)
     f.close()
 
