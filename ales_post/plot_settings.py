@@ -41,3 +41,34 @@ def plot_setting(
     #    ax.yaxis.set_major_formatter(FormatStrFormatter(tick_format))
     #    ax.yaxis.set_minor_locator(MultipleLocator(minor_tick))
     return
+#-------------------------------------------------------------------------#
+# Miscellaneous                                                           #
+#-------------------------------------------------------------------------#
+def misc(
+    #---------------------------------------------------------------------#
+    # Tick mark settings                                                  #
+    #---------------------------------------------------------------------#
+    fig, ax = plt.subplots()
+    if major_tick is not False:
+        ax.xaxis.set_major_locator(MultipleLocator(major_tick))
+        ax.xaxis.set_major_formatter(FormatStrFormatter(tick_format))
+        ax.xaxis.set_minor_locator(MultipleLocator(minor_tick))
+    if y_tick is not False:
+        ax.yaxis.set_major_locator(MultipleLocator(major_tick))
+        ax.yaxis.set_major_formatter(FormatStrFormatter(tick_format))
+        ax.yaxis.set_minor_locator(MultipleLocator(minor_tick))
+    #---------------------------------------------------------------------#
+    # Plot example for plotting comparison                                #
+    #---------------------------------------------------------------------#
+    fig, ax1    = plt.subplots(1,1)
+    ax1.plot(tvals, error1, 'r', lw=1.5, label='$x_{1}$')
+    ax1.plot(tvals, error2, 'b', lw=1.5, label='$x_{2}$')
+    ax1.plot(tvals, error3, 'g', lw=1.5, label='$x_{3}$')
+    ax1.ticklabel_format(axis='y', style='sci', scilimits=(0,1))
+    plt.grid(True)
+    plt.ylabel('Error')
+    plt.xlabel('Time step')
+    plt.legend(loc=0)
+    ax1.invert_xaxis()
+    plt.savefig(media_path + 'error-64.png')
+    plt.close()
