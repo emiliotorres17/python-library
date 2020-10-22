@@ -30,8 +30,10 @@ if __name__ == '__main__':
     # Main preamble                                                       #
     #---------------------------------------------------------------------#
     call(['clear'])
-    sep     = os.sep
-    pwd     = os.getcwd()
+    sep         = os.sep
+    pwd         = os.getcwd()
+    data_path   = pwd + '%c..%cdata%c'          %(sep, sep, sep)
+    media_path  = pwd + '%c..%cmedia%c'         %(sep, sep, sep)
 
 
     print('**** Successful run ****')
