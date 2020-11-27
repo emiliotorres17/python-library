@@ -42,8 +42,13 @@ if __name__ == '__main__':
     time    = data[ts:tf,1]
     ke      = data[ts:tf,2]
     print(ke[-1])
+    #---------------------------------------------------------------------#
+    # Plotting kinetic energy                                             #
+    #---------------------------------------------------------------------#
     plot_setting()
     plt.plot(time, ke, 'r', lw=1.5) 
+    plt.xlabel('time')
+    plt.ylabel('Average kinetic energy')
     plt.grid(True)
     plt.show()
     
