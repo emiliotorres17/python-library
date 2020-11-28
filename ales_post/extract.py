@@ -19,7 +19,7 @@ import numpy as np
 #-------------------------------------------------------------------------#
 # User defined packages                                                   #
 #-------------------------------------------------------------------------#
-from npy_extract    import npy_time
+from npy_extract    import npy_time_interval
 from npy_extract    import npy_velocity_general
 from npy_extract    import npy_vorticity_general
 from npy_extract    import npy_transport_term_general
@@ -117,7 +117,7 @@ if __name__ == "__main__":
         #-----------------------------------------------------------------#
         # Extracting time                                                 #
         #-----------------------------------------------------------------#
-        time        = npy_time(tf, time_path)
+        time        = npy_time_interval(tstart, tf, time_path)
         np.save(data_path + "time.npy", time)
         if del_flag is True:
             delete_var(time_path, 'time')
