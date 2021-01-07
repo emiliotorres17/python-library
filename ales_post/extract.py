@@ -19,7 +19,7 @@ import numpy as np
 #-------------------------------------------------------------------------#
 # User defined packages                                                   #
 #-------------------------------------------------------------------------#
-from npy_extract    import npy_time
+from npy_extract    import npy_time_interval
 from npy_extract    import npy_velocity_general
 from npy_extract    import npy_vorticity_general
 from npy_extract    import npy_transport_term_general
@@ -86,9 +86,9 @@ if __name__ == "__main__":
     vel1_path       = pwd + "%c..%cvelocity1%c"         %(sep, sep, sep)
     vel2_path       = pwd + "%c..%cvelocity2%c"         %(sep, sep, sep)
     vel3_path       = pwd + "%c..%cvelocity3%c"         %(sep, sep, sep)
-    omega1_path     = pwd + "%c..%comega1%c"            %(sep, sep, sep)
-    omega2_path     = pwd + "%c..%comega2%c"            %(sep, sep, sep)
-    omega3_path     = pwd + "%c..%comega3%c"            %(sep, sep, sep)
+    omega1_path     = pwd + "%c..%cvorticity1%c"        %(sep, sep, sep)
+    omega2_path     = pwd + "%c..%cvorticity2%c"        %(sep, sep, sep)
+    omega3_path     = pwd + "%c..%cvorticity3%c"        %(sep, sep, sep)
     tau_path        = pwd + "%c..%ctau%c"               %(sep, sep, sep)
     S_path          = pwd + "%c..%cstrain-rates%c"      %(sep, sep, sep)
     cs2_path        = pwd + "%c..%ccs2%c"               %(sep, sep, sep)
@@ -117,7 +117,7 @@ if __name__ == "__main__":
         #-----------------------------------------------------------------#
         # Extracting time                                                 #
         #-----------------------------------------------------------------#
-        time        = npy_time(tf, time_path)
+        time        = npy_time_interval(tstart, tf, time_path)
         np.save(data_path + "time.npy", time)
         if del_flag is True:
             delete_var(time_path, 'time')
