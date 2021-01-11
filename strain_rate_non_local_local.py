@@ -17,7 +17,7 @@ Author:
 import os
 import sys
 from subprocess import call
-from numpy import *
+import numpy as np
 import matplotlib.pyplot as plt
 #-------------------------------------------------------------------------#
 # User packages                                                           #
@@ -85,8 +85,8 @@ def gradient_non_local(
     #---------------------------------------------------------------------#
     # Multiplying both terms by their respective constants                #
     #---------------------------------------------------------------------#
-    term2   *= R**2.0/10.0
-    term3   *= R**4.0/280.0
+    term2   *= rad**2.0/10.0
+    term3   *= rad**4.0/280.0
     #---------------------------------------------------------------------#
     # Finding the no-local and local strain                               #
     #---------------------------------------------------------------------#
