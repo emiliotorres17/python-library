@@ -123,6 +123,54 @@ if __name__ == "__main__":
             delete_var(time_path, 'time')
         del time 
     #=====================================================================#
+    # Enstrophy and kinetic energy fields                                 #
+    #=====================================================================#
+    if fields_flag is True:
+        #-----------------------------------------------------------------#
+        # Enstrophy fields                                                #
+        #-----------------------------------------------------------------#
+        enst    = npy_transport_term_general('enstrophy', N, num_proc, tstart, tf, enst_path)
+        np.save(data_path + "enst.npy", enst)
+        if del_flag is True:
+            delete_var(enst_path, 'enst')
+        del enst
+        #-----------------------------------------------------------------#
+        # KE fields                                                       #
+        #-----------------------------------------------------------------#
+        ke      = npy_transport_term_general('ke', N, num_proc, tstart, tf, ke_path)
+        np.save(data_path + "ke.npy", ke)
+        if del_flag is True:
+            delete_var(ke_path, 'ke')
+        del ke
+    #=====================================================================#
+    # Velocity fields                                                     #
+    #=====================================================================#
+    if vel_flag is True:
+        #-----------------------------------------------------------------#
+        # velocity-1                                                      #
+        #-----------------------------------------------------------------#
+        vel1    = npy_velocity_general(1, N, num_proc, tstart, tf, vel1_path)
+        np.save(data_path + 'velocity1.npy', vel1)
+        if del_flag is True:
+            delete_var(vel1_path, 'vel-1')
+        del vel1
+        #-----------------------------------------------------------------#
+        # velocity-2                                                      #
+        #-----------------------------------------------------------------#
+        vel2    = npy_velocity_general(2, N, num_proc, tstart, tf, vel2_path)
+        np.save(data_path + 'velocity2.npy', vel2)
+        if del_flag is True:
+            delete_var(vel2_path, 'vel-2')
+        del vel2
+        #-----------------------------------------------------------------#
+        # velocity-3                                                      #
+        #-----------------------------------------------------------------#
+        vel3    = npy_velocity_general(3, N, num_proc, tstart, tf, vel3_path)
+        np.save(data_path + 'velocity3.npy', vel3)
+        if del_flag is True:
+            delete_var(vel3_path, 'vel-3')
+        del vel3
+    #=====================================================================#
     # Enstrophy transport terms                                           #
     #=====================================================================#
     if enst_flag is True:
@@ -210,54 +258,6 @@ if __name__ == "__main__":
         if del_flag is True:
             delete_var(P_path_ke, 'P-ke')
         del P
-    #=====================================================================#
-    # Enstrophy and kinetic energy fields                                 #
-    #=====================================================================#
-    if fields_flag is True:
-        #-----------------------------------------------------------------#
-        # KE fields                                                       #
-        #-----------------------------------------------------------------#
-        ke      = npy_transport_term_general('ke', N, num_proc, tstart, tf, ke_path)
-        np.save(data_path + "ke.npy", ke)
-        if del_flag is True:
-            delete_var(ke_path, 'ke')
-        del ke
-        #-----------------------------------------------------------------#
-        # Enstrophy fields                                                #
-        #-----------------------------------------------------------------#
-        enst    = npy_transport_term_general('enstrophy', N, num_proc, tstart, tf, enst_path)
-        np.save(data_path + "enst.npy", enst)
-        if del_flag is True:
-            delete_var(enst_path, 'enst')
-        del enst
-    #=====================================================================#
-    # Velocity fields                                                     #
-    #=====================================================================#
-    if vel_flag is True:
-        #-----------------------------------------------------------------#
-        # velocity-1                                                      #
-        #-----------------------------------------------------------------#
-        vel1    = npy_velocity_general(1, N, num_proc, tstart, tf, vel1_path)
-        np.save(data_path + 'velocity1.npy', vel1)
-        if del_flag is True:
-            delete_var(vel1_path, 'vel-1')
-        del vel1
-        #-----------------------------------------------------------------#
-        # velocity-2                                                      #
-        #-----------------------------------------------------------------#
-        vel2    = npy_velocity_general(2, N, num_proc, tstart, tf, vel2_path)
-        np.save(data_path + 'velocity2.npy', vel2)
-        if del_flag is True:
-            delete_var(vel2_path, 'vel-2')
-        del vel2
-        #-----------------------------------------------------------------#
-        # velocity-3                                                      #
-        #-----------------------------------------------------------------#
-        vel3    = npy_velocity_general(3, N, num_proc, tstart, tf, vel3_path)
-        np.save(data_path + 'velocity3.npy', vel3)
-        if del_flag is True:
-            delete_var(vel3_path, 'vel-3')
-        del vel3
     #=====================================================================#
     # Vorticity fields                                                    #
     #=====================================================================#
