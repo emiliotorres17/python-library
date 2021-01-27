@@ -374,7 +374,7 @@ if __name__ == "__main__":
     # Dynamic Smagorinsky                                                 #
     #=====================================================================#
     if cs2_flag is True:
-        cs2 = npy_transport_term_general('Cs2', N, 4, tstart, tf, cs2_path)
+        cs2 = npy_transport_term_general('Cs2', N, num_proc, tstart, tf, cs2_path)
         np.save(data_path + 'cs2.npy', cs2)
         del cs2
         if del_flag is True:
