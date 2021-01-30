@@ -54,9 +54,9 @@ def plot_terms(
     plt.grid(True)
     plt.legend(loc=2)
     plt.tight_layout()
-    plt.xlim([-20, 20])
+    plt.xlim([x_min_lim, x_max_lim])
     plt.savefig(name, bbox_inches = "tight")
-    #plt.show()
+    plt.show()
     plt.close()
     
     return
@@ -76,8 +76,11 @@ if __name__ == '__main__':
     # Loading ke data                                                     #
     #---------------------------------------------------------------------#
     ts          = 0
-    tint        = 240
-    iters       = flipud(linspace(ts-222, tint-222, (tint-ts)+1))
+    tzero       = 215
+    tint        = 255
+    x_min_lim   = -int(tint-tzero)
+    x_max_lim   = int(tint-tzero)
+    iters       = flipud(linspace(ts-tzero, tint-tzero, (tint-ts)+1))
     time        = loadtxt(data_path + 'ke.out', skiprows=1)[:,0]
     ke          = loadtxt(data_path + 'ke.out', skiprows=1)[:,-1]
     A_ke        = loadtxt(data_path + 'A-ke.out', skiprows=1)[:,-1]

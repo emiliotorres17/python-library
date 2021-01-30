@@ -15,7 +15,7 @@ Author:
 import os
 import sys
 from subprocess import call
-from numpy import zeros, load, loadtxt, linspace, pi, flipud
+from numpy import arange, mean, zeros, load, loadtxt, linspace, pi, flipud
 import matplotlib.pyplot as plt
 #-------------------------------------------------------------------------#
 # User packages                                                           #
@@ -27,6 +27,41 @@ from rk4_back_tracking          import ghost_cells
 #=========================================================================#
 # User defined functions                                                  #
 #=========================================================================#
+#-------------------------------------------------------------------------#
+# Generating dash                                                         #
+#-------------------------------------------------------------------------#
+def dash(
+        number,
+        length):
+    """ Generating the line symbol """
+    if number < len(length):
+        line_not    = '*--'
+    if number > len(length) and number < 2.0*len(length):
+        line_not    = '--'
+    else:
+        line_not    = '^--'
+
+    return line_not
+#-------------------------------------------------------------------------#
+# Generating label                                                        #
+#-------------------------------------------------------------------------#
+def get_label(
+        val,
+        switch):
+    """ Generating the label for the location plots """
+    #-----------------------------------------------------------------#
+    # Generating label                                                #
+    #-----------------------------------------------------------------#
+    if int(val-switch) == 1:
+        Lab = '$t_{0} + \\Delta t$' 
+    elif int(val-switch) < 0:
+        Lab = '$t_{0} - %i\\Delta t$'   %(abs(int(val-switch))) 
+    elif int(val-switch) == 0:
+        Lab = '$t_{0}$'    
+    elif int(val-switch) > 1:
+        Lab = '$t_{0} + %i\\Delta t$'   %(abs(int(val-switch))) 
+
+    return Lab
 #-------------------------------------------------------------------------#
 # Tracking locations                                                      #
 #-------------------------------------------------------------------------#
@@ -53,14 +88,28 @@ def plot_x_location(
     # Plotting location                                                   #
     #---------------------------------------------------------------------#
     plot_setting()
-    syms    = ['r', 'b', 'g', 'k', 'm', 'c']
+    syms    = ['r', 'b', 'g', 'k', 'm', 'c', 'y']
     for q, T in enumerate(test):
-        plt.plot(x_vec[q], Locs[q], syms[q], \
-                    label='$t_{0} + %i\\Delta t$'   %(int(T-tzero)))
+        #-----------------------------------------------------------------#
+        # Plot symbol                                                     #
+        #-----------------------------------------------------------------#
+        if q >= len(syms):
+            diff    = int(q-len(syms))
+            symbol  = syms[diff] + dash(diff, syms)
+        else:
+            symbol = syms[q]
+        #-----------------------------------------------------------------#
+        # Plot Label                                                      #
+        #-----------------------------------------------------------------#
+        lab     = get_label(T,tzero)
+        #-----------------------------------------------------------------#
+        # Plot plot                                                       #
+        #-----------------------------------------------------------------#
+        plt.plot(x_vec[q], Locs[q], symbol, label=lab)
         #-----------------------------------------------------------------#
         # Plotting the location of BS and DS switch                       #
         #-----------------------------------------------------------------#
-        plt.plot([tzero, tzero], [7,-7], 'b--', lw=1.5)
+        plt.plot([0, 0], [7,-7], 'b--', lw=1.5)
     #---------------------------------------------------------------------#
     # Plot settings                                                       #
     #---------------------------------------------------------------------#
@@ -68,6 +117,12 @@ def plot_x_location(
     plt.legend(loc=0)
     plt.ylabel('$x_{%i}$ location'          %(int(direction)))
     plt.xlabel(xlab)
+    #---------------------------------------------------------------------#
+    # Plot limits                                                         #
+    #---------------------------------------------------------------------#
+    x_min   = -int(T-tzero) 
+    x_max   = int(max(test)-tzero) 
+    plt.xlim([x_min, x_max])
     plt.ylim([0., 2.0*pi])
     plt.yticks([0, 0.5*pi, pi, 1.5*pi, 2.0*pi], \
                 [0,\
@@ -121,10 +176,10 @@ if __name__ == '__main__':
     # Loading enstrophy                                                   #
     #---------------------------------------------------------------------#
     print('Loading data:')
-    test        = [285, 280, 275]
+    test        = [123, 124, 125]
     ts          = 0
-    tf          = 289
-    tzero       = 215
+    tf          = 150
+    tzero       = 84
     time        = load(data_path + 'time.npy')[ts:tf]
     dt          = zeros(len(time)-1)
     count       = zeros(len(time)-1)
@@ -139,6 +194,13 @@ if __name__ == '__main__':
     print(time[-1])
     print(mean(enst[:,:,:,-1]))
     #---------------------------------------------------------------------#
+    # Domain variables                                                    #
+    #---------------------------------------------------------------------#
+    dx  = 2.*pi/N
+    x1  = linspace(-0.5*dx, 2.0*pi+0.5*dx, N+2)
+    x2  = linspace(-0.5*dx, 2.0*pi+0.5*dx, N+2)
+    x3  = linspace(-0.5*dx, 2.0*pi+0.5*dx, N+2)
+    #---------------------------------------------------------------------#
     # Initializing strings                                                #
     #---------------------------------------------------------------------#
     x1_loc  = []
@@ -149,7 +211,7 @@ if __name__ == '__main__':
     #---------------------------------------------------------------------#
     # Test loop                                                           #
     #---------------------------------------------------------------------#
-    IC      = ''
+    IC      = '\n'
     for count,  tint in enumerate(test):
         #-----------------------------------------------------------------#
         # Maximum values and coordinates                                  #
@@ -163,10 +225,10 @@ if __name__ == '__main__':
         # Initial point                                                   #
         #-----------------------------------------------------------------#
         x0  = x[xc]
-        y0  = x[yc]
-        z0  = x[zc]
+        y0  = y[yc]
+        z0  = z[zc]
         t0  = time[tint]
-        IC  += '\ttval=%i\tval=%5.3e\tx0=%5.3f\tx1=%5.3f\tx1=%5.3f\n\n'\
+        IC  += 'tval=%10i\t\tval=%20.8e\t\tx0=%20.8f\t\tx1=%20.8f\t\tx1=%20.8f\n'\
                 %(tint, val, x0, y0, z0)
         #-----------------------------------------------------------------#
         # Domain variables                                                #
@@ -210,7 +272,12 @@ if __name__ == '__main__':
         x2_loc.append(data[:,2])
         x3_loc.append(data[:,3])
         t_val.append(data[:,0])
-        t_steps.append(flipud(linspace(0, tint, len(x1_loc[count]))))
+        t_steps.append(flipud(linspace(ts-tzero, tint-tzero, len(x1_loc[count]))))
+    #---------------------------------------------------------------------#
+    # Printing initial conditions                                         #
+    #---------------------------------------------------------------------#
+    call(['clear'])
+    print(IC)
     #---------------------------------------------------------------------#
     # Plotting data                                                       #
     #---------------------------------------------------------------------#
