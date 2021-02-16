@@ -16,3 +16,6 @@ rm -frv velocity3
 rm -frv vorticity1
 rm -frv vorticity2
 rm -frv vorticity3
+rm -frv strain-rates
+rm -frv tau
+rm -frv cs2
