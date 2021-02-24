@@ -39,17 +39,49 @@ if __name__ == '__main__':
     ts      = 0
     tf      = -1
     data    = loadtxt('../ke-omega-avg.txt', skiprows=2)
+    steps   = data[ts:tf,0]
     time    = data[ts:tf,1]
     ke      = data[ts:tf,2]
+    enst    = data[ts:tf,3]
     print(ke[-1])
     #---------------------------------------------------------------------#
-    # Plotting kinetic energy                                             #
+    # Plot settings                                                       #
     #---------------------------------------------------------------------#
     plot_setting()
-    plt.plot(time, ke, 'r', lw=1.5) 
-    plt.xlabel('time')
-    plt.ylabel('Average kinetic energy')
-    plt.grid(True)
+    fig, [ax1, ax2]     = plt.subplots(2,1)
+    #---------------------------------------------------------------------#
+    # Plotting average kinetic energy v. time                             #
+    #---------------------------------------------------------------------#
+    ax1.plot(time, ke, 'r', lw=1.5) 
+    ax1.set_xlabel('Time')
+    ax1.set_ylabel('$\\langle k \\rangle$')
+    ax1.grid(True)
+    #---------------------------------------------------------------------#
+    # Plotting average enstrophy v. time                                  #
+    #---------------------------------------------------------------------#
+    ax2.plot(time, enst, 'r', lw=1.5) 
+    ax2.set_xlabel('Time')
+    ax2.set_ylabel('$\\langle \\Omega \\rangle$')
+    ax2.grid(True)
+    plt.show()
+    #---------------------------------------------------------------------#
+    # Plot settings                                                       #
+    #---------------------------------------------------------------------#
+    fig, [ax1, ax2]     = plt.subplots(2,1)
+    #---------------------------------------------------------------------#
+    # Plotting average kinetic energy v. time                             #
+    #---------------------------------------------------------------------#
+    ax1.plot(steps, ke, 'r', lw=1.5) 
+    ax1.set_xlabel('Time steps')
+    ax1.set_ylabel('$\\langle k \\rangle$')
+    ax1.grid(True)
+    #---------------------------------------------------------------------#
+    # Plotting average enstrophy v. time                                  #
+    #---------------------------------------------------------------------#
+    ax2.plot(steps, enst, 'r', lw=1.5) 
+    ax2.set_xlabel('Time steps')
+    ax2.set_ylabel('$\\langle \\Omega \\rangle$')
+    ax2.grid(True)
     plt.show()
     
 
