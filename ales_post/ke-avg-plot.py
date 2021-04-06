@@ -40,7 +40,7 @@ if __name__ == '__main__':
     tf      = -1
     data    = loadtxt('../ke-omega-avg.txt', skiprows=2)
     steps   = data[ts:tf,0]
-    time    = data[ts:tf,1]
+    time    = data[ts:tf,1]-15.0
     ke      = data[ts:tf,2]
     enst    = data[ts:tf,3]
     print(ke[-1])
