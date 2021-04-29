@@ -52,6 +52,7 @@ if __name__ == '__main__':
     #---------------------------------------------------------------------#
     # Plotting average kinetic energy v. time                             #
     #---------------------------------------------------------------------#
+    ax1.plot([0,0], [amin(ke), amax(ke)], 'b--', lw=1.5)
     ax1.plot(time, ke, 'r', lw=1.5) 
     ax1.set_xlabel('Time')
     ax1.set_ylabel('$\\langle k \\rangle$')
@@ -59,6 +60,7 @@ if __name__ == '__main__':
     #---------------------------------------------------------------------#
     # Plotting average enstrophy v. time                                  #
     #---------------------------------------------------------------------#
+    ax1.plot([0,0], [amin(enst), amax(enst)], 'b--', lw=1.5)
     ax2.plot(time, enst, 'r', lw=1.5) 
     ax2.set_xlabel('Time')
     ax2.set_ylabel('$\\langle \\Omega \\rangle$')
