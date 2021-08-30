@@ -19,3 +19,6 @@ rm -frv vorticity3
 rm -frv strain-rates
 rm -frv tau
 rm -frv cs2
+rm -frv time
+rm -frv P-ke-NL
+rm -frv P-ke-L
