@@ -5,7 +5,8 @@ tags
 *.lot
 *.swp
 *.swo
-*.swq`
+*.swq
+*.pyc
 data/*
 ke_transport_terms/data/*
 __pycache__/*
