@@ -22,6 +22,7 @@ import sys
 from subprocess import call
 from numpy import *
 import matplotlib.pyplot as plt
+import scipy.io
 #-------------------------------------------------------------------------#
 # User packages                                                           #
 #-------------------------------------------------------------------------#
@@ -29,6 +30,17 @@ from ales_post.plot_settings        import plot_setting
 #=========================================================================#
 # User defined functions                                                  #
 #=========================================================================#
+#-------------------------------------------------------------------------#
+# Auxiliary functions                                                     #
+#-------------------------------------------------------------------------#
+def psum(data):
+    """
+    Array summation by heirarchical partial summation.
+    Input argument data can be any n-dimensional array-like object,
+    even a (n=0) scalar. That is, psum() is safe to use on any
+    numeric data type.
+    """
+    return sum(sum(sum(data, axis=-1), axis=-1))
 #-------------------------------------------------------------------------#
 # Shell average                                                           #
 #-------------------------------------------------------------------------#
@@ -190,22 +202,33 @@ if __name__ == '__main__':
     call(['clear'])
     sep         = os.sep
     pwd         = os.getcwd()
-    data_path   = '/home/eetorres/MAE-792/Spring-2021/june/tf5/TF5_for_Emilio/TF5-CS-0.85-no-limiting/data/'
-    media_path  = pwd + '%c..%cmedia%c'             %(sep, sep, sep)
+    data_path   = pwd + '%cenergy-spectra-test-data%c'      %(sep, sep)  
     #---------------------------------------------------------------------#
-    # load data                                                           #
+    # Load data                                                           #
     #---------------------------------------------------------------------#
+    spec_sim    = loadtxt(data_path + 'KE.spectra', skiprows=2)
     u1          = load(data_path + 'velocity1.npy')[:,:,:,-1]
     u2          = load(data_path + 'velocity2.npy')[:,:,:,-1]
     u3          = load(data_path + 'velocity3.npy')[:,:,:,-1]
+    Ek_M        = scipy.io.loadmat(data_path + 'Ek.mat')['Ek']
+    #---------------------------------------------------------------------#
+    # Finding the energy spectrum                                         #
+    #---------------------------------------------------------------------#
+    [k, spec]   = energy_spectra( u1, u2, u3)
+    #---------------------------------------------------------------------#
+    # Plotting spectrum                                                   #
+    #---------------------------------------------------------------------#
+    plot_setting()
+    plt.loglog(k[1:32], spec[1:32]/spec[1], 'r', lw=1.5, label= 'subroutine') 
+    plt.loglog(k[1:32], spec_sim[1:32]/spec_sim[1], 'bo', lw=1.5, label= 'simulation') 
+    plt.loglog(k[1:32], Ek_M[1:32]/Ek_M[1], 'k--', lw=1.5, label= 'MATLAB') 
+    plt.ylim([10**-3, 2])
+    plt.xlim([1, 60])
+    plt.ylabel('$E(k)/E_{0}$')
+    plt.xlabel('$k$')
+    plt.grid(True, which='both', ls='--', c='gray')
+    plt.legend(loc=0)
+    plt.show()
 
-    bs  = scipy.io.loadmat('BS-spectra.mat')
-    bs  = bs['Ek_85']
-    kbs = scipy.io.loadmat('k-bs.mat')
-    kbs = transpose(kbs['k'])
-
-
-
-
-    print('**** Successful run ****')
+    :w
     sys.exit(0)
