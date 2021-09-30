@@ -230,5 +230,5 @@ if __name__ == '__main__':
     plt.legend(loc=0)
     plt.show()
 
-    :w
+    print('**** Successful run ****')
     sys.exit(0)
