@@ -59,21 +59,23 @@ if __name__ == '__main__':
     fig, ax     = plt.subplots()
     ax.hist(values, bins=bins, density=True, alpha=0.5, edgecolor='black',)
     ax.plot(x, pdf, linewidth=2)
+    
+    edges = np.histogram_bin_edges(values, bins=bins)
 
-    edges = np.histogram_bin_edges(values, bins=bins)   # same style used by np.histogram
+    # bin index 0..bins-1 for each point
+    idx = np.digitize(values, edges, right=False) - 1
+    idx = np.clip(idx, 0, bins-1)  # keep max in last bin
+    
     print(f"bins = {bins}")
     print("edges =", edges)
     
-    # Assign each value to a bin index 0..bins-1
-    idx = np.digitize(values, edges, right=False) - 1
-    idx = np.clip(idx, 0, bins-1)  # ensures max value falls in last bin
-    
     for i in range(bins):
         left, right = edges[i], edges[i+1]
-        # last bin includes the right edge
         bracket_r = "]" if i == bins-1 else ")"
-        in_bin = np.sort(values[idx == i])
-        print(f"{i+1}: [{left:.6f}, {right:.6f}{bracket_r}  count={in_bin.size}  values={in_bin.tolist()}")
+        # +1 so you see point numbers 1..n (instead of 0..n-1)
+        point_nums = (np.where(idx == i)[0]).tolist()
+        print(f"{i+1}: [{left:.6f}, {right:.6f}{bracket_r}  points={point_nums}  count={len(point_nums)}")
+
     plt.show()
     
 
